@@ -27,8 +27,8 @@ SECRET_KEY = 'django-insecure-bjybtte)y^lc!lu2ndz3s21@r_y5syjo3#u$pq=_-w!-081q0e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# ALLOWED_HOSTS = ['invenotry-ms.herokuapp.com', '127.0.0.1']
-ALLOWED_HOSTS  =['*']
+ALLOWED_HOSTS = ['invenotry-ms.herokuapp.com', '127.0.0.1']
+# ALLOWED_HOSTS  =[*]
 
 # Application definition
 
@@ -77,12 +77,12 @@ WSGI_APPLICATION = 'ims.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -92,16 +92,16 @@ DATABASES = {
 # }
 
 # connecting to posgresql
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'ims',
-#        'USER': 'imsuser',
-#        'PASSWORD': 'p@ssw0rd',
-#        'HOST': 'localhost',
-#        'PORT': '5432',
-#    }
-# }
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'ims',
+       'USER': 'imsuser',
+       'PASSWORD': 'p@ssw0rd',
+       'HOST': 'localhost',
+       'PORT': '5432',
+   }
+}
 
 
 
