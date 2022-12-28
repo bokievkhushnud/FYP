@@ -32,13 +32,14 @@ scan.addEventListener('click', () => {
       var cameraId = devices[0].id;
       const html5QrCode = new Html5Qrcode(/* element id */ "reader");
       html5QrCode.start(
+        { facingMode: "environment" }, config, qrCodeSuccessCallback,
         cameraId,
         {
           fps: 10,    // Optional, frame per seconds for qr code scanning
           qrbox: { width: 200, height: 200 }  // Optional, if you want bounded box UI
         },
         (decodedText, decodedResult) => {
-          window.location = `http://127.0.0.1:8000/${decodedText}/`;
+          window.location = `https://invenotry-ms.herokuapp.com/${decodedText}/`;
         },
         (errorMessage) => {
           // parse error, ignore it.
