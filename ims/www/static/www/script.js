@@ -3,6 +3,7 @@
 // 	"reader", { fps: 10, qrbox: 250 });
 let scan = document.getElementById("scanqr")
 let stop_scan = document.getElementById("closeqr")
+let stop_scan1 = document.getElementById("closeqr1")
 // function onScanSuccess(decodedText, decodedResult) {
 //     // Handle on success condition with the decoded text or result.
 //     console.log(`Scan result: ${decodedText}`);
@@ -18,24 +19,22 @@ let stop_scan = document.getElementById("closeqr")
 //     // handle on error condition, with error message
 
 // }
+const html5QrCode = new Html5Qrcode(/* element id */ "reader");
+
 
 
 
 scan.addEventListener('click', () => {
   // This method will trigger user permissions
   Html5Qrcode.getCameras().then(devices => {
-    /**
-     * devices would be an array of objects of type:
-     * { id: "id", label: "label" }
-     */
     if (devices && devices.length) {
-      var cameraId = devices[0].id;
-      const html5QrCode = new Html5Qrcode(/* element id */ "reader");
+      console.log(devices)
+      var cameraId = devices[1].id;
       html5QrCode.start(
         cameraId,
         {
-          fps: 10, 
-          facingMode: "environment" ,   // Optional, frame per seconds for qr code scanning
+          fps: 10,
+          facingMode: "environment",
           // qrbox: { width: 200, height: 200 }  // Optional, if you want bounded box UI
         },
         (decodedText, decodedResult) => {
@@ -52,9 +51,25 @@ scan.addEventListener('click', () => {
     // handle err
   });
 
+  stop_scan.addEventListener('click', () => {
+    html5QrCode.stop().then((ignore) => {
+      console.log("QR Code scanning is ")
+      // QR Code scanning is stopped.
+    }).catch((err) => {
+      // Stop failed, handle it.
+    });
+  })
+  stop_scan1.addEventListener('click', () => {
+    html5QrCode.stop().then((ignore) => {
+      console.log("QR Code scanning is ")
+      // QR Code scanning is stopped.
+    }).catch((err) => {
+      // Stop failed, handle it.
+    });
+  })
+
 })
 
-const html5QrCode = new Html5Qrcode(/* element id */ "reader");
 // File based scanning
 const fileinput = document.getElementById('qr-input-file');
 fileinput.addEventListener('change', e => {
@@ -62,7 +77,6 @@ fileinput.addEventListener('change', e => {
     // No file selected, ignore 
     return;
   }
-
   const imageFile = e.target.files[0];
   // Scan QR Code
   html5QrCode.scanFile(imageFile, true)
@@ -76,13 +90,4 @@ fileinput.addEventListener('change', e => {
     });
 });
 
-
-stop_scan.addEventListener('click', () => {
-  html5QrCode.stop().then((ignore) => {
-    console.log("QR Code scanning is ")
-    // QR Code scanning is stopped.
-  }).catch((err) => {
-    // Stop failed, handle it.
-  });
-})
 

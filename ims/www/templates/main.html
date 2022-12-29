@@ -50,7 +50,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Scan QR Code</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button id="closeqr1" type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -67,9 +67,11 @@
                         </div>
                     </div>
                     <div style="width: 100%" id="reader"></div>
+                    
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <a class="btn btn-default"  href="{% url 'home' %}">Close</a>
+                    <button id="closeqr" class="btn btn-default" data-dismiss="modal">Stop</button>
+                    
                 </div>
             </div>
             <!-- /.modal-content -->
