@@ -28,8 +28,8 @@ scan.addEventListener('click', () => {
   // This method will trigger user permissions
   Html5Qrcode.getCameras().then(devices => {
     if (devices && devices.length) {
-      console.log(devices)
-      var cameraId = devices[1].id;
+      console.log(devices.length)
+      var cameraId = devices[devices.length-1].id;
       html5QrCode.start(
         cameraId,
         {
@@ -38,6 +38,12 @@ scan.addEventListener('click', () => {
           // qrbox: { width: 200, height: 200 }  // Optional, if you want bounded box UI
         },
         (decodedText, decodedResult) => {
+          html5QrCode.stop().then((ignore) => {
+            console.log("QR Code scanning is ")
+            // QR Code scanning is stopped.
+          }).catch((err) => {
+            // Stop failed, handle it.
+          });
           window.location = `https://invenotry-ms.herokuapp.com/${decodedText}/`;
         },
         (errorMessage) => {
