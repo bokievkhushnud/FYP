@@ -4,21 +4,7 @@
 let scan = document.getElementById("scanqr")
 let stop_scan = document.getElementById("closeqr")
 let stop_scan1 = document.getElementById("closeqr1")
-// function onScanSuccess(decodedText, decodedResult) {
-//     // Handle on success condition with the decoded text or result.
-//     console.log(`Scan result: ${decodedText}`);
-//     // console.log(`http://127.0.0.1:8000/${decodedText}/`)
-//     window.location = `http://127.0.0.1:8000/${decodedText}/`;
-//     html5QrcodeScanner.clear();
-//     // ^ this will stop the scanner (video feed) and clear the scan area.
-// }
-// html5QrcodeScanner.render(onScanSuccess);
 
-
-// function onScanError(errorMessage) {
-//     // handle on error condition, with error message
-
-// }
 const html5QrCode = new Html5Qrcode(/* element id */ "reader");
 
 
@@ -87,8 +73,7 @@ fileinput.addEventListener('change', e => {
   // Scan QR Code
   html5QrCode.scanFile(imageFile, true)
     .then(decodedText => {
-      window.location = `http://127.0.0.1:8000/${decodedText}/`;
-      console.log(decodedText);
+      window.location = `https://invenotry-ms.herokuapp.com/${decodedText}/`;
     })
     .catch(err => {
       // failure, handle it.
