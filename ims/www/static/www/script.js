@@ -15,7 +15,7 @@ scan.addEventListener('click', () => {
   Html5Qrcode.getCameras().then(devices => {
     if (devices && devices.length) {
       console.log(devices.length)
-      var cameraId = devices[devices.length-1].id;
+      var cameraId = devices[devices.length - 1].id;
       html5QrCode.start(
         cameraId,
         {
@@ -81,4 +81,37 @@ fileinput.addEventListener('change', e => {
     });
 });
 
+// Reset Filter
 
+let resetbtn = document.getElementById("reset_filter")
+resetbtn.addEventListener("click", (e) => {
+  e.preventDefault()
+  document.getElementById("date_recieved_filter").value = ""
+  document.getElementById("cat_select").value = ""
+  document.getElementById("dep_select").value = ""
+  document.getElementById("status_select").value = ""
+})
+
+// Select All 
+document.getElementById("selectAll").addEventListener("change", function(){
+  var options = document.getElementsByClassName("option");
+  for(var i = 0; i < options.length; i++){
+      options[i].checked = this.checked;
+  }
+});
+
+// if any of them is not selected deselect all
+var options = document.getElementsByClassName("option");
+for(var i = 0; i < options.length; i++){
+    options[i].addEventListener("change", function(){
+        var selectAll = document.getElementById("selectAll");
+        var allChecked = true;
+        for(var j = 0; j < options.length; j++){
+            if(!options[j].checked){
+                allChecked = false;
+                break;
+            }
+        }
+        selectAll.checked = allChecked;
+    });
+}

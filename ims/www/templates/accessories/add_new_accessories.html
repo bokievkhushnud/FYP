@@ -7,12 +7,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Add Item</h1>
+                    <h1 class="m-0">Add accessories</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Add New Item</li>
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Add New Accessories</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -37,7 +37,7 @@
 
                                 </div>
                                 <div class="bs-stepper-content">
-                                    <form action="{% url 'add_item' %}" method="post">
+                                    <form action="{% url 'add_accessories' %}" method="post">
                                         {% csrf_token %}
                                         <!-- your steps content here -->
                                         <div id="" class="content">

@@ -1,0 +1,137 @@
+{% extends 'main.html' %}
+{% block content %}
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">New item</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item active">New Item</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-default">
+                        <div class="card-header">
+                            <h3 class="card-title">Fill the information</h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="bs-stepper">
+                                <div class="bs-stepper-header" role="tablist">
+
+                                </div>
+                                <div class="bs-stepper-content">
+                                    <form class="row" action="{% url 'add_item' %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">{{form.category.label}}</label>
+                                                {{form.category}}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">{{form.item_code.label}}</label>
+                                                {{form.item_code}}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">{{form.campus.label}}</label>
+                                                {{form.campus}}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">{{form.date_received.label}}</label>
+                                                {{form.date_received}}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">{{form.department.label}}</label>
+                                                {{form.department}}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">{{form.price.label}}</label>
+                                                {{form.price}}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">{{form.vendor.label}}</label>
+                                                {{form.vendor}}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">{{form.expiration_date.label}}</label>
+                                                {{form.expiration_date}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">{{form.item_name.label}}</label>
+                                                {{form.item_name}}
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">{{form.currency.label}}</label>
+                                                {{form.currency}}
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">{{form.order_number.label}}</label>
+                                                {{form.order_number}}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">{{form.image.label}}</label>
+                                                {{form.image}}
+                                            </div>
+                                        </div>
+
+                                        <!-- your steps content here -->
+                                        <div id="" class="col-md-12">
+
+                                            <div class="form-group">
+                                                <label for="">{{form.description.label}}</label>
+                                                {{form.description}}
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">{{form.notes.label}}</label>
+                                                {{form.notes}}
+                                            </div>
+
+                                            <input class="btn btn-primary" type="submit" value="Add Item">
+
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+
+{% endblock %}

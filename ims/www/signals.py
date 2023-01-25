@@ -15,12 +15,12 @@ def add_qr_item(sender, instance, **kwargs):
 def notify_user(sender, instance, **kwargs):
     data = f'bulkitems/detail/{instance.id}'
     img_url  = generate_qr('bulkitems', data, instance.id)
-    Item.objects.filter(id = instance.id).update(qr_code = img_url)
+    BulkItem.objects.filter(id = instance.id).update(qr_code = img_url)
 
 
 @receiver(post_save,sender = Consumable)
 def notify_user(sender, instance, **kwargs):
     data = f'consumables/detail/{instance.id}'
     img_url  = generate_qr('consumable', data, instance.id)
-    Item.objects.filter(id = instance.id).update(qr_code = img_url)
+    Consumable.objects.filter(id = instance.id).update(qr_code = img_url)
 

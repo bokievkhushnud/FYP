@@ -6,18 +6,16 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0 d-inline">{{title}}</h1>
-                    <a class="h5" href="{% url 'add_item' %}"><i class="fa-sharp fa-solid fa-cart-plus text-success fs-3"></i></a>
+                    <a class="h5" href="{% url 'add_licenses' %}"><i class="fa-sharp fa-solid fa-cart-plus text-success fs-3"></i></a>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <form class="input-group input-group-sm float-sm-right" style="width: 150px;" method="GET", action ="#">
                         <input type="text" name="table_search" class="form-control" placeholder="Search">
-
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-default">
                                 <i class="fas fa-search"></i>
@@ -120,10 +118,8 @@
 
                                     <tr>
                                         <td>{{item.id}}</td>
-                                        <td> <a href="{% url 'item_detail' item.id %}">{{item.item_name}}</a></td>
+                                        <td> <a href="{% url 'licenses_detail' item.id %}">{{item.license_name}}</a></td>
                                     </tr>
-
-
                                     {% endfor %}
                                 </tbody>
                             </table>
