@@ -32,20 +32,12 @@
         <!-- /.form-group -->
 
         <div class="form-group">
-          <label>Department</label>
-          <select class="form-control" name="department" id="dep_select" style="width: 100%;">
-            {% if search_filters.department == "" %}
-            <option selected value="">All</option>
-            {% else %}
-            <option value="">All</option>
-            {% endif %}
-            {% for dep in departments %}
-            {% if dep.name == search_filters.department %}
-            <option selected value="{{dep}}">{{ dep|title}}</option>
-            {% else %}
-            <option value="{{dep}}">{{ dep|title}}</option>
-            {% endif %}
-            {% endfor %}
+          <label>Item Type</label>
+          <select class="form-control" name="item_type" id="item_type" style="width: 100%;">
+            <option {% if search_filters.item_type == "" %}selected{% endif %} value="">All</option>
+            <option {% if search_filters.item_type == "asset" %}selected{% endif %} value="asset">Asset</option>
+            <option {% if search_filters.item_type == "accessory" %}selected{% endif %} value="accessory">Accessory</option>
+            <option {% if search_filters.item_type == "consumable" %}selected{% endif %} value="consumable">Consumable</option>
           </select>
         </div>
         <!-- /.form-group -->

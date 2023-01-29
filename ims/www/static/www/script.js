@@ -88,7 +88,7 @@ resetbtn.addEventListener("click", (e) => {
   e.preventDefault()
   document.getElementById("date_recieved_filter").value = ""
   document.getElementById("cat_select").value = ""
-  document.getElementById("dep_select").value = ""
+  document.getElementById("item_type").value = ""
   document.getElementById("status_select").value = ""
 })
 

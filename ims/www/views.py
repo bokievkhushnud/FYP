@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import Item, BulkItem, Consumable, License, Category, Department
-from .forms import AddItemForm, AddBulkItemForm, AddConsumableForm, AddLicenseForm
+from .models import Item, License, Category, Department
+from .forms import AddItemForm, AddBulkItemForm, AddConsumableForm, AddLicenseForm, CustomUserCreationForm
 from django.db.models import Q
-from datetime import datetime
+from django.contrib.auth import login, authenticate
+from django.contrib import messages
 
 
 # Create your views here.
@@ -24,25 +25,24 @@ def homeView(request):
 def items(request):
 
     category = request.GET.get("category")
-    department = request.GET.get("department")
     status = request.GET.get("status")
+    item_type = request.GET.get("item_type")
     date_received = request.GET.get("date_recieved")
     q = request.GET.get("q")
 
     search_filters = {
         "category": category if category is not None else "",
-        "department": department if department is not None else "",
         "status": status if status is not None else "",
+        "item_type": item_type if item_type is not None else "",
         "date_recieved": date_received if date_received is not None else "",
         "q": q if q is not None else "",
     }
     items_list = Item.objects.filter(
         Q(category__name__contains=search_filters["category"]) &
-        Q(department__name__contains=search_filters["department"]) &
         Q(status__contains=search_filters["status"]) &
+        Q(item_type__contains=search_filters["item_type"]) &
         Q(date_received__contains=search_filters["date_recieved"])
     ).filter(
-        Q(item_code__contains=search_filters["q"]) |
         Q(item_name__contains=search_filters["q"]) |
         Q(location__contains=search_filters["q"]) |
         Q(description__contains=search_filters["q"]) |
@@ -54,12 +54,11 @@ def items(request):
     context = {
         "title": "Items",
         "items": items_list,
-        "total_count": items_list.count(),
-        "broken_count": items_list.filter(status="broken").count(),
-        "available_count": items_list.filter(status="available").count(),
-        "inuse_count": items_list.filter(status="outinuse").count(),
+        "total_count": Item.objects.count(),
+        "broken_count": Item.objects.filter(status="broken").count(),
+        "available_count": Item.objects.filter(status="available").count(),
+        "inuse_count": Item.objects.filter(status="outinuse").count(),
         "categories": Category.objects.all(),
-        "departments": Department.objects.all(),
         "search_filters": search_filters
     }
     return render(request, 'items/items.html', context)
@@ -91,79 +90,6 @@ def item_detail(request, pk):
     }
 
     return render(request, "items/item_detail.html", context)
-
-# ----------------------------------------- BULK ITEMS -----------------------------------
-
-# For Accessories
-
-
-def bulk_items(request):
-    context = {
-        "title": "Accessories",
-        "items": BulkItem.objects.all(),
-    }
-    return render(request, 'accessories/items_bulk.html', context)
-
-
-# Function for Accessories details
-def buik_item_detail(request, pk):
-    item = BulkItem.objects.get(id=pk)
-    context = {
-        "title": f"{item.name} Detail",
-        "item": item,
-    }
-    return render(request, "accessories/bulkitem_detail.html", context)
-
-
-# Function for adding new Accessory to DB
-def add_bulkitem(request):
-    if request.method == "POST":
-        form = AddBulkItemForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return redirect('accessories')
-
-    context = {
-        "title": "Add New Accessories",
-        "form": AddBulkItemForm(),
-    }
-    return render(request, "accessories/add_new_accessories.html", context)
-
-
-# ------------------------------------------ CONSUMABLES -------------------------------------
-
-# For consumables
-def consumables(request):
-    context = {
-        "title": "Consumables",
-        "items": Consumable.objects.all(),
-    }
-    return render(request, 'consumables/consumables.html', context)
-
-
-# Function for consumables details
-def consumables_detail(request, pk):
-    item = Consumable.objects.get(id=pk)
-    context = {
-        "title": f"{item.name} Detail",
-        "item": item,
-    }
-    return render(request, 'consumables/consumable_detail.html', context)
-
-
-# Function for adding new consumables to DB
-def add_consumables(request):
-    if request.method == "POST":
-        form = AddConsumableForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return redirect('consumables')
-
-    context = {
-        "title": "Add Consumables",
-        "form": AddConsumableForm(),
-    }
-    return render(request, 'consumables/add_new_consumables.html', context)
 
 
 # ----------------------------------------------- Licenses --------------------------
@@ -206,7 +132,7 @@ def add_licenses(request):
 def delete_items(request):
     if request.method == "POST":
         checked_items = request.POST.getlist("item_id")
-        if len(checkout_items)>0:
+        if len(checkout_items) > 0:
             Item.objects.filter(id__in=checked_items).delete()
         return redirect('items')
 
@@ -216,3 +142,29 @@ def checkout_items(request):
     if request.method == "POST":
         checked_items = request.POST.getlist("item_id")
         print(checked_items)
+
+
+# Registration
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                username = form.cleaned_data.get('username')
+                raw_password = form.cleaned_data.get('password1')
+                user = authenticate(username=username, password=raw_password)
+                login(request, user)
+                messages.success(request, 'Account created successfully')
+                return redirect('home')
+            except Exception as e:
+                print(e)
+        else:
+            for error in form.non_field_errors():
+                messages.error(request, error)
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'auth/register.html', {'form': form, "title": "Registration", })

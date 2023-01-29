@@ -9,14 +9,21 @@
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1 class="m-0 d-inline">{{title}}</h1>
-          <a class="h5" href="{% url 'add_item' %}"><i class="fa-sharp fa-solid fa-cart-plus text-success fs-3"></i></a>
+          <button type="button" class="btn btn-lg  p-0 m-0" data-toggle="dropdown">
+            <i title="Add new" class="fa-sharp fa-solid fa-cart-plus text-success"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'add_item' %}">Asset</a>
+            <a class="dropdown-item" href="{% url 'add_item' %}">Accessory</a>
+            <a class="dropdown-item" href="{% url 'add_item' %}">Consumable</a>
+          </div>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <form id="searchform" class="input-group input-group-sm float-sm-right" style="width: 150px;" method="GET" ,
             action="{% url 'items' %}">
             <input type="text" name="q" value="{{search_filters.q}}" class="form-control" placeholder="Search">
             <input type="hidden" value="{{search_filters.category}}" name="category">
-            <input type="hidden" value="{{search_filters.department}}" name="department">
+            <input type="hidden" value="{{search_filters.item_type}}" name="item_type">
             <input type="hidden" value="{{search_filters.status}}" name="status">
             <input type="hidden" value="{{search_filters.date_recieved}}" name="date_recieved">
             <div class="input-group-append">
@@ -129,7 +136,7 @@
                     <th>Item</th>
                     <th>Location</th>
                     <th>Category</th>
-                    <th>Department</th>
+                    <th>Type</th>
                     <th>Status</th>
                     <th>Arrival Date</th>
                     <th>Action</th>
@@ -144,7 +151,7 @@
                     <td> <a href="{% url 'item_detail' item.id %}">{{item.item_name}}</a></td>
                     <td>{{item.location}}</td>
                     <td>{{item.category}}</td>
-                    <td>{{item.department}}</td>
+                    <td>{{item.item_type}}</td>
                     <td><span class="badge bg-{% if item.status == 'available' %}success{% elif item.status == 'broken' %}danger{% else %}warning{%endif%}" style="font-size: small;">{{item.status}}</span></td>
                     <td>{{item.date_received}}</td>
                     <td>

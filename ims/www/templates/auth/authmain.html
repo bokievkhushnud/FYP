@@ -35,18 +35,7 @@
     <title>{{title}}</title>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-
-
-    <div class="wrapper">
-        {% include "navbar.html" %}
-        {% include "main_sidebar.html" %}
-        {% include "messages.html" %}
-        {% block content %}
-
-
-        {% endblock %}
-    </div>
+<body class="hold-transition ">
 
     <!-- Modal For QR Code Scanner -->
     <div class="modal fade" id="modal-default">
@@ -81,6 +70,18 @@
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
+    </div>
+
+    <div class="wrapper">
+        {% include "messages.html" %}
+        <div class="register-page">
+
+            {% block content %}
+
+
+
+            {% endblock %}
+        </div>
     </div>
 
     <script src="{% static 'www/html5-qrcode.min.js' %}"></script>
