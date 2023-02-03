@@ -9,7 +9,24 @@ from django.contrib.auth import get_user_model
 class AddItemForm(ModelForm):
     class Meta:
         model = Item
-        exclude = ["qr_code", "holder", "status"]
+        exclude = [
+            "category",
+            "item_type",
+            "quantity_unit",
+            "location",
+            "quantity",
+            "item_code",
+            "min_alert_quantity",
+            "qr_code",
+            "holder",
+            "status",
+            "vendor",
+            "department"]
+
+    date_received = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date"}))
+    expiration_date = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date"}))
 
     def __init__(self, *args, **kwargs):
         super(AddItemForm, self).__init__(*args, **kwargs)
@@ -17,27 +34,56 @@ class AddItemForm(ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
+            if visible.field.label == "Image":
+                visible.field.widget.attrs['class'] = 'form-control d-none'
+
+            if visible.field.label == "Notes" or visible.field.label == "Description":
+                visible.field.widget.attrs['rows'] = 6
 
 # Form for adding items in bulk
-class AddBulkItemForm(ModelForm):
+
+
+class AddAccessoryForm(ModelForm):
+    class Meta:
+        model = Item
+        exclude = [
+            "category",
+            "item_type",
+            "location",
+            "item_code",
+            "qr_code",
+            "holder",
+            "status",
+            "vendor",
+            "department"]
+
+    date_received = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date"}))
+    expiration_date = forms.DateField(
+        widget=forms.DateInput(attrs={"type": "date"}))
+
+    def __init__(self, *args, **kwargs):
+        super(AddItemForm, self).__init__(*args, **kwargs)
+
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+            if visible.field.label == "Image":
+                visible.field.widget.attrs['class'] = 'form-control d-none'
+
+            if visible.field.label == "Notes" or visible.field.label == "Description":
+                visible.field.widget.attrs['rows'] = 6
+# Form for adding consumables
+
+
+class AddConsumableForm(ModelForm):
     class Meta:
         model = Item
         exclude = ["qr_code", "holder", "status"]
 
     def __init__(self, *args, **kwargs):
-        super(AddBulkItemForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
+        super(AddItemForm, self).__init__(*args, **kwargs)
 
-
-# Form for adding consumables
-class AddConsumableForm(ModelForm):
-    class Meta:
-        model = Item
-        exclude = ["qr_code", "holder"]
-
-    def __init__(self, *args, **kwargs):
-        super(AddConsumableForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 

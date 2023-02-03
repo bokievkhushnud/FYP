@@ -2,20 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 #  Table for departments
-
-
 class Department(models.Model):
     name = models.CharField(max_length=100)
+    dep_code = models.CharField(max_length=20, default="")
     head = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 # Table of categories
-
-
 class Category(models.Model):
     name = models.CharField(max_length=100)
+    cat_code = models.CharField(max_length=20, default="")
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -27,17 +25,19 @@ class Category(models.Model):
 class Item(models.Model):
     item_type = models.CharField(max_length=20, choices=[("asset", "Asset"), ("accessory", "Accessory"), ("consumable", "Consumable")],
                                  default="asset")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     item_name = models.CharField(max_length=300)
     item_code = models.CharField(max_length=100)
     price = models.PositiveIntegerField(default=0)
     currency = models.CharField(max_length=20, default="USD", blank=True)
+    quantity = models.PositiveIntegerField(default=1, blank=True)
     quantity_unit = models.CharField(max_length=100, default="PCS")
-    quantity = models.PositiveIntegerField(default=1)
     min_alert_quantity = models.PositiveIntegerField(default=0)
     location = models.CharField(max_length=100, default="storage", blank=True)
     campus = models.CharField(max_length=20, choices=[(
-        "Naryn", "Naryn"), ("Khorog", "Khorog"), ("Tekeli", "Tekeli")], default="Naryn")
+        "NAR", "Naryn"), ("KHG", "Khorog"), ("TKL", "Tekeli")], default="Naryn")
     description = models.TextField(blank=True)
     vendor = models.CharField(max_length=100, blank=True)
     date_received = models.DateField()
@@ -57,9 +57,8 @@ class Item(models.Model):
     def __str__(self):
         return self.item_name
 
+
 # Table for Licenses
-
-
 class License(models.Model):
     license_id = models.CharField(max_length=20, )
     license_name = models.CharField(max_length=100, default="")

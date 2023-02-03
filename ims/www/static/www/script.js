@@ -4,12 +4,7 @@
 let scan = document.getElementById("scanqr")
 let stop_scan = document.getElementById("closeqr")
 let stop_scan1 = document.getElementById("closeqr1")
-
 const html5QrCode = new Html5Qrcode(/* element id */ "reader");
-
-
-
-
 scan.addEventListener('click', () => {
   // This method will trigger user permissions
   Html5Qrcode.getCameras().then(devices => {
@@ -93,25 +88,26 @@ resetbtn.addEventListener("click", (e) => {
 })
 
 // Select All 
-document.getElementById("selectAll").addEventListener("change", function(){
+document.getElementById("selectAll").addEventListener("change", function () {
   var options = document.getElementsByClassName("option");
-  for(var i = 0; i < options.length; i++){
-      options[i].checked = this.checked;
+  for (var i = 0; i < options.length; i++) {
+    options[i].checked = this.checked;
   }
 });
 
 // if any of them is not selected deselect all
 var options = document.getElementsByClassName("option");
-for(var i = 0; i < options.length; i++){
-    options[i].addEventListener("change", function(){
-        var selectAll = document.getElementById("selectAll");
-        var allChecked = true;
-        for(var j = 0; j < options.length; j++){
-            if(!options[j].checked){
-                allChecked = false;
-                break;
-            }
-        }
-        selectAll.checked = allChecked;
-    });
+for (var i = 0; i < options.length; i++) {
+  options[i].addEventListener("change", function () {
+    var selectAll = document.getElementById("selectAll");
+    var allChecked = true;
+    for (var j = 0; j < options.length; j++) {
+      if (!options[j].checked) {
+        allChecked = false;
+        break;
+      }
+    }
+    selectAll.checked = allChecked;
+  });
 }
+

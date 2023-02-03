@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import Item, License, Category, Department
-from .forms import AddItemForm, AddBulkItemForm, AddConsumableForm, AddLicenseForm, CustomUserCreationForm
+from .forms import AddItemForm, AddAccessoryForm, AddConsumableForm, AddLicenseForm, CustomUserCreationForm
 from django.db.models import Q
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
-
+from .utils import generate_code, generate_qr
 
 # Create your views here.
 
@@ -66,19 +66,57 @@ def items(request):
 
 # function for adding new Item to DB
 def add_item(request):
+    department = Department.objects.get(head=request.user)
     if request.method == "POST":
-        form = AddItemForm(request.POST)
+        form = AddItemForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-        return redirect('items')
+            item = form.save(commit=False)
+            cat = Category.objects.filter(department=department).filter(name=request.POST.get("category"))
+            item.category = cat[0]
+            item.department = department
+            item.item_type = "asset" 
+            item.save()
 
+        else:
+            for error in form.non_field_errors():
+                messages.error(request, error)
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+        return redirect('items')
     context = {
         "title": "Add New Item",
+        "categories": Category.objects.filter(department=department),
         "form": AddItemForm(),
     }
     return render(request, "items/add_new_item.html", context)
 
 
+def add_accessory_consumables(request):
+    department = Department.objects.get(head=request.user)
+    if request.method == "POST":
+        form = AddItemForm(request.POST, request.FILES)
+        if form.is_valid():
+            item = form.save(commit=False)
+            cat = Category.objects.filter(department=department).filter(name=request.POST.get("category"))
+            item.category = cat[0]
+            item.department = department
+            item.item_type = "asset" 
+            item.save()
+
+        else:
+            for error in form.non_field_errors():
+                messages.error(request, error)
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+        return redirect('items')
+    context = {
+        "title": "Add New Item",
+        "categories": Category.objects.filter(department=department),
+        "form": AddItemForm(),
+    }
+    return render(request, "items/add_new_item.html", context)
 # function for item details
 def item_detail(request, pk):
 
