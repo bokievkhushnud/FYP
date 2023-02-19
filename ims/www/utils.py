@@ -10,5 +10,9 @@ def generate_qr(item_type,data,id):
     return img_name
 
 
+# Function to generate Unique code for every item
 def generate_code(campus, department, category, ID):
     return f"{campus}-{department.dep_code}-{category.cat_code}-{ID}"
+
+
+# Saving new Items

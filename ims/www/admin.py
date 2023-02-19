@@ -5,5 +5,5 @@ admin.site.register(Item)
 admin.site.register(Department)
 admin.site.register(Category)
 admin.site.register(License)
-admin.site.register(Loan)
+admin.site.register(ItemAssignment)
 

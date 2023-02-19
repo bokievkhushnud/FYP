@@ -14,8 +14,8 @@
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="{% url 'add_item' %}">Asset</a>
-            <a class="dropdown-item" href="{% url 'add_item' %}">Accessory</a>
-            <a class="dropdown-item" href="{% url 'add_item' %}">Consumable</a>
+            <a class="dropdown-item" href="{% url 'add_accessories' %}">Accessory</a>
+            <a class="dropdown-item" href="{% url 'add_consumables' %}">Consumable</a>
           </div>
         </div><!-- /.col -->
         <div class="col-sm-6">
@@ -62,7 +62,6 @@
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
             <span class="info-box-icon bg-danger elevation-1"><i class="fa-solid fa-hammer"></i></span>
-
             <div class="info-box-content">
               <span class="info-box-text">Broken</span>
               <span class="info-box-number">{{broken_count}}</span>
@@ -72,10 +71,8 @@
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
-
         <!-- fix for small devices only -->
         <div class="clearfix hidden-md-up"></div>
-
         <div class="col-12 col-sm-6 col-md-3">
           <div class="info-box mb-3">
             <span class="info-box-icon bg-success elevation-1"><i class="fa-solid fa-square-check"></i></span>
@@ -122,8 +119,9 @@
                   Bulk action
                 </button>
                 <div class="dropdown-menu">
-                  <input class="dropdown-item" type="submit"  formaction="{% url 'bulk_delete' %}" value="Delete"/>
-                  <input class="dropdown-item" type="submit" formaction="{% url 'bulk_checkout' %}" value="Check Out"/>
+                  <input class="dropdown-item" type="submit" formaction="{% url 'bulk_delete' %}" value="Delete" />
+                  <input class="dropdown-item" type="submit" formaction="{% url 'checkout_items' %}"
+                    value="Check Out" />
                 </div>
               </div>
             </div>
@@ -144,24 +142,29 @@
                 </thead>
                 <tbody>
                   {% for item in items %}
-                  
-
                   <tr>
-                    <td><input type="checkbox" name="item_id" value="{{item.id}}" class="option" ></td>
+                    <td><input type="checkbox" name="item_id" value="{{item.id}}" class="option"></td>
                     <td> <a href="{% url 'item_detail' item.id %}">{{item.item_name}}</a></td>
                     <td>{{item.location}}</td>
                     <td>{{item.category}}</td>
                     <td>{{item.item_type}}</td>
-                    <td><span class="badge bg-{% if item.status == 'available' %}success{% elif item.status == 'broken' %}danger{% else %}warning{%endif%}" style="font-size: small;">{{item.status}}</span></td>
+                    <td><span
+                        class="badge bg-{% if item.status == 'available' %}success{% elif item.status == 'broken' %}danger{% else %}warning{%endif%}"
+                        style="font-size: small;">{{item.status}}</span></td>
                     <td>{{item.date_received}}</td>
                     <td>
-                      <div class="input-group-prepend m-0 p-0">
-                        <button type="button" class="btn btn-sm p-0 dropdown-toggle" data-toggle="dropdown">
+                      <div class="input-group-prepend   ml-auto">
+                        <button type="button" class="btn  m-0 dropdown-toggle" data-toggle="dropdown">
                           Action
                         </button>
                         <div class="dropdown-menu">
-                          <a class="dropdown-item" href="#">Delete</a>
-                          <a class="dropdown-item" href="#">Edit</a>
+                          <a href="{% url 'bulk_delete' item.id %}" class="dropdown-item">Delete</a>
+                          {% if item.item_type == "asset" %}
+                          <a href="{% url 'update_items' item.id %}" class="dropdown-item">Edit</a>
+                          {% else %}
+                          <a href="{% url 'update_consumable' item.id %}" class="dropdown-item">Edit</a>
+                          {% endif %}
+
                         </div>
                       </div>
                     </td>

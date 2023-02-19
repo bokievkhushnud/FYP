@@ -24,9 +24,9 @@ class AddItemForm(ModelForm):
             "department"]
 
     date_received = forms.DateField(
-        widget=forms.DateInput(attrs={"type": "date"}))
+        widget=forms.DateInput(attrs={"type": "date"}), )
     expiration_date = forms.DateField(
-        widget=forms.DateInput(attrs={"type": "date"}))
+        widget=forms.DateInput(attrs={"type": "date"}), required=False)
 
     def __init__(self, *args, **kwargs):
         super(AddItemForm, self).__init__(*args, **kwargs)
@@ -40,9 +40,8 @@ class AddItemForm(ModelForm):
             if visible.field.label == "Notes" or visible.field.label == "Description":
                 visible.field.widget.attrs['rows'] = 6
 
-# Form for adding items in bulk
 
-
+# Form for adding items in bulk and consumables
 class AddAccessoryForm(ModelForm):
     class Meta:
         model = Item
@@ -60,10 +59,10 @@ class AddAccessoryForm(ModelForm):
     date_received = forms.DateField(
         widget=forms.DateInput(attrs={"type": "date"}))
     expiration_date = forms.DateField(
-        widget=forms.DateInput(attrs={"type": "date"}))
+        widget=forms.DateInput(attrs={"type": "date"}), required=False)
 
     def __init__(self, *args, **kwargs):
-        super(AddItemForm, self).__init__(*args, **kwargs)
+        super(AddAccessoryForm, self).__init__(*args, **kwargs)
 
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
@@ -73,22 +72,9 @@ class AddAccessoryForm(ModelForm):
 
             if visible.field.label == "Notes" or visible.field.label == "Description":
                 visible.field.widget.attrs['rows'] = 6
-# Form for adding consumables
 
 
-class AddConsumableForm(ModelForm):
-    class Meta:
-        model = Item
-        exclude = ["qr_code", "holder", "status"]
-
-    def __init__(self, *args, **kwargs):
-        super(AddItemForm, self).__init__(*args, **kwargs)
-
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-
-
-# Form for adding consumables
+# For Licenses
 class AddLicenseForm(ModelForm):
     class Meta:
         model = License

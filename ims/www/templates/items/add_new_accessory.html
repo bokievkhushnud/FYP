@@ -35,11 +35,9 @@
                         <div class="card-body p-4">
                             <div class="bs-stepper">
                                 <div class="bs-stepper-header" role="tablist">
-
                                 </div>
                                 <div class="bs-stepper-content">
-                                    <form class="row" action="{% url 'add_item' %}" method="post"
-                                        enctype="multipart/form-data">
+                                    <form class="row" action="{% url add_url %}" method="post" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -53,15 +51,14 @@
                                                                 alt="example placeholder" style="max-height: 300px;" />
                                                         </div>
                                                         <div class="d-flex justify-content-center">
-                                                            <div class="d-none" style="position: absolute; top:40">
+                                                            <div class="" style="position: absolute; top:40%">
                                                                 {{form.image}}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </label>
                                             </div>
-                                        </div>
-
+                                        </div>                   
                                         <div class="col-md-8">
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -129,7 +126,24 @@
         
                                             </div>
                                         </div>
-
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">{{form.quantity.label}}</label>
+                                                {{form.quantity}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">{{form.quantity_unit.label}}</label>
+                                                {{form.quantity_unit}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">{{form.min_alert_quantity.label}}</label>
+                                                {{form.min_alert_quantity}}
+                                            </div>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="">{{form.description.label}}</label>
@@ -145,11 +159,7 @@
 
                                         <!-- your steps content here -->
                                         <div id="" class="col-12">
-
-
-
                                             <input class="btn btn-success" type="submit" value="Add Item">
-
                                         </div>
                                     </form>
                                 </div>
@@ -165,11 +175,9 @@
     </section>
     <!-- /.content -->
 </div>
+
+
 <script>
-    console.log("Hello")
-
-    console.log(document.querySelector('#id_image'))
-
     document.querySelector('#id_image').addEventListener('change', function () {
 
         const reader = new FileReader();
@@ -179,5 +187,6 @@
         reader.readAsDataURL(this.files[0]);
     });
 </script>
+
 
 {% endblock %}

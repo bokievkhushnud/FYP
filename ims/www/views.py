@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Item, License, Category, Department
-from .forms import AddItemForm, AddAccessoryForm, AddConsumableForm, AddLicenseForm, CustomUserCreationForm
+from .models import Item, License, Category, Department, ItemAssignment
+from .forms import AddItemForm, AddAccessoryForm, AddLicenseForm, CustomUserCreationForm
 from django.db.models import Q
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
-from .utils import generate_code, generate_qr
-
+from django.contrib.auth.models import User
+from datetime import date
 # Create your views here.
 
 
@@ -23,7 +23,6 @@ def homeView(request):
 # Single Items
 
 def items(request):
-
     category = request.GET.get("category")
     status = request.GET.get("status")
     item_type = request.GET.get("item_type")
@@ -46,7 +45,6 @@ def items(request):
         Q(item_name__contains=search_filters["q"]) |
         Q(location__contains=search_filters["q"]) |
         Q(description__contains=search_filters["q"]) |
-        Q(holder__contains=search_filters["q"]) |
         Q(notes__contains=search_filters["q"]) |
         Q(vendor__contains=search_filters["q"])
     )
@@ -64,18 +62,21 @@ def items(request):
     return render(request, 'items/items.html', context)
 
 
-# function for adding new Item to DB
+# function for adding new Items to DB
 def add_item(request):
     department = Department.objects.get(head=request.user)
     if request.method == "POST":
         form = AddItemForm(request.POST, request.FILES)
         if form.is_valid():
             item = form.save(commit=False)
-            cat = Category.objects.filter(department=department).filter(name=request.POST.get("category"))
+            cat = Category.objects.filter(department=department).filter(
+                name=request.POST.get("category"))
             item.category = cat[0]
             item.department = department
-            item.item_type = "asset" 
+            item.item_type = "asset"
             item.save()
+            messages.success(request, 'Item added successfully')
+            return redirect('items')
 
         else:
             for error in form.non_field_errors():
@@ -83,26 +84,28 @@ def add_item(request):
             for field in form:
                 for error in field.errors:
                     messages.error(request, error)
-        return redirect('items')
     context = {
-        "title": "Add New Item",
+        "title": "New Item",
         "categories": Category.objects.filter(department=department),
         "form": AddItemForm(),
     }
     return render(request, "items/add_new_item.html", context)
 
 
-def add_accessory_consumables(request):
+def add_accessory(request):
     department = Department.objects.get(head=request.user)
     if request.method == "POST":
-        form = AddItemForm(request.POST, request.FILES)
+        form = AddAccessoryForm(request.POST, request.FILES)
         if form.is_valid():
             item = form.save(commit=False)
-            cat = Category.objects.filter(department=department).filter(name=request.POST.get("category"))
+            cat = Category.objects.filter(department=department).filter(
+                name=request.POST.get("category"))
             item.category = cat[0]
             item.department = department
-            item.item_type = "asset" 
+            item.item_type = "accessory"
             item.save()
+            messages.success(request, 'Item added successfully')
+            return redirect('items')
 
         else:
             for error in form.non_field_errors():
@@ -110,21 +113,117 @@ def add_accessory_consumables(request):
             for field in form:
                 for error in field.errors:
                     messages.error(request, error)
-        return redirect('items')
     context = {
-        "title": "Add New Item",
+        "title": "New Accessory",
+        "add_url": "add_accessories",
         "categories": Category.objects.filter(department=department),
-        "form": AddItemForm(),
+        "form": AddAccessoryForm(),
     }
-    return render(request, "items/add_new_item.html", context)
+    return render(request, "items/add_new_accessory.html", context)
+
+
+def add_consumable(request):
+    department = Department.objects.get(head=request.user)
+    if request.method == "POST":
+        form = AddAccessoryForm(request.POST, request.FILES)
+        if form.is_valid():
+            item = form.save(commit=False)
+            cat = Category.objects.filter(department=department).filter(
+                name=request.POST.get("category"))
+            item.category = cat[0]
+            item.department = department
+            item.item_type = "consumable"
+            item.save()
+            messages.success(request, 'Item added successfully')
+            return redirect('items')
+        else:
+            for error in form.non_field_errors():
+                messages.error(request, error)
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+    context = {
+        "title": "New Consumable",
+        "categories": Category.objects.filter(department=department),
+        "add_url": "add_consumables",
+        "form": AddAccessoryForm(),
+    }
+    return render(request, "items/add_new_accessory.html", context)
+
+
+def update(request, pk):
+    department = Department.objects.get(head=request.user)
+    item = Item.objects.get(id = pk)
+
+    if request.method == "POST":
+        form = AddItemForm(request.POST, request.FILES, instance=item)
+        if form.is_valid():
+            item = form.save(commit=False)
+            cat = Category.objects.filter(department=department).filter(
+                name=request.POST.get("category"))
+            item.category = cat[0]
+            item.save()
+            messages.success(request, 'Item Edited !')
+            return redirect('items')
+
+        else:
+            for error in form.non_field_errors():
+                messages.error(request, error)
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+
+    context = {
+        "title": "Edit Item",
+        "categories": Category.objects.filter(department=department),
+        "form": AddItemForm(instance=item),
+        "item":item,
+    }
+    return render(request, "items/update_item.html", context)
+
+
+
+def update_consumables(request, pk):
+    department = Department.objects.get(head=request.user)
+    item = Item.objects.get(id = pk)
+
+    if request.method == "POST":
+        form = AddAccessoryForm(request.POST, request.FILES, instance=item)
+        if form.is_valid():
+            item = form.save(commit=False)
+            cat = Category.objects.filter(department=department).filter(
+                name=request.POST.get("category"))
+            item.category = cat[0]
+            item.save()
+            messages.success(request, 'Item Edited !')
+            return redirect('items')
+
+        else:
+            for error in form.non_field_errors():
+                messages.error(request, error)
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+    context = {
+        "title": "Edit Item",
+        "categories": Category.objects.filter(department=department),
+        "form": AddAccessoryForm(instance=item),
+        "item":item,
+    }
+    return render(request, "items/update_consumable.html", context)
+
+
 # function for item details
 def item_detail(request, pk):
 
     item = Item.objects.get(id=pk)
+    checked_out_items = ItemAssignment.objects.filter(item=item, action="assign")
 
     context = {
         "title": f"{item.item_name} Detail",
         "item": item,
+        "history":checked_out_items,
+
     }
 
     return render(request, "items/item_detail.html", context)
@@ -143,7 +242,9 @@ def licenses(request):
 
 # Function for consumables details
 def licenses_detail(request, pk):
+
     item = License.objects.get(id=pk)
+   
     context = {
         "title": f"{item.license_name} Detail",
         "item": item,
@@ -167,42 +268,143 @@ def add_licenses(request):
 
 
 # Bulk Delete
-def delete_items(request):
+def delete_items(request, pk=None):
     if request.method == "POST":
+        print("YEESSSS")
         checked_items = request.POST.getlist("item_id")
-        if len(checkout_items) > 0:
+        print(checkin_items)
+        if len(checked_items) > 0:
             Item.objects.filter(id__in=checked_items).delete()
         return redirect('items')
+    else:
+        Item.objects.filter(id=pk).delete()
+        return redirect('items')
+        
+   
 
 
-# Buck Checkout
-def checkout_items(request):
+
+# Check Out
+def checkout_items(request, pk):
+    # checked_items = request.POST.getlist("item_id");
     if request.method == "POST":
-        checked_items = request.POST.getlist("item_id")
-        print(checked_items)
+        item_id = request.POST.get("item_id")
+        item = Item.objects.get(id=item_id)
+        quantity = request.POST.get("quantity")
+        department = item.department
+        location = request.POST.get("location")
+        requestor_id = request.POST.get("requestor")
+        requestor = User.objects.get(id=requestor_id)
+        done_by = request.user
+        due_date = request.POST.get("due_date")
+        notes = request.POST.get("notes")
+        item.location = location
+        item.holder.add(requestor) 
+        if item.item_type == "asset": 
+            item.status = "outinuse"
+        else:
+            if int(item.quantity)-int(quantity) == 0:
+                item.status = "outinuse"
+            item.quantity = int(item.quantity)-int(quantity)
 
+        
+        item.save()
+
+        # create new Assignment 
+        item_out = ItemAssignment(
+            item=item,
+            quantity=quantity,
+            action = "assign",
+            department=department,
+            location=location,
+            requestor=requestor,
+            done_by=done_by,
+            due_date=due_date,
+            notes=notes,
+        )
+        item_out.save()
+
+        messages.success(request, 'Checked Out Successfully')
+        return redirect("item_detail", item.id)
+
+        
+
+    users = User.objects.all()
+    context = {
+        "item": Item.objects.get(id=pk),
+        "users": users,
+        "today": date.today()
+    }
+    return render(request, "items/checkout.html", context)
+
+
+# Check in View
+def checkin_items(request, pk):
+    # checked_items = request.POST.getlist("item_id");
+    assingment = ItemAssignment.objects.get(id=pk)
+    if request.method == "POST":
+        item = assingment.item
+        notes = request.POST.get("notes")
+        quantity = assingment.quantity
+        location = "storage"
+        requestor = assingment.requestor
+        done_by = request.user
+        due_date = None
+
+        # Change Item in DB
+        item.location = location
+        item.holder.remove(requestor) 
+        if item.item_type == "asset": 
+            item.status = "available"
+        else:
+            if int(item.quantity)+int(quantity) >0:
+                item.status = "available"
+            item.quantity = int(item.quantity)+int(quantity)
+        item.save()
+
+        # create new Assignment 
+        ItemAssignment.objects.filter(id=pk).update(
+            item=item,
+            quantity=quantity,
+            action = "return",
+            location=location,
+            requestor=requestor,
+            done_by=done_by,
+            due_date=due_date,
+            notes=notes,
+        )
+
+        # Redirect
+        messages.success(request, 'Checked In Successfully')
+        return redirect("item_detail", item.id)
+
+    # users = User.objects.all()
+    context = {
+        "item": assingment,
+        "today": date.today()
+    }
+    return render(request, "items/checkin.html", context)
 
 # Registration
+
+
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            try:
-                form.save()
-                username = form.cleaned_data.get('username')
-                raw_password = form.cleaned_data.get('password1')
-                user = authenticate(username=username, password=raw_password)
-                login(request, user)
-                messages.success(request, 'Account created successfully')
-                return redirect('home')
-            except Exception as e:
-                print(e)
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            messages.success(request, 'Account created successfully')
+            return redirect('home')
         else:
             for error in form.non_field_errors():
                 messages.error(request, error)
             for field in form:
                 for error in field.errors:
                     messages.error(request, error)
-    else:
-        form = CustomUserCreationForm()
+
+    form = CustomUserCreationForm()
     return render(request, 'auth/register.html', {'form': form, "title": "Registration", })
