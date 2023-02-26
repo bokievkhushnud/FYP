@@ -29,7 +29,11 @@ urlpatterns = [
     path('delete', views.delete_items, name="bulk_delete"),
     path('delete/<int:pk>/', views.delete_items, name="bulk_delete"),
 
-    path('checkout', views.checkout_items, name="checkout_items"),
+    path('checkout/', views.checkout_items, name="checkout_items"),
+    path('print_qr/', views.print_qr, name="print_qr"),
+    path('print_qr/<int:pk>/', views.print_qr, name="print_qr"),
+    path('generate_pdf/', views.generate_pdf, name="generate_pdf"),
+
 
 
     # Registration

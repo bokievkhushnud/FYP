@@ -120,8 +120,9 @@
                 </button>
                 <div class="dropdown-menu">
                   <input class="dropdown-item" type="submit" formaction="{% url 'bulk_delete' %}" value="Delete" />
-                  <input class="dropdown-item" type="submit" formaction="{% url 'checkout_items' %}"
-                    value="Check Out" />
+                  <input class="dropdown-item" type="submit" formaction="{% url 'checkout_items' %}" value="Check Out" />
+                  <input class="dropdown-item" type="submit" formaction="{% url 'print_qr' %}" value="Print QR" />
+
                 </div>
               </div>
             </div>

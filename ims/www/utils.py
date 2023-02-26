@@ -12,7 +12,7 @@ def generate_qr(item_type,data,id):
 
 # Function to generate Unique code for every item
 def generate_code(campus, department, category, ID):
-    return f"{campus}-{department.dep_code}-{category.cat_code}-{ID}"
+    return "{}-{:04d}-{:04d}-{:04d}".format(campus, int(department.dep_code), int(category.cat_code),int(ID))
 
 
 # Saving new Items

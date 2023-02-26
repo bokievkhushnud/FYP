@@ -1,4 +1,10 @@
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+from django.conf import settings
 from django.shortcuts import render, redirect
+from django.http import JsonResponse, FileResponse
 from .models import Item, License, Category, Department, ItemAssignment
 from .forms import AddItemForm, AddAccessoryForm, AddLicenseForm, CustomUserCreationForm
 from django.db.models import Q
@@ -153,7 +159,7 @@ def add_consumable(request):
 
 def update(request, pk):
     department = Department.objects.get(head=request.user)
-    item = Item.objects.get(id = pk)
+    item = Item.objects.get(id=pk)
 
     if request.method == "POST":
         form = AddItemForm(request.POST, request.FILES, instance=item)
@@ -177,15 +183,14 @@ def update(request, pk):
         "title": "Edit Item",
         "categories": Category.objects.filter(department=department),
         "form": AddItemForm(instance=item),
-        "item":item,
+        "item": item,
     }
     return render(request, "items/update_item.html", context)
 
 
-
 def update_consumables(request, pk):
     department = Department.objects.get(head=request.user)
-    item = Item.objects.get(id = pk)
+    item = Item.objects.get(id=pk)
 
     if request.method == "POST":
         form = AddAccessoryForm(request.POST, request.FILES, instance=item)
@@ -208,7 +213,7 @@ def update_consumables(request, pk):
         "title": "Edit Item",
         "categories": Category.objects.filter(department=department),
         "form": AddAccessoryForm(instance=item),
-        "item":item,
+        "item": item,
     }
     return render(request, "items/update_consumable.html", context)
 
@@ -217,12 +222,13 @@ def update_consumables(request, pk):
 def item_detail(request, pk):
 
     item = Item.objects.get(id=pk)
-    checked_out_items = ItemAssignment.objects.filter(item=item, action="assign")
+    checked_out_items = ItemAssignment.objects.filter(
+        item=item, action="assign")
 
     context = {
         "title": f"{item.item_name} Detail",
         "item": item,
-        "history":checked_out_items,
+        "history": checked_out_items,
 
     }
 
@@ -244,7 +250,7 @@ def licenses(request):
 def licenses_detail(request, pk):
 
     item = License.objects.get(id=pk)
-   
+
     context = {
         "title": f"{item.license_name} Detail",
         "item": item,
@@ -270,7 +276,6 @@ def add_licenses(request):
 # Bulk Delete
 def delete_items(request, pk=None):
     if request.method == "POST":
-        print("YEESSSS")
         checked_items = request.POST.getlist("item_id")
         print(checkin_items)
         if len(checked_items) > 0:
@@ -279,9 +284,6 @@ def delete_items(request, pk=None):
     else:
         Item.objects.filter(id=pk).delete()
         return redirect('items')
-        
-   
-
 
 
 # Check Out
@@ -299,22 +301,21 @@ def checkout_items(request, pk):
         due_date = request.POST.get("due_date")
         notes = request.POST.get("notes")
         item.location = location
-        item.holder.add(requestor) 
-        if item.item_type == "asset": 
+        item.holder.add(requestor)
+        if item.item_type == "asset":
             item.status = "outinuse"
         else:
             if int(item.quantity)-int(quantity) == 0:
                 item.status = "outinuse"
             item.quantity = int(item.quantity)-int(quantity)
 
-        
         item.save()
 
-        # create new Assignment 
+        # create new Assignment
         item_out = ItemAssignment(
             item=item,
             quantity=quantity,
-            action = "assign",
+            action="assign",
             department=department,
             location=location,
             requestor=requestor,
@@ -326,8 +327,6 @@ def checkout_items(request, pk):
 
         messages.success(request, 'Checked Out Successfully')
         return redirect("item_detail", item.id)
-
-        
 
     users = User.objects.all()
     context = {
@@ -353,20 +352,20 @@ def checkin_items(request, pk):
 
         # Change Item in DB
         item.location = location
-        item.holder.remove(requestor) 
-        if item.item_type == "asset": 
+        item.holder.remove(requestor)
+        if item.item_type == "asset":
             item.status = "available"
         else:
-            if int(item.quantity)+int(quantity) >0:
+            if int(item.quantity)+int(quantity) > 0:
                 item.status = "available"
             item.quantity = int(item.quantity)+int(quantity)
         item.save()
 
-        # create new Assignment 
+        # create new Assignment
         ItemAssignment.objects.filter(id=pk).update(
             item=item,
             quantity=quantity,
-            action = "return",
+            action="return",
             location=location,
             requestor=requestor,
             done_by=done_by,
@@ -385,9 +384,76 @@ def checkin_items(request, pk):
     }
     return render(request, "items/checkin.html", context)
 
+
+def generate_pdf(request):
+    if request.method =="POST":
+        checked_items = request.POST.getlist("item_id")    
+        size = request.POST.get("size")
+        gap = request.POST.get("gap")
+        mx = request.POST.get("mx")
+        my = request.POST.get("my")
+        # Create a file-like buffer to receive PDF data.
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'inline; filename="qrcodes.pdf"'
+        # Create the PDF object, using the response object as its "file."
+        p = canvas.Canvas(response, pagesize=A4, bottomup=1 )
+        # p.setPageRotation(180)    
+        items = Item.objects.filter(id__in=checked_items)
+        # image_paths =  [(settings.MEDIA_ROOT + 'qrcode/' + items) for i in range(100) ]
+        # Define a list of image paths
+        image_paths = list(map(lambda item: settings.MEDIA_ROOT + 'qrcode/' + item.qr_code, items))
+        image_width = int(size)
+        image_height = int(size)
+        padding = int(gap)
+        p.translate(0,A4[1]-image_height)
+        x=0+int(mx)
+        y=0-int(my)
+
+        for i in range(len(image_paths)):
+        
+            image = ImageReader(image_paths[i])
+            p.drawImage(image, x, y, width=image_width, height=image_height,showBoundary=True)
+
+            x+=(image_width+padding)
+            if (x+image_width+padding+int(mx)) > A4[0]:
+                if (y-(2*image_height+padding+int(my)))<=-A4[1]:
+                    p.showPage()
+                    p.translate(0,A4[1]-image_height)
+                    x=0+int(mx)
+                    y=0-int(my)
+                else:
+                    y-=(image_height+padding)
+                    x = 0+int(mx)
+
+        p.showPage()
+        # Close the PDF object cleanly, and we're done.
+        p.save()
+
+        return response
+
+
+def print_qr(request,pk=None):
+    checked_items = request.POST.getlist("item_id")
+    if pk is not None:
+        checked_items = [i for i in checked_items if i!=pk]  
+    context = {
+        "items":Item.objects.filter(id__in=checked_items),
+        "all_items":Item.objects.all().exclude(id__in=checked_items),
+    }
+
+    return render(request, "items/print_qrcodes.html", context)
+
+
+
+
+
+
+
+
+
+
+
 # Registration
-
-
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
