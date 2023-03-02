@@ -33,10 +33,13 @@ urlpatterns = [
     path('print_qr/', views.print_qr, name="print_qr"),
     path('print_qr/<int:pk>/', views.print_qr, name="print_qr"),
     path('generate_pdf/', views.generate_pdf, name="generate_pdf"),
+    path('login/', views.auth, name="login"),
 
 
 
     # Registration
     path('register', views.register, name='register'),
+    path('activate/<uidb64>/<token>', views.activate, name='activate'),
+
 
 ]

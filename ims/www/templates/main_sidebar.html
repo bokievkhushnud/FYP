@@ -1,118 +1,120 @@
 <!-- Main Sidebar Container -->
 {% load static %}
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="#" class="brand-link">
-        <img src="{% static 'www/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-            style="opacity: .8">
+  <!-- Brand Logo -->
+  <a href="#" class="brand-link">
+    <img src="{% static 'www/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo"
+      class="brand-image img-circle elevation-3" style="opacity: .8">
 
-        <span class="brand-text font-weight-light">IMS UCA-Naryn</span>
-    </a>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <img src="{% static 'www/dist/img/user2-160x160.jpg' %}" class="img-circle elevation-2" alt="User Image">
-            </div>
-            <div class="info">
-                <a href="#" class="d-block">{{request.user}}</a>
-            </div>
-        </div>
+    <span class="brand-text font-weight-light">IMS UCA-Naryn</span>
+  </a>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="image">
+        <img src="{% static 'www/dist/img/user2-160x160.jpg' %}" class="img-circle elevation-2" alt="User Image">
+      </div>
+      <div class="info">
+        <a href="#" class="d-block">{{request.user.first_name}}</a>
 
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-              <!-- Add icons to the links using the .nav-icon class
-                   with font-awesome or any other icon font library -->
-              <li class="nav-item ">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon fa-solid fa-sitemap"></i>
-                  <p>
-                    Categories
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./index.html" class="nav-link active">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v1</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index2.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v2</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Dashboard v3</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon fa-solid fa-people-group"></i>
-                  <p>
-                    Departments
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="pages/charts/chartjs.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>ChartJS</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="pages/charts/flot.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Flot</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="pages/charts/inline.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>Inline</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="pages/charts/uplot.html" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
-                      <p>uPlot</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="{% url 'items' %}" class="nav-link">
-                  <i class="nav-icon fa-solid fa-box"></i>
-                  <p>
-                    Items
-                  </p>
-                </a>
-              </li>
-              
-              <li class="nav-item">
-                <a href="{% url 'licenses' %}" class="nav-link">
-                    <i class="nav-icon fa-solid fa-file-lines"></i>
-                  <p>
-                    Licenses
-                  </p>
-                </a>
-              </li>
+      </div>
 
- 
-
-            </ul>
-          </nav>
-      
-        <!-- /.sidebar-menu -->
     </div>
-    <!-- /.sidebar -->
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+                   with font-awesome or any other icon font library -->
+        <li class="nav-item ">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fa-solid fa-sitemap"></i>
+            <p>
+              Categories
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="./index.html" class="nav-link active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Dashboard v1</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="./index2.html" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Dashboard v2</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="./index3.html" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Dashboard v3</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fa-solid fa-people-group"></i>
+            <p>
+              Departments
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="pages/charts/chartjs.html" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>ChartJS</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="pages/charts/flot.html" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Flot</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="pages/charts/inline.html" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Inline</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="pages/charts/uplot.html" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>uPlot</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'items' %}" class="nav-link">
+            <i class="nav-icon fa-solid fa-box"></i>
+            <p>
+              Items
+            </p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{% url 'licenses' %}" class="nav-link">
+            <i class="nav-icon fa-solid fa-file-lines"></i>
+            <p>
+              Licenses
+            </p>
+          </a>
+        </li>
+
+
+
+      </ul>
+    </nav>
+
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
 </aside>
