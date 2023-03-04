@@ -1,11 +1,12 @@
+from django.db.models.query_utils import Q
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from django.conf import settings
 from django.shortcuts import render, redirect
-from .models import Item, License, Category, Department, ItemAssignment
-from .forms import AddItemForm, AddAccessoryForm, AddLicenseForm, CustomUserCreationForm
+from .models import Item, License, Category, Department, ItemAssignment, Profile
+from .forms import AddItemForm, AddAccessoryForm, AddLicenseForm, CustomUserCreationForm, PasswordResetForm,SetPasswordForm
 from django.db.models import Q
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
@@ -13,9 +14,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from datetime import date
 from .tokens import account_activation_token
-
 import re
-
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -179,7 +178,7 @@ def update(request, pk):
             item.category = cat[0]
             item.save()
             messages.success(request, 'Item Edited !')
-            return redirect('item_detail',pk)
+            return redirect('item_detail', pk)
 
         else:
             for error in form.non_field_errors():
@@ -210,7 +209,7 @@ def update_consumables(request, pk):
             item.category = cat[0]
             item.save()
             messages.success(request, 'Item Edited !')
-            return redirect('item_detail',pk)
+            return redirect('item_detail', pk)
 
         else:
             for error in form.non_field_errors():
@@ -395,8 +394,8 @@ def checkin_items(request, pk):
 
 
 def generate_pdf(request):
-    if request.method =="POST":
-        checked_items = request.POST.getlist("item_id")    
+    if request.method == "POST":
+        checked_items = request.POST.getlist("item_id")
         size = request.POST.get("size")
         gap = request.POST.get("gap")
         mx = request.POST.get("mx")
@@ -405,33 +404,35 @@ def generate_pdf(request):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename="qrcodes.pdf"'
         # Create the PDF object, using the response object as its "file."
-        p = canvas.Canvas(response, pagesize=A4, bottomup=1 )
-        # p.setPageRotation(180)    
+        p = canvas.Canvas(response, pagesize=A4, bottomup=1)
+        # p.setPageRotation(180)
         items = Item.objects.filter(id__in=checked_items)
         # image_paths =  [(settings.MEDIA_ROOT + 'qrcode/' + items) for i in range(100) ]
         # Define a list of image paths
-        image_paths = list(map(lambda item: settings.MEDIA_ROOT + 'qrcode/' + item.qr_code, items))
+        image_paths = list(
+            map(lambda item: settings.MEDIA_ROOT + 'qrcode/' + item.qr_code, items))
         image_width = int(size)
         image_height = int(size)
         padding = int(gap)
-        p.translate(0,A4[1]-image_height)
-        x=0+int(mx)
-        y=0-int(my)
+        p.translate(0, A4[1]-image_height)
+        x = 0+int(mx)
+        y = 0-int(my)
 
         for i in range(len(image_paths)):
-        
-            image = ImageReader(image_paths[i])
-            p.drawImage(image, x, y, width=image_width, height=image_height,showBoundary=True)
 
-            x+=(image_width+padding)
+            image = ImageReader(image_paths[i])
+            p.drawImage(image, x, y, width=image_width,
+                        height=image_height, showBoundary=True)
+
+            x += (image_width+padding)
             if (x+image_width+padding+int(mx)) > A4[0]:
-                if (y-(2*image_height+padding+int(my)))<=-A4[1]:
+                if (y-(2*image_height+padding+int(my))) <= -A4[1]:
                     p.showPage()
-                    p.translate(0,A4[1]-image_height)
-                    x=0+int(mx)
-                    y=0-int(my)
+                    p.translate(0, A4[1]-image_height)
+                    x = 0+int(mx)
+                    y = 0-int(my)
                 else:
-                    y-=(image_height+padding)
+                    y -= (image_height+padding)
                     x = 0+int(mx)
 
         p.showPage()
@@ -441,16 +442,16 @@ def generate_pdf(request):
         return response
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="qrcodes.pdf"'
-    return response 
+    return response
 
 
-def print_qr(request,pk=None):
+def print_qr(request, pk=None):
     checked_items = request.POST.getlist("item_id")
     if pk is not None:
-        checked_items.append(pk)  
+        checked_items.append(pk)
     context = {
-        "items":Item.objects.filter(id__in=checked_items),
-        "all_items":Item.objects.all().exclude(id__in=checked_items),
+        "items": Item.objects.filter(id__in=checked_items),
+        "all_items": Item.objects.all().exclude(id__in=checked_items),
     }
 
     return render(request, "items/print_qrcodes.html", context)
@@ -467,10 +468,11 @@ def activateEmail(request, user, to_email):
     })
     email = EmailMessage(mail_subject, message, to=[to_email])
     if email.send():
-        messages.success(request, f'Dear <b>{user}</b>, please go to you email <b>{to_email}</b> inbox and click on \
-            received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
+        messages.success(request, f'Dear user, please go to you email  inbox and click on \
+            received activation link to confirm and complete the registration. Check your spam folder.')
     else:
-        messages.error(request, f'Problem sending confirmation email to {to_email}, check if you typed it correctly.')
+        messages.error(
+            request, f'Problem sending confirmation email to {to_email}, check if you typed it correctly.')
 
 
 # Registration
@@ -480,7 +482,7 @@ def register(request):
         if not re.match(r'^[a-zA-Z]+\.[a-zA-Z]+(_\d{4})?@ucentralasia\.org$', email):
             messages.error(request, 'Please enter a valid UCA email address.')
             return redirect("register")
-        
+
         first_name, last_name = email.split('@')[0].split('.')
         if "_" in last_name:
             last_name = last_name.split("_")[0]
@@ -490,11 +492,10 @@ def register(request):
             user.is_active = False
             user.username = email
             user.first_name = first_name
-            user.last_name =last_name
+            user.last_name = last_name
             user.save()
             activateEmail(request, user, form.cleaned_data.get('email'))
 
-            messages.success(request, 'Account created successfully')
             return redirect('home')
         else:
             for error in form.non_field_errors():
@@ -512,18 +513,19 @@ def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
 
-        messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
+        messages.success(
+            request, 'Thank you for your email confirmation. Now you can login your account.')
         return redirect('login')
     else:
         messages.error(request, 'Activation link is invalid!')
-    
+
     return redirect('home')
 
 
@@ -539,3 +541,97 @@ def auth(request):
         else:
             messages.error(request, 'Invalid email or password.')
     return render(request, "auth/login.html")
+
+
+def password_change(request):
+    user = request.user
+    if request.method == 'POST':
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your password has been changed")
+            return redirect('login')
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
+
+    form = SetPasswordForm(user)
+    return render(request, 'auth/recover_password.html', {'form': form})
+
+
+def password_reset_request(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            user_email = form.cleaned_data['email']
+            associated_user = get_user_model().objects.filter(Q(email=user_email)).first()
+            if associated_user:
+                subject = "Password Reset request"
+                message = render_to_string("auth/template_reset_password.html", {
+                    'user': associated_user,
+                    'domain': get_current_site(request).domain,
+                    'uid': urlsafe_base64_encode(force_bytes(associated_user.pk)),
+                    'token': account_activation_token.make_token(associated_user),
+                    "protocol": 'https' if request.is_secure() else 'http'
+                })
+                email = EmailMessage(subject, message, to=[
+                                     associated_user.email])
+                if email.send():
+                    messages.success(request,
+                                     """
+                        <h2>Password reset sent</h2><hr>
+                        <p>
+                            We've emailed you instructions for setting your password, if an account exists with the email you entered. 
+                            You should receive them shortly.<br>If you don't receive an email, please make sure you've entered the address 
+                            you registered with, and check your spam folder.
+                        </p>
+                        """
+                                     )
+                else:
+                    messages.error(
+                        request, "Problem sending reset password email, <b>SERVER PROBLEM</b>")
+
+            return redirect('home')
+
+    form = PasswordResetForm()
+    return render(request, "auth/forgot_password.html", context={"form": form})
+
+
+def passwordResetConfirm(request, uidb64, token):
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except:
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        if request.method == 'POST':
+            form = SetPasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(
+                    request, "Your password has been set. You may go ahead and <b>log in </b> now.")
+                return redirect('homepage')
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request, error)
+
+        form = SetPasswordForm(user)
+        return render(request, 'auth/recover_password.html', {'form': form})
+    else:
+        messages.error(request, "Link is expired")
+
+    messages.error(
+        request, 'Something went wrong, redirecting back to Homepage')
+    return redirect("home")
+
+
+
+def profilePage(request):
+    context={
+        'title':'Profile',
+        'profile':Profile.objects.get(owner=request.user),
+        'items':ItemAssignment.objects.filter(requestor = request.user)
+    }
+    return render(request, 'profile.html', context)

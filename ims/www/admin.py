@@ -6,4 +6,5 @@ admin.site.register(Department)
 admin.site.register(Category)
 admin.site.register(License)
 admin.site.register(ItemAssignment)
+admin.site.register(Profile)
 

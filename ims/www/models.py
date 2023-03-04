@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Department(models.Model):
     name = models.CharField(max_length=100)
     dep_code = models.CharField(max_length=20, default="")
-    head = models.ForeignKey(User, on_delete=models.CASCADE)
+    head = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -91,3 +91,15 @@ class ItemAssignment(models.Model):
 
     def __str__(self):
         return f"{self.requestor.username}-{self.item.item_name}"
+
+
+
+class Profile(models.Model):
+    owner = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(default='items/default.png', upload_to='profile_pics')
+    
+    def __str__(self):
+        return f"{self.owner.first_name}-{self.owner.last_name}"
+ 
+
+

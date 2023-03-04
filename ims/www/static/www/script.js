@@ -68,7 +68,7 @@ fileinput.addEventListener('change', e => {
   // Scan QR Code
   html5QrCode.scanFile(imageFile, true)
     .then(decodedText => {
-      window.location = `https://invenotry-ms.herokuapp.com/${decodedText}/`;
+      window.location = `http://127.0.0.1:8000/${decodedText}/`;
     })
     .catch(err => {
       // failure, handle it.

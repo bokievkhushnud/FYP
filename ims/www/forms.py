@@ -3,7 +3,8 @@ from .models import *
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-import re
+from django.contrib.auth.forms import SetPasswordForm,PasswordResetForm
+ 
 
 
 # Form for adding new Item
@@ -111,3 +112,31 @@ class CustomUserCreationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['password2'].label = "Confirm Password"
         self.fields['password1'].label = "Password"
+
+
+
+
+class SetPasswordForm(SetPasswordForm):
+    class Meta:
+        model = get_user_model()
+        fields = ['new_password1', 'new_password2']
+
+    new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'New password',
+                                                                  'class': 'form-control',
+                                                                  }))
+    new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm new password',
+                                                                  'class': 'form-control',
+                                                                  }))
+
+
+class PasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super(PasswordResetForm, self).__init__(*args, **kwargs)
+
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email',
+                                                                  'class': 'form-control',
+                                                                  }))
+
+
+
+
