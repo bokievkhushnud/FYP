@@ -78,13 +78,24 @@ WSGI_APPLICATION = 'ims.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # connecting to posgresql
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'mydatabase',
+#     }
+# }
 
+
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'd57l14eo4kj584',
+       'USER': 'epfamqixllpddb',
+       'PASSWORD': '294cbdd21b8e10ce7f39599abeb2860e93a73330dc52d63eed3d046d799ea1bc',
+       'HOST': 'ec2-52-30-67-143.eu-west-1.compute.amazonaws.com',
+       'PORT': '5432',
+   }
+}
 
 
 # Password validation
