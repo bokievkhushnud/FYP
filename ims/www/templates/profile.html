@@ -29,6 +29,7 @@
 
           <!-- Profile Image -->
           <div class="card card-primary card-outline">
+
             <div class="card-body box-profile">
               <div class="text-center">
                 <img class="profile-user-img img-fluid img-circle" src="{{profile.profile_pic.url}}"
@@ -44,8 +45,17 @@
                   <b>Items</b> <a class="float-right">1</a>
                 </li>
               </ul>
+              <form action="{% url 'profile' %}" id="upload_form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="id_profile_pic" style="width:100%;">
+                  <p class="btn btn-primary btn-block mb-0"><b>Update Profile Pic</b></p>
+                </label>
+                <div class="d-none">
+                  {{form.profile_pic}}
+                </div>
 
-              <a href="#" class="btn btn-primary btn-block"><b>Update Profile</b></a>
+              </form>
+
               <a href="{% url 'password_change' %}" class="btn btn-default btn-block"><b>Change Password</b></a>
 
             </div>
@@ -75,7 +85,7 @@
                           <th>Due Date</th>
                           <th>Checked Out By</th>
                           <th>Notes</th>
-                          
+
                         </tr>
                       </thead>
                       <tbody>
@@ -87,7 +97,7 @@
                           <td>{{item.due_date |date:"M d, Y"}}</td>
                           <td>{{item.done_by}}</td>
                           <td>{{item.notes}}</td>
-                         
+
                         </tr>
 
 
@@ -109,4 +119,15 @@
       <!-- /.row -->
     </div><!-- /.container-fluid -->
   </section>
+  <script>
+    // User Picture Upload
+    const prfile_pic_upload = document.getElementById("id_profile_pic");
+    const profile_form = document.getElementById('upload_form');
+    
+
+    prfile_pic_upload.addEventListener('change', () => {
+      profile_form.submit();
+    });
+
+  </script>
   {% endblock %}

@@ -3,8 +3,7 @@ from .models import *
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import SetPasswordForm,PasswordResetForm
- 
+from django.contrib.auth.forms import SetPasswordForm, PasswordResetForm
 
 
 # Form for adding new Item
@@ -88,8 +87,6 @@ class AddLicenseForm(ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
 
 
-
-
 # Registration form
 class CustomUserCreationForm(UserCreationForm):
     # email = UCAEmailField(label=_('Email'), max_length=254)
@@ -114,19 +111,17 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['password1'].label = "Password"
 
 
-
-
 class SetPasswordForm(SetPasswordForm):
     class Meta:
         model = get_user_model()
         fields = ['new_password1', 'new_password2']
 
     new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'New password',
-                                                                  'class': 'form-control',
-                                                                  }))
+                                                                      'class': 'form-control',
+                                                                      }))
     new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm new password',
-                                                                  'class': 'form-control',
-                                                                  }))
+                                                                      'class': 'form-control',
+                                                                      }))
 
 
 class PasswordResetForm(PasswordResetForm):
@@ -134,9 +129,19 @@ class PasswordResetForm(PasswordResetForm):
         super(PasswordResetForm, self).__init__(*args, **kwargs)
 
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email',
-                                                                  'class': 'form-control',
-                                                                  }))
+                                                            'class': 'form-control',
+                                                            }))
 
 
+class ProfileForm(ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ['owner']
 
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
 
+        for visible in self.visible_fields():
+
+            if visible.field.label == "Profile pic":
+                visible.field.widget.attrs['class'] = 'form-control d-none'

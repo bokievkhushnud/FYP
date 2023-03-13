@@ -6,7 +6,7 @@ from reportlab.lib.utils import ImageReader
 from django.conf import settings
 from django.shortcuts import render, redirect
 from .models import Item, License, Category, Department, ItemAssignment, Profile
-from .forms import AddItemForm, AddAccessoryForm, AddLicenseForm, CustomUserCreationForm, PasswordResetForm,SetPasswordForm
+from .forms import AddItemForm, AddAccessoryForm, AddLicenseForm, CustomUserCreationForm, PasswordResetForm, SetPasswordForm, ProfileForm
 from django.db.models import Q
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
@@ -627,11 +627,24 @@ def passwordResetConfirm(request, uidb64, token):
     return redirect("home")
 
 
-
 def profilePage(request):
-    context={
-        'title':'Profile',
-        'profile':Profile.objects.get(owner=request.user),
-        'items':ItemAssignment.objects.filter(requestor = request.user)
+    profile = Profile.objects.get(owner=request.user)
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            print("It is valid")
+            form.save()
+        else:
+            for error in form.non_field_errors():
+                messages.error(request, error)
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+
+    context = {
+        'title': 'Profile',
+        'profile': profile,
+        'items': ItemAssignment.objects.filter(requestor=request.user),
+        'form': ProfileForm(instance=profile)
     }
     return render(request, 'profile.html', context)
