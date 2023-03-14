@@ -105,6 +105,8 @@
 
                 </div>
                 <hr>
+                {% if request.user.is_authenticated %}
+
                 <div class="row">
                     <div class="col">
                         {% if item.item_type == "asset" %}
@@ -132,11 +134,12 @@
                             <input type="hidden" name="item_id" value="{{item.id}}" class="option" >
                             <input type="submit" class="btn btn-danger  m-1" value="Delete"> 
                         </form>
-
+                        <a href="#" class="btn btn-warning">Out of order</a>
                         <a  class="btn btn-default m-1" href="{% url 'print_qr' item.id %}">Print QR</a>
                         
 
                     </div>
+                   
                 </div>
                 <div class="row mt-4">
                     <nav class="w-100">
@@ -231,6 +234,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
 
             </div>
