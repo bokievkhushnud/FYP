@@ -47,7 +47,12 @@ urlpatterns = [
 
     # profile page
     path('profile/',views.profilePage, name="profile"),
-    
+    path('broken/<int:pk>/', views.item_outoforder, name="broken"),
+    path('fix/<int:pk>/', views.item_fixed, name="fix"),
+    path('reports/',views.reportPage, name="reports"),
+    path('download_report/<str:type>/',views.download_report, name="download_report"),
+    path('get_monthly_added_items/<int:year>/', views.get_monthly_added_items_data, name='get_monthly_added_items'),
 
+    
 
 ]

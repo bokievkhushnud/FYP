@@ -82,7 +82,9 @@ let resetbtn = document.getElementById("reset_filter")
 resetbtn.addEventListener("click", (e) => {
   e.preventDefault()
   document.getElementById("date_recieved_filter").value = ""
+  document.getElementById("date_recieved_filter1").value = ""
   document.getElementById("cat_select").value = ""
+  document.getElementById("owner_select").value = ""
   document.getElementById("item_type").value = ""
   document.getElementById("status_select").value = ""
 })
@@ -110,10 +112,4 @@ for (var i = 0; i < options.length; i++) {
     selectAll.checked = allChecked;
   });
 }
-
-
-
-
-
-
 

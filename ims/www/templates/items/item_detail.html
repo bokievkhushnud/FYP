@@ -134,7 +134,11 @@
                             <input type="hidden" name="item_id" value="{{item.id}}" class="option" >
                             <input type="submit" class="btn btn-danger  m-1" value="Delete"> 
                         </form>
-                        <a href="#" class="btn btn-warning">Out of order</a>
+                        {% if item.status == 'broken' %}
+                        <a href="{% url 'fix' item.id %}" class="btn btn-success">Fixed</a>
+                        {% else %}
+                        <a href="{% url 'broken' item.id %}" class="btn btn-warning">Out of order</a>
+                        {% endif %}
                         <a  class="btn btn-default m-1" href="{% url 'print_qr' item.id %}">Print QR</a>
                         
 

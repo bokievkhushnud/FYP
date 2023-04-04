@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 import django_heroku
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -50,6 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+
 ]
 
 ROOT_URLCONF = 'ims.urls'
@@ -78,24 +82,24 @@ WSGI_APPLICATION = 'ims.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # connecting to posgresql
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'mydatabase',
-#     }
-# }
-
-
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'd57l14eo4kj584',
-       'USER': 'epfamqixllpddb',
-       'PASSWORD': '294cbdd21b8e10ce7f39599abeb2860e93a73330dc52d63eed3d046d799ea1bc',
-       'HOST': 'ec2-52-30-67-143.eu-west-1.compute.amazonaws.com',
-       'PORT': '5432',
-   }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
 }
+
+
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'd57l14eo4kj584',
+#        'USER': 'epfamqixllpddb',
+#        'PASSWORD': '294cbdd21b8e10ce7f39599abeb2860e93a73330dc52d63eed3d046d799ea1bc',
+#        'HOST': 'ec2-52-30-67-143.eu-west-1.compute.amazonaws.com',
+#        'PORT': '5432',
+#    }
+# }
 
 
 # Password validation
@@ -116,14 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_FROM = 'bokiev.khushnud@gmail.com'
-EMAIL_HOST_USER = 'bokiev.khushnud@gmail.com'
-EMAIL_HOST_PASSWORD = 'ewenqjguxdejohri'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-PASSWORD_RESET_TIMEOUT = 14400
+
 
 
 # Internationalization
@@ -135,7 +132,20 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('ru', 'Russian'),
+]
+
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
+
 
 
 # Static files (CSS, JavaScripMEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -152,3 +162,31 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 django_heroku.settings(locals())
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 X_FRAME_OPTIONS = "SAMEORIGIN"
+
+
+# Celery settings
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # replace with your broker URL
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # replace with your backend URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+
+
+CELERY_BEAT_SCHEDULE = {
+    'send_due_date_notification': {
+        'task': 'www.tasks.send_due_date_notification',
+        'schedule': timedelta(days=1),
+    },
+    'send_expiry_notification': {
+        'task': 'www.tasks.send_expiry_notification',
+        'schedule': timedelta(days=1),
+    },
+}
+
+
+
+
+
+
