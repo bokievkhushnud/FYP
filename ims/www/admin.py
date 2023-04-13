@@ -7,4 +7,5 @@ admin.site.register(Category)
 admin.site.register(License)
 admin.site.register(ItemAssignment)
 admin.site.register(Profile)
+admin.site.register(ItemHistory)
 

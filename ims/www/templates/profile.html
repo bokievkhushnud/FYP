@@ -44,6 +44,9 @@
                 <li class="list-group-item">
                   <b>Items</b> <a class="float-right">1</a>
                 </li>
+                <li class="list-group-item">
+                  <b>Department</b> <a class="float-right">{{profile.owner.department}}</a>
+                </li>
               </ul>
               <form action="{% url 'profile' %}" id="upload_form" method="post" enctype="multipart/form-data">
                 {% csrf_token %}

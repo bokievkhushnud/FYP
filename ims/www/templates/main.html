@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,21 +23,24 @@
     <!-- iCheck -->
     <link rel="stylesheet" href="{% static 'www/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
 
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="{% static 'www/plugins/jqvmap/jqvmap.min.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'www/dist/css/adminlte.min.css' %}">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="{% static 'www/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="{% static 'www/plugins/daterangepicker/daterangepicker.css' %}">
-    <!-- summernote -->
-    <link rel="stylesheet" href="{% static 'www/plugins/summernote/summernote-bs4.min.css' %}">
 
     <!-- chart js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <link href="https://cdn.datatables.net/v/bs4/jq-3.6.0/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/b-print-2.3.6/date-1.4.0/r-2.4.1/sc-2.1.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.css" rel="stylesheet" />
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+
+    <script
+        src="https://cdn.datatables.net/v/bs4/jq-3.6.0/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/b-print-2.3.6/date-1.4.0/r-2.4.1/sc-2.1.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
+    <style>
+        div.dataTables_wrapper div.dataTables_length select {
+            width: 50px;
+            display: inline-block;
+        }
+    </style>
     <title>{{title}}</title>
 </head>
 
@@ -91,17 +93,17 @@
         <!-- /.modal-dialog -->
     </div>
     <footer class="main-footer">
-        <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+        <strong>Copyright &copy; 2023 <a href="#">IMS-UCA</a>.</strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
-          <b>Version</b> 3.2.0
+            <b>Version</b> 1.0.0
         </div>
-      </footer>
+    </footer>
 
     <!-- jQuery -->
-    <script src="{% static 'www/plugins/jquery/jquery.min.js' %}"></script>
+    <!-- <script src="{% static 'www/plugins/jquery/jquery.min.js' %}"></script> -->
     <!-- jQuery UI 1.11.4 -->
-    <script src="{% static 'www/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+    <!-- <script src="{% static 'www/plugins/jquery-ui/jquery-ui.min.js' %}"></script> -->
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <!-- <script>
         $.widget.bridge('uibutton', $.ui.button)
@@ -109,18 +111,11 @@
     <!-- Bootstrap 4 -->
     <script src="{% static 'www/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <!-- ChartJS -->
-    <script src="{% static 'www/plugins/chart.js/Chart.min.js' %}"></script>
-    
-    <!-- Tempusdominus Bootstrap 4 -->
-    <!-- <script src="{% static 'www/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script> -->
-    <!-- Summernote -->
-    <!-- <script src="{% static 'www/plugins/summernote/summernote-bs4.min.js' %}"></script> -->
-    <!-- overlayScrollbars -->
-    <!-- <script src="{% static 'www/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script> -->
-    
+
+
     <!-- AdminLTE App -->
     <script src="{% static 'www/dist/js/adminlte.js' %}"></script>
-    <script src="{% static 'www/dist/js/pages/dashboard.js' %}"></script>
+    <!-- <script src="{% static 'www/dist/js/pages/dashboard.js' %}"></script> -->
     <script src="{% static 'www/html5-qrcode.min.js' %}"></script>
     <script src="{% static 'www/script.js' %}"></script>
 

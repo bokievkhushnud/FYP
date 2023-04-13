@@ -8,12 +8,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{{title}}</h1>
+                    <h1 class="m-0">Check Out</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-                        <li class="breadcrumb-item active">{{title}}</li>
+                        <li class="breadcrumb-item active">Check Out</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -25,123 +25,62 @@
     <section class="content">
         <div class="container-fluid">
             <!-- Main row -->
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-default">
-                        <div class="card-header">
-                            <h3 class="card-title">Check In</h3>
-                        </div>
-                        <div class="card-body p-4">
-                            <div class="bs-stepper">
-                                <div class="bs-stepper-header" role="tablist">
-
-                                </div>
-                                <div class="bs-stepper-content">
-                                    <form class="row" action="{% url 'checkout_items' item.id %}" method="post">
-                                        {% csrf_token %}
-                                        <div class="card-body table-responsive p-0 mb-3">
-                                            <table class="table table-hover text-nowrap">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Item</th>
-                                                        <th>Department</th>
-                                                        <th>Price</th>
-                                                        <th>Quantity</th>
-                                                        <th>Location</th>
-                                                        <th>Due Date</th>
-                                                        <th>Notes</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-
-
-                                                    <tr>
-                                                        <td> 
-                                                            <a href="{% url 'item_detail' item.id %}">{{item.item_name}}</a>
-                                                            <input type="hidden" name="item_id" value="{{item.id}}">
-                                                        </td>
-                                                        <td>
-                                                            {{item.department.name}}
-                                                        </td>
-                                                        <td>
-                                                            {{item.price}}
-                                                        </td>
-                                                        {% if item.item_type == "asset" %}
-                                                        <td>
-                                                            {{item.quantity}}
-                                                            <input type="hidden" name="quantity" value="1">
-                                                        </td>
-                                                        {% else %}
-                                                        <td><input class="form-control form-control-sm" min="0"
-                                                                name="quantity" type="number" max="{{item.quantity}}">
-                                                        </td>
-                                                        {% endif %}
-                                                        <td><input style="max-width:fit-content;" name="location"
-                                                                class="form-control form-control-sm" type="text"
-                                                                placeholder="location"></td>
-
-                                                        <td><input style="max-width:max-content;" type="date"
-                                                                name="due_date" class="form-control form-control-sm">
-                                                        </td>
-                                                        <td>
-                                                            <textarea class="form-control form-control-sm" name="notes"
-                                                                id="" cols="25" rows="1"></textarea>
-
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                               
-                                            <hr>
-                                        </div>
-
-                                        <div class="col-md-6">
-
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <table class="table m-0 p-0">
-                                                <tbody>
-                                                    <tr>
-                                                        <th>Requestor</th>
-                                                        <td>
-                                                            <select style="max-width: fit-content;"
-                                                                class="form-control form-control-sm" name="requestor" id="">
-                                                                {% for user in users %}
-                                                                <option value="{{user.id}}">{{user.username}}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th># Items</th>
-                                                        <td>1</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Date</th>
-                                                        <td>{{today}}</td>
-                                                    </tr>
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-
-
-                                        <!-- your steps content here -->
-                                        <div id="" class="col-12">
-                                            <input class="btn btn-success" type="submit" value="Check out">
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.card-body -->
+            <form class="card-body row bg-white" action="{% url 'checkout_items' item.id %}" method="post">
+                {% csrf_token %}
+                <div class="col-md-5  d-flex  justify-content-center">
+                    <div class="mt-2">
+                        <img class="img-fluid" src="{{item.image.url}}" alt="">
                     </div>
-                    <!-- /.card -->
                 </div>
-            </div>
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label for="inputName">Item Name</label>
+                        <a class="form-control" href="{% url 'item_detail' item.id %}">{{item.item_name}}</a>
+                        <input type="hidden" name="item_id" value="{{item.id}}">
+                        <!-- <p class="form-control">{{item.item.item_name}}</p> -->
+                    </div>
+
+                    {% if item.item_type == "asset" %}
+                    <input type="hidden" name="quantity" value="1">
+
+                    {% else %}
+                    <div class="form-group">
+                        <label for="inputSubject">Quantity</label>
+                        <input class="form-control" min="0" placeholder="some number" name="quantity" type="number"
+                            max="{{item.quantity}}">
+                    </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="inputSubject">Location</label>
+                        <input required name="location" class="form-control" type="text" placeholder="location">
+
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSubject">Return Date</label>
+                        <input type="date" name="due_date" class="form-control ">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputMessage" class="text-start">Notes</label>
+                        <textarea id="inputMessage" name="notes" class="form-control" rows="4"></textarea>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label  for="inputSubject">Requestor</label>
+                        <select required  class="form-control" name="requestor" id="">
+                            {% for user in users %}
+                            <option value="{{user.id}}">{{user.username}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                   
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Check Out">
+                    </div>
+                </div>
+            </form>
             <!-- /.row (main row) -->
         </div><!-- /.container-fluid -->
     </section>

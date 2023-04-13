@@ -12,9 +12,11 @@ class Department(models.Model):
 
 # Table of categories
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100 ,unique=True)
     cat_code = models.CharField(max_length=20, default="")
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    description = models.TextField(blank=True)
+
 
     def __str__(self):
         return self.name
@@ -88,12 +90,25 @@ class ItemAssignment(models.Model):
     date = models.DateTimeField(auto_now=True)
     due_date = models.DateTimeField(blank=True, null=True)
     notes = models.TextField(blank=True)
+    status = models.CharField(max_length=3, choices=[('in', 'in'), ('out','out')], default='in')
 
     def __str__(self):
         return f"{self.requestor.username}-{self.item.item_name}"
 
 
 
+# model to store item history
+class ItemHistory(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    transaction = models.ForeignKey(ItemAssignment, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f"{self.item.item_name} - {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
+
+
+
+# model for user profiles
 class Profile(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(default='items/default.png', upload_to='profile_pics')

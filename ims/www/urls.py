@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 # url maps for www app
 urlpatterns = [
     path('', views.homeView, name='home'),
@@ -43,6 +44,7 @@ urlpatterns = [
     path("password_change", views.password_change, name="password_change"),
     path("password_reset", views.password_reset_request, name="password_reset"),
     path('reset/<uidb64>/<token>', views.passwordResetConfirm, name='password_reset_confirm'),
+    path('logout_user',views.logout_user, name="logout"),
 
 
     # profile page
@@ -50,8 +52,20 @@ urlpatterns = [
     path('broken/<int:pk>/', views.item_outoforder, name="broken"),
     path('fix/<int:pk>/', views.item_fixed, name="fix"),
     path('reports/',views.reportPage, name="reports"),
-    path('download_report/<str:type>/',views.download_report, name="download_report"),
     path('get_monthly_added_items/<int:year>/', views.get_monthly_added_items_data, name='get_monthly_added_items'),
+
+    # loans
+    path('loans/',views.loans, name="loans"),
+
+
+    # categories
+    path('categories/',views.categories, name="categories" ),
+    path('category/delete/<int:pk>/',views.categories_delete, name="delete_category" ),
+    path('category/update/<int:pk>/',views.categories_update, name="update_category" ),
+
+
+
+
 
     
 

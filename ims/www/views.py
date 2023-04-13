@@ -5,10 +5,10 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from django.conf import settings
 from django.shortcuts import render, redirect
-from .models import Item, License, Category, Department, ItemAssignment, Profile
-from .forms import AddItemForm, AddAccessoryForm, AddLicenseForm, CustomUserCreationForm, PasswordResetForm, SetPasswordForm, ProfileForm
+from .models import Item, License, Category, Department, ItemAssignment, Profile, ItemHistory
+from .forms import AddItemForm, AddAccessoryForm, AddLicenseForm, CustomUserCreationForm, PasswordResetForm, SetPasswordForm, ProfileForm, CategoryForm
 from django.db.models import Q
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -23,68 +23,116 @@ from django.core.mail import EmailMessage
 from datetime import date
 import pandas as pd
 from django.http import HttpResponse, JsonResponse
-from django.db.models import Count,Sum
-from django.db.models.functions import TruncMonth,ExtractYear
+from django.db.models import Count, Sum
+from django.db.models.functions import TruncMonth, ExtractYear
 import datetime
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required, user_passes_test
+
 # Create your views here.
 
+# Function to check if the user is head of some department
+def is_department_head(user):
+    """
+    Function to check if the user 
+    is the head of the department or not 
+    """
+    department = Department.objects.filter(head=user).first()
+    return department is not None
 
+
+# Dashboard View
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def homeView(request):
-    items = Item.objects.all()
-    labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July']
-    data = [10, 20, 30, 40, 50, 60, 70]
-    items_with_year = Item.objects.annotate(year=ExtractYear('date_received')).values('year').distinct()
+    """
+    This view is for dashboard page,
+    It contains, statistics, 
+    graphs and tables about 
+    the items and categories
+    """
+
+    # find the department by user
+    department = Department.objects.filter(head=request.user).first()
+    if department is None:
+        return redirect('profile')
+
+    # filter items by department
+    items = Item.objects.filter(department=department)
+
+    # Data for the Items Added Graph (Line Chart)
+    items_with_year = items.annotate(year=ExtractYear(
+        'date_received')).values('year').distinct()
     years = [item['year'] for item in items_with_year]
-    # Prepare the data for the Category chart
-    categories = Category.objects.all().annotate(total_quantity=Sum('item__quantity'))
+
+    # Prepare the data for the Category chart (BAR)
+    categories = Category.objects.filter(department=department).annotate(
+        total_quantity=Sum('item__quantity'))
     category_names = [category.name for category in categories]
-    item_quantities = [category.total_quantity if category.total_quantity else 0 for category in categories]
-    # Prepare data for Item Types chart
-    item_types_data = (
-        items.values('item_type')
-        .annotate(item_count=Sum('quantity'))
-        .order_by('item_type')
-    )
+    item_quantities = [
+        category.total_quantity if category.total_quantity else 0 for category in categories]
+
+    # Prepare data for Item Types chart (PIE)
+    item_types_data = (items.values('item_type').annotate(
+        item_count=Sum('quantity')).order_by('item_type'))
     type_label = [types['item_type'] for types in item_types_data]
-    type_data = [types['item_count'] if types['item_count'] else 0 for types in item_types_data]
+    type_data = [types['item_count'] if types['item_count']
+                 else 0 for types in item_types_data]
 
-
+    # Broken Items Count
     broken_items = items.filter(status='broken')
-    recently_checked_out_items = ItemAssignment.objects.filter(department= items[0].department, action="assign")
+    recently_checked_out_items = ItemAssignment.objects.filter(department=department, action="assign", status="out")
+
+    # Context to pass the data to template
     context = {
         "title": "Dashboard",
         "available_count": items.filter(status='available').count(),
-        "checked_out_count":items.filter(status='outinuse').count(),
-        "broken_count":broken_items.count(),
+        "checked_out_count": items.filter(status='outinuse').count(),
+        "broken_count": broken_items.count(),
         "total_count": items.all().count(),
-        "recently_checked_out_items":recently_checked_out_items.order_by('-date')[:10],
-        "broken_items":broken_items[:10],
-        "items_in_shortage":items.filter(Q(item_type="accessory")|Q(item_type="consumable")).order_by("quantity")[:10],
-        "items_due_return":recently_checked_out_items.order_by("due_date")[:10],
-        'labels': labels,
-        'data': data,
-        "category_names":category_names,
-        'item_quantities':item_quantities,
-        'type_label':type_label,
-        'type_data':type_data,
-        'years':years,
-        
+        "recently_checked_out_items": recently_checked_out_items.order_by('-date')[:10],
+        "broken_items": broken_items[:10],
+        "items_in_shortage": items.filter(Q(item_type="accessory") | Q(item_type="consumable")).order_by("quantity")[:10],
+        "items_due_return": recently_checked_out_items.order_by("due_date")[:10],
+        "category_names": category_names,
+        'item_quantities': item_quantities,
+        'type_label': type_label,
+        'type_data': type_data,
+        'years': years,
     }
     return render(request, "dashboard.html", context)
 
 
+def get_monthly_added_items_data(request, year):
+    """
+    This view is for Item Added Graph,
+    this will recieve the ajax request and
+    responcse as json with data, 
+    to make the filtering faster.
 
+    """
+     
+    # find the department by user
+    department = Department.objects.filter(head=request.user).first()
 
-def get_monthly_added_items_data(request,year):
-    monthly_data = (
-        Item.objects.filter(date_received__year=year)
-        .annotate(month=TruncMonth('date_received'))
-        .values('month')
-        .annotate(items_added=Count('id'))
-        .order_by('month')
-    )
-    months = [data['month'].strftime('%B') for data in monthly_data]
-    items_added = [data['items_added'] for data in monthly_data]
+    # if the user is not the head of department dont show anything
+    if department is None:
+        months = []
+        items_added = []
+    else:
+        # filter items for the department
+        items = Item.objects.filter(department=department)
+        monthly_data = (
+            items.filter(date_received__year=year)
+            .annotate(month=TruncMonth('date_received'))
+            .values('month')
+            .annotate(items_added=Count('id'))
+            .order_by('month')
+        )
+
+        # Data for the graph (labels and data)
+        months = [data['month'].strftime('%B') for data in monthly_data]
+        items_added = [data['items_added'] for data in monthly_data]
 
     data = {
         'months': months,
@@ -93,17 +141,37 @@ def get_monthly_added_items_data(request,year):
 
     return JsonResponse(data)
 
+
+
+
 # ------------------------------ ITEMS ------------------------------------------------
 
 # Single Items
-
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def items(request):
+    """
+    items view is for Items page,
+    where it shows, tables with items,
+    fillters and search bars
+
+    """
+
+    # get the department
+    department = Department.objects.filter(head=request.user).first()
+    items = Item.objects.filter(department=department)
+
+    # get the filter information
     category = request.GET.get("category")
     status = request.GET.get("status")
     item_type = request.GET.get("item_type")
     date_received = request.GET.get("date_recieved")
+
+    # input from the search field
     q = request.GET.get("q")
 
+    # make dictionary out of search and filter inputs, to pass them back to page
+    # for saving the filters status
     search_filters = {
         "category": category if category is not None else "",
         "status": status if status is not None else "",
@@ -111,7 +179,9 @@ def items(request):
         "date_recieved": date_received if date_received is not None else "",
         "q": q if q is not None else "",
     }
-    items_list = Item.objects.filter(
+
+    # Filter items according to users inputs (filter and search)
+    items_list = items.filter(
         Q(category__name__contains=search_filters["category"]) &
         Q(status__contains=search_filters["status"]) &
         Q(item_type__contains=search_filters["item_type"]) &
@@ -124,41 +194,78 @@ def items(request):
         Q(vendor__contains=search_filters["q"])
     )
 
+
+    # paginator (for items table)
+    page = request.GET.get('page', 1)
+    # Default to 50 items per page
+    items_per_page = request.GET.get('items_per_page', 50)
+    # Show 50 items per page
+    paginator = Paginator(items_list, items_per_page)
+
+    try:
+        data = paginator.page(page)
+    except PageNotAnInteger:
+        # If the page parameter is not an integer, show the first page
+        data = paginator.page(1)
+    except EmptyPage:
+        # If the page parameter is out of range, show the last page of results
+        data = paginator.page(paginator.num_pages)
+
+    # pass the data to the page
     context = {
         "title": "Items",
-        "items": items_list,
-        "total_count": Item.objects.count(),
-        "broken_count": Item.objects.filter(status="broken").count(),
-        "available_count": Item.objects.filter(status="available").count(),
-        "inuse_count": Item.objects.filter(status="outinuse").count(),
-        "categories": Category.objects.all(),
+        "items": data,
+        'items_per_page': items_per_page,
+        "total_count": items.count(),
+        "broken_count": items.filter(status="broken").count(),
+        "available_count": items.filter(status="available").count(),
+        "inuse_count": items.filter(status="outinuse").count(),
+        "categories": Category.objects.all().filter(department=department),
         "search_filters": search_filters
     }
     return render(request, 'items/items.html', context)
 
 
 # function for adding new Items to DB
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def add_item(request):
+    """
+    View to add new Items (Single items),
+    to the db
+    """
+
+    # get the department
     department = Department.objects.get(head=request.user)
+
+    # process the form
     if request.method == "POST":
         form = AddItemForm(request.POST, request.FILES)
+
+        # Do the validation
         if form.is_valid():
             item = form.save(commit=False)
-            cat = Category.objects.filter(department=department).filter(
-                name=request.POST.get("category"))
+
+            # set category
+            cat = Category.objects.filter(department=department).filter(name=request.POST.get("category"))
             item.category = cat[0]
             item.department = department
+
+            # set type as asset (single item)
             item.item_type = "asset"
             item.save()
             messages.success(request, 'Item added successfully')
             return redirect('items')
-
+        
+        # if form is not valid show errors
         else:
             for error in form.non_field_errors():
                 messages.error(request, error)
             for field in form:
                 for error in field.errors:
                     messages.error(request, error)
+
+    # pass data
     context = {
         "title": "New Item",
         "categories": Category.objects.filter(department=department),
@@ -166,8 +273,15 @@ def add_item(request):
     }
     return render(request, "items/add_new_item.html", context)
 
-
+# function to add (bulk items)
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def add_accessory(request):
+    """
+    View to add new Items (bulk items),
+    to the db
+    """
+
     department = Department.objects.get(head=request.user)
     if request.method == "POST":
         form = AddAccessoryForm(request.POST, request.FILES)
@@ -196,8 +310,14 @@ def add_accessory(request):
     }
     return render(request, "items/add_new_accessory.html", context)
 
-
+# function to add (consumable)
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def add_consumable(request):
+    """
+    View to add new Items (Consumables),
+    to the db
+    """
     department = Department.objects.get(head=request.user)
     if request.method == "POST":
         form = AddAccessoryForm(request.POST, request.FILES)
@@ -225,8 +345,13 @@ def add_consumable(request):
     }
     return render(request, "items/add_new_accessory.html", context)
 
-
+# function to update assets
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def update(request, pk):
+    """
+    View to update Assets (single items)
+    """
     department = Department.objects.get(head=request.user)
     item = Item.objects.get(id=pk)
 
@@ -256,8 +381,13 @@ def update(request, pk):
     }
     return render(request, "items/update_item.html", context)
 
-
+# function to add bulk items and consumables
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def update_consumables(request, pk):
+    """
+    View to update consumables and accessories (items in  bulk)
+    """
     department = Department.objects.get(head=request.user)
     item = Item.objects.get(id=pk)
 
@@ -288,21 +418,36 @@ def update_consumables(request, pk):
 
 
 # function for item details
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def item_detail(request, pk):
+    """
+    View for detail page of the items
+    Where admin can perform, crud operations on items
+    plus check in and out
 
+    """
+
+    # Get the item
     item = Item.objects.get(id=pk)
-    checked_out_items = ItemAssignment.objects.filter(
-        item=item, action="assign")
 
+    # get checked out items
+    checked_out_items = ItemAssignment.objects.filter(item=item, action="assign", status = 'out')
+
+    # get the history of the items
+    item_history = ItemHistory.objects.filter(item=item)
+
+
+    # pass information to the page
     context = {
         "title": f"{item.item_name} Detail",
         "item": item,
-        "history": checked_out_items,
+        "checked_out_items": checked_out_items,
+        'item_history':item_history,
 
     }
 
     return render(request, "items/item_detail.html", context)
-
 
 # ----------------------------------------------- Licenses --------------------------
 
@@ -343,6 +488,8 @@ def add_licenses(request):
 
 
 # Bulk Delete
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def delete_items(request, pk=None):
     if request.method == "POST":
         checked_items = request.POST.getlist("item_id")
@@ -356,8 +503,15 @@ def delete_items(request, pk=None):
 
 
 # Check Out
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def checkout_items(request, pk):
-    # checked_items = request.POST.getlist("item_id");
+    """
+    This view is for checking out the items
+    or assigning items to someone 
+
+    """
+    # Extract informatin fromt the form
     if request.method == "POST":
         item_id = request.POST.get("item_id")
         item = Item.objects.get(id=item_id)
@@ -367,23 +521,34 @@ def checkout_items(request, pk):
         requestor_id = request.POST.get("requestor")
         requestor = User.objects.get(id=requestor_id)
         done_by = request.user
-        due_date = request.POST.get("due_date")
+        due_date = request.POST.get("due_date") or None
+
+        
         notes = request.POST.get("notes")
         item.location = location
+
+        # update the item owner
         item.holder.add(requestor)
+
+        # alter the status of the item
         if item.item_type == "asset":
             item.status = "outinuse"
         else:
             if int(item.quantity)-int(quantity) == 0:
                 item.status = "outinuse"
             item.quantity = int(item.quantity)-int(quantity)
+        # save the item
         item.save()
-        if item.min_alert_quantity>0:
-            if item.quantity<=item.min_alert_quantity:
+
+        # if the quantity of items is less then min_alert
+        #  it will send email notifications
+        if item.min_alert_quantity > 0:
+            if item.quantity <= item.min_alert_quantity:
                 email = EmailMessage(
                     f"{item}:Items in Shortage", f"Dear Admin, the following item is in shortage:\n{item}\t{item.quantity} available", to=[item.department.head.email])
                 email.send()
-        # create new Assignment
+
+        # create new Transaction
         item_out = ItemAssignment(
             item=item,
             quantity=quantity,
@@ -394,15 +559,22 @@ def checkout_items(request, pk):
             done_by=done_by,
             due_date=due_date,
             notes=notes,
+            status= 'out',
         )
         item_out.save()
-        email = EmailMessage(
-            f"{item}", f"Dear {requestor.first_name},\nNew Items was assigned to you:\n{item}----{quantity}---{location}---{due_date}\nNotes: {notes}\nBy: {done_by} at {date}", to=[requestor.email])
-        email.send()
-        
+
+        # Save to the item story
+        ItemHistory.objects.create(item=item, transaction=item_out)
+
+
+        # Send email to the user about the new transaction
+        # email = EmailMessage(
+        #     f"{item}", f"Dear {requestor.first_name},\nNew Items was assigned to you:\n{item}----{quantity}---{location}---{due_date}\nNotes: {notes}\nBy: {done_by} at {date}", to=[requestor.email])
+        # email.send()
+
         messages.success(request, 'Checked Out Successfully')
         return redirect("item_detail", item.id)
-
+    
     users = User.objects.all()
     context = {
         "item": Item.objects.get(id=pk),
@@ -413,9 +585,16 @@ def checkout_items(request, pk):
 
 
 # Check in View
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def checkin_items(request, pk):
-    # checked_items = request.POST.getlist("item_id");
+    """
+    This view is for handling items check in
+    or when the items are returned
+
+    """
     assingment = ItemAssignment.objects.get(id=pk)
+    # Extract the data
     if request.method == "POST":
         item = assingment.item
         notes = request.POST.get("notes")
@@ -429,30 +608,40 @@ def checkin_items(request, pk):
         item.location = location
         item.holder.remove(requestor)
         if item.item_type == "asset":
-            if item.status!='broken':
-                item.status = "available"
+            if item.status != 'broken':
+                item.status = "available"  
         else:
             if int(item.quantity)+int(quantity) > 0:
                 item.status = "available"
             item.quantity = int(item.quantity)+int(quantity)
         item.save()
 
-        # create new Assignment
-        ItemAssignment.objects.filter(id=pk).update(
+        # create new Transaction
+        item_in = ItemAssignment(
             item=item,
             quantity=quantity,
             action="return",
+            department=assingment.department,
             location=location,
             requestor=requestor,
             done_by=done_by,
             due_date=due_date,
             notes=notes,
         )
+        item_in.save()
+
+        # change the status of checked out item
+        assingment.status = 'in'
+        assingment.save()
+
+
+        # Save to the item story
+        ItemHistory.objects.create(item=item, transaction=item_in)
 
         # Redirect
-        email = EmailMessage(
-            f"{item}", f"Dear {requestor.first_name},\nItem was returned:\n{item}----{quantity}\nNotes: {notes}\nBy: {done_by}", to=[requestor.email])
-        email.send()
+        # email = EmailMessage(
+        #     f"{item}", f"Dear {requestor.first_name},\nItem was returned:\n{item}----{quantity}\nNotes: {notes}\nBy: {done_by}", to=[requestor.email])
+        # email.send()
         messages.success(request, 'Checked In Successfully')
         return redirect("item_detail", item.id)
 
@@ -464,20 +653,23 @@ def checkin_items(request, pk):
     return render(request, "items/checkin.html", context)
 
 # item broken view: To report the item is broken
-def item_outoforder(request,pk):
-    item =Item.objects.get(id = pk)
-    item.status = "broken"  
+@login_required(login_url='login/')
+def item_outoforder(request, pk):
+    item = Item.objects.get(id=pk)
+    item.status = "broken"
     item.save()
     email = EmailMessage(
-            f"{item} Out of Order", f"Report: {item} is out of order\nLocation: {item.location}.",to=[item.department.head.email])
+        f"{item} Out of Order", f"Report: {item} is out of order\nLocation: {item.location}.", to=[item.department.head.email])
     email.send()
     messages.success(request, 'Report sent to Admin successfully!')
     return redirect("item_detail", item.id)
 
 
 # item fixed view
-def item_fixed(request,pk):
-    item =Item.objects.get(id = pk)
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
+def item_fixed(request, pk):
+    item = Item.objects.get(id=pk)
     if item.location == 'storage':
         item.status = "available"
     else:
@@ -486,21 +678,40 @@ def item_fixed(request,pk):
     messages.success(request, 'Report sent to Admin successfully!')
     return redirect("item_detail", item.id)
 
-# PDF of qr codes 
+
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
+# PDF of qr codes
 def generate_pdf(request):
+    """
+    View to generate pdf of qr codes and 
+    allow customization of the page
+
+    """
+
+    # handle the form
     if request.method == "POST":
+        # page configurations
         checked_items = request.POST.getlist("item_id")
         size = request.POST.get("size")
         gap = request.POST.get("gap")
         mx = request.POST.get("mx")
         my = request.POST.get("my")
+
+
         # Create a file-like buffer to receive PDF data.
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename="qrcodes.pdf"'
+
+
         # Create the PDF object, using the response object as its "file."
         p = canvas.Canvas(response, pagesize=A4, bottomup=1)
+
+
         # p.setPageRotation(180)
         items = Item.objects.filter(id__in=checked_items)
+
+
         # image_paths =  [(settings.MEDIA_ROOT + 'qrcode/' + items) for i in range(100) ]
         # Define a list of image paths
         image_paths = list(
@@ -512,8 +723,8 @@ def generate_pdf(request):
         x = 0+int(mx)
         y = 0-int(my)
 
+        # putting the qr codes in the page according to configurations
         for i in range(len(image_paths)):
-
             image = ImageReader(image_paths[i])
             p.drawImage(image, x, y, width=image_width,
                         height=image_height, showBoundary=True)
@@ -534,12 +745,21 @@ def generate_pdf(request):
         p.save()
 
         return response
+    
+    # return it as pdf page
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="qrcodes.pdf"'
     return response
 
-
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
+# qr code printing page
 def print_qr(request, pk=None):
+    """
+    View to show the print QR codes page
+    """
+
+    # get the selected items and show the page
     checked_items = request.POST.getlist("item_id")
     if pk is not None:
         checked_items.append(pk)
@@ -551,7 +771,11 @@ def print_qr(request, pk=None):
     return render(request, "items/print_qrcodes.html", context)
 
 
+# function to send an email to the user for confirmation
 def activateEmail(request, user, to_email):
+    """
+    Function to send confirmation email to the user
+    """
     mail_subject = 'Activate your user account.'
     message = render_to_string('auth/template_activate_account.html', {
         'user': user.username,
@@ -571,15 +795,24 @@ def activateEmail(request, user, to_email):
 
 # Registration
 def register(request):
+    """
+    View to handle the registration of new users
+    """
+    # handle registrantion form
     if request.method == 'POST':
         email = request.POST['email']
+        # Validate email, it should be UCA email only!
         if not re.match(r'^[a-zA-Z]+\.[a-zA-Z]+(_\d{4})?@ucentralasia\.org$', email):
             messages.error(request, 'Please enter a valid UCA email address.')
             return redirect("register")
-
+        
+        # Extract data first name and last name from the email
         first_name, last_name = email.split('@')[0].split('.')
         if "_" in last_name:
             last_name = last_name.split("_")[0]
+
+        # handle the form (create the user but it should not be active)
+        # after email confirmation it becomes active
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
@@ -588,9 +821,14 @@ def register(request):
             user.first_name = first_name
             user.last_name = last_name
             user.save()
+
+            # call the activateEmail function that will send email to the user
+            # to confirm 
             activateEmail(request, user, form.cleaned_data.get('email'))
+
             # need to change to be redirected the special page
-            return redirect('home')
+            return redirect('login')
+        
         else:
             for error in form.non_field_errors():
                 messages.error(request, error)
@@ -602,7 +840,11 @@ def register(request):
     return render(request, 'auth/register.html', {'form': form, "title": "Registration", })
 
 
+# Confirms email and makes the user active
 def activate(request, uidb64, token):
+    """
+    View to active the user account
+    """
     User = get_user_model()
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -610,9 +852,12 @@ def activate(request, uidb64, token):
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
+    # Check the token
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+
+        # Notify user about account activation
         email = EmailMessage(
             "Accaunt Created", f"Dear {user.first_name},\nYour accaunt is creataed successfully", to=[user.email])
         email.send()
@@ -625,7 +870,12 @@ def activate(request, uidb64, token):
     return redirect('home')
 
 
+# login view
 def auth(request):
+    """
+    Login view, handles the login form and
+    redirects accordingly 
+    """
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
@@ -633,21 +883,36 @@ def auth(request):
         if user is not None:
             login(request, user)
             messages.success(request, f'Welcome, {user.first_name}!')
-            return redirect('home')
+            department = Department.objects.filter(head=user).first()
+            if department is not None:
+                # Redirect to admin dashboard if user is the head of a department
+                return redirect('home')
+            else:
+                # Redirect to profile page if user is not the head of a department
+                return redirect('profile')
         else:
             messages.error(request, 'Invalid email or password.')
     return render(request, "auth/login.html")
 
-
+# view to change your password
 def password_change(request):
+    """
+    View to change your password
+    """
+
+    # get the user
     user = request.user
+
+    # handle the form and change the passowrd
     if request.method == 'POST':
         form = SetPasswordForm(user, request.POST)
         if form.is_valid():
             form.save()
+
+            # notify user about the password change
             messages.success(request, "Your password has been changed")
             email = EmailMessage(
-            "Password Changed", f"Dear {user.first_name},\nYour password is changed successfully", to=[user.email])
+                "Password Changed", f"Dear {user.first_name},\nYour password is changed successfully", to=[user.email])
             email.send()
             return redirect('login')
         else:
@@ -658,12 +923,22 @@ def password_change(request):
     return render(request, 'auth/recover_password.html', {'form': form})
 
 
+# view to reset the passowrd
 def password_reset_request(request):
+    """
+    This view will send request to reset your password
+    by email confirmation
+    """
+
+    # handle the form
     if request.method == 'POST':
         form = PasswordResetForm(request.POST)
         if form.is_valid():
+            # get the user email
             user_email = form.cleaned_data['email']
             associated_user = get_user_model().objects.filter(Q(email=user_email)).first()
+
+            # if there is a user with this email, send email to that user to confirm
             if associated_user:
                 subject = "Password Reset request"
                 message = render_to_string("auth/template_reset_password.html", {
@@ -693,7 +968,13 @@ def password_reset_request(request):
     return render(request, "auth/forgot_password.html", context={"form": form})
 
 
+# View to confirm the email and change the password
 def passwordResetConfirm(request, uidb64, token):
+    """
+    View to confirm the email and change the password
+    """
+
+    # get the user
     User = get_user_model()
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -701,11 +982,14 @@ def passwordResetConfirm(request, uidb64, token):
     except:
         user = None
 
+    # handle the form and change the password
     if user is not None and account_activation_token.check_token(user, token):
         if request.method == 'POST':
             form = SetPasswordForm(user, request.POST)
             if form.is_valid():
                 form.save()
+
+                # notify the user about the successfull password change
                 email = EmailMessage(
                     "Password  reset", f"Dear {user.first_name},\nYour password is reset successfully", to=[user.email])
                 email.send()
@@ -726,8 +1010,29 @@ def passwordResetConfirm(request, uidb64, token):
     return redirect("home")
 
 
+# Logout view
+def logout_user(request):
+    """
+    Logout View
+    To log out user from the system
+    """
+    logout(request)
+    return redirect('login')
+
+
+@login_required(login_url='login/')
+# personal profile page of the users
 def profilePage(request):
+    """
+    This view is for profile page
+    of the users, where they can change their 
+    password, profile picture, and see items that are assigned to them
+    """
+
+    # Get the profile
     profile = Profile.objects.get(owner=request.user)
+
+    # hamdle form for updating the profile picture
     if request.method == "POST":
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -740,22 +1045,40 @@ def profilePage(request):
                 for error in field.errors:
                     messages.error(request, error)
 
+
     context = {
         'title': 'Profile',
         'profile': profile,
-        'items': ItemAssignment.objects.filter(requestor=request.user),
+        'items': ItemAssignment.objects.filter(requestor=request.user, status ='out'),
         'form': ProfileForm(instance=profile)
     }
     return render(request, 'profile.html', context)
 
 
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
+# Page to generate and print reports about the items
 def reportPage(request):
+    """
+    View to generate the report, by using custom filter
+    and print or download it in different formats
+    such as csv, xls, pdf.
+
+    """
+
+     # get the department
+    department = Department.objects.filter(head=request.user).first()
+    items = Item.objects.filter(department=department)
+
+    # filter queries
     category = request.GET.get("category")
     owner = request.GET.get("owner")
     status = request.GET.get("status")
     item_type = request.GET.get("item_type")
     date_received = request.GET.get("date_recieved")
-    date_received_to = request.GET.get("date_recieved_to")    
+    date_received_to = request.GET.get("date_recieved_to")
+
+    # save in dictionary to pass to the page
     search_filters = {
         "category": category if category is not None else "",
         "owner": owner if owner is not None else "",
@@ -764,73 +1087,173 @@ def reportPage(request):
         "date_recieved": date_received if date_received is not None else "",
         "date_recieved_to": date_received_to if date_received_to is not None else "",
     }
-    items_list = Item.objects.filter(
+
+    # filtering items
+    items_list = items.filter(
         Q(category__name__contains=search_filters["category"]) &
         Q(status__contains=search_filters["status"]) &
-        Q(item_type__contains=search_filters["item_type"]) 
+        Q(item_type__contains=search_filters["item_type"])
     )
 
-    if search_filters["date_recieved"]!="":
-        items_list = items_list.filter(date_received__gte=search_filters["date_recieved"])
-    
-    if search_filters["date_recieved_to"]!="":
-        items_list = items_list.filter(date_received__lte=search_filters["date_recieved_to"])
+    # validation of the fields
+    if search_filters["date_recieved"] != "":
+        items_list = items_list.filter(
+            date_received__gte=search_filters["date_recieved"])
 
-    if search_filters["owner"]!="":
-        items_list = items_list.filter(holder__username__contains=search_filters["owner"])
-    
+    if search_filters["date_recieved_to"] != "":
+        items_list = items_list.filter(
+            date_received__lte=search_filters["date_recieved_to"])
+
+    if search_filters["owner"] != "":
+        items_list = items_list.filter(
+            holder__username__contains=search_filters["owner"])
 
 
+    # passing data to the page
     context = {
         "title": "reports",
         "items": items_list,
-        "total_count": Item.objects.count(),
-        "broken_count": Item.objects.filter(status="broken").count(),
-        "available_count": Item.objects.filter(status="available").count(),
-        "inuse_count": Item.objects.filter(status="outinuse").count(),
-        "categories": Category.objects.all(),
+        "categories": Category.objects.filter(department=department),
         "owners": User.objects.all(),
         "search_filters": search_filters
     }
-    return render(request, 'report.html',context )
+    return render(request, 'report.html', context)
 
-# download the report 
-def download_report(request,type):
-    checked_items = request.POST.getlist("item_id")
 
-    items = Item.objects.filter(id__in=checked_items)
-    data = {'ID': [item.id for item in items],
-            'Name': [item.item_name for item in items],
-            'Price': [item.price for item in items],
-            'Currency': [item.currency for item in items],
-            'Quantity': [item.quantity for item in items],
-            'Quantity Unit': [item.quantity_unit for item in items],
-            'Category': [item.category for item in items],
-            'Department': [item.department for item in items],
-            'Item Code': [item.item_code for item in items],
-            'Location': [item.location for item in items],
-            'Campus': [item.campus for item in items],
-            'Date Received': [item.date_received for item in items],
-            'Expiration Date': [item.expiration_date for item in items],
-            'Order_Number': [item.order_number for item in items],
-            'Holder': [[holder.email for holder  in item.holder.all()] for item in items],
-            'Status': [item.status for item in items],
-            }
+
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
+def loans(request):
+
+    department = Department.objects.filter(head=request.user).first()
+    items = ItemAssignment.objects.filter(department=department, status="out")
+
+
+    # filter queries
+    category = request.GET.get("category")
+    owner = request.GET.get("owner")
+    date_received = request.GET.get("date_recieved")
+    date_received_to = request.GET.get("date_recieved_to")
+
+    # save in dictionary to pass to the page
+    search_filters = {
+        "category": category if category is not None else "",
+        "owner": owner if owner is not None else "",
+        "date_recieved": date_received if date_received is not None else "",
+        "date_recieved_to": date_received_to if date_received_to is not None else "",
+    }
+
+    # filtering items
+    items_list = items.filter(
+        Q(item__category__name__contains=search_filters["category"])
+    )
+
+    # validation of the fields
+    if search_filters["date_recieved"] != "":
+        items_list = items_list.filter(
+            date__contains=search_filters["date_recieved"])
+
+    if search_filters["date_recieved_to"] != "":
+        items_list = items_list.filter(
+            due_date__contains=search_filters["date_recieved_to"])
+
+    if search_filters["owner"] != "":
+        items_list = items_list.filter(
+            requestor__username__contains=search_filters["owner"])
+
+
+    # passing data to the page
+    context = {
+        "title": "loans",
+        "items": items_list,
+        "categories": Category.objects.filter(department=department),
+        "owners": User.objects.all(),
+        "search_filters": search_filters
+    }
+
+    return render(request, 'loans.html', context)
+
+
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
+def categories(request):
+    """
+    View for adding new categories
+    it should be done only by head of the specific department
+
+    """
+
+    department = Department.objects.filter(head=request.user).first()
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            cateogry = form.save(commit=False)
+            cateogry.department = department
+            cateogry.save()
+            messages.success(request, 'Category added successfully')
+            return redirect('categories')
+        
+        # if form is not valid show errors
+        else:
+            for error in form.non_field_errors():
+                messages.error(request, error)
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+
+        
+
+    # passing data to the page
+    context = {
+        'form':CategoryForm(),
+        "title": "Categories",
+        "categories": Category.objects.filter(department=department),
+        'form_url':'categories',
+
+    }
+
+    return render(request, 'categories.html', context)
+
+
+
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
+def categories_update(request,pk):
+    """
+    View to update category
+    """
+    category = Category.objects.get(id =pk)
+    if request.method == 'POST':
+        form =CategoryForm(request.POST, instance = category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category updated successfully')
+            return redirect('categories')
+        
+        # if form is not valid show errors
+        else:
+            for error in form.non_field_errors():
+                messages.error(request, error)
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
+
+
+    context = {
+        'form':CategoryForm(instance = category),
+        "title": "Update Category",
+        "pk":pk
+    }
+
+    return render(request, 'categories.html', context)
     
-    df = pd.DataFrame(data)
-    if type == "csv":
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="items.csv"'
-        df.to_csv(path_or_buf=response, index=False)
-    else:
-        response = HttpResponse(content_type='text/xlsx')
-        response['Content-Disposition'] = 'attachment; filename="items.xlsx"'
-        df.to_excel(response, index=False, sheet_name='Items')
 
 
-    return response
-
-
-
-
-
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
+def categories_delete(request,pk):
+    """
+    View to remove category from the DB
+    """
+    category = Category.objects.get(id =pk).delete()
+    return redirect('categories')

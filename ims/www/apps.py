@@ -8,3 +8,5 @@ class WwwConfig(AppConfig):
 
     def ready(self):
         import www.signals
+        import www.templatetags.custom_filters
+

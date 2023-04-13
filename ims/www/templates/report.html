@@ -19,8 +19,7 @@
   <!-- Main content -->
   <section class="content">
     <div class="container-fluid">
-      <!-- Filters -->
-      
+      <!-- Filters --> 
       <div class="card card-default">
         <div class="card-header">
           <h3 class="card-title">Filter</h3>
@@ -121,76 +120,71 @@
       
       </div>
       <!-- /.Filters -->
-
-      <!-- Main row -->
-      <form method="POST" class="row">
-        {% csrf_token %}
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header d-flex align-items-center">
-              <h3 class="card-title">List of items ( </h3>
-              <span class="">{{total_count}})</span>
-              <div class="input-group-prepend   ml-auto">
-                <button type="button" class="btn  m-0 dropdown-toggle" data-toggle="dropdown">
-                  Download
-                </button>
-                <div class="dropdown-menu">
-                  <input class="dropdown-item" type="submit" formaction="{% url 'download_report' 'csv' %}" value="CSV" />
-                  <input class="dropdown-item" type="submit" formaction="{% url 'download_report' 'excell'  %}" value="Excell" />
-                </div>
-              </div>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body table-responsive p-0">
-              <table class="table table-hover text-nowrap">
-                <thead>
-                  <tr>
-                    <th>Item</th>
-                    <th>Location</th>
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Arrival Date</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for item in items %}
-                  <tr>
-                    <input type="checkbox" name="item_id" checked value="{{item.id}}" class="d-none">
-                    <td> <a href="{% url 'item_detail' item.id %}">{{item.item_name}}</a></td>
-                    <td>{{item.location}}</td>
-                    <td>{{item.category}}</td>
-                    <td>{{item.item_type}}</td>
-                    <td><span
-                        class="badge bg-{% if item.status == 'available' %}success{% elif item.status == 'broken' %}danger{% else %}warning{%endif%}"
-                        style="font-size: small;">{{item.status}}</span></td>
-                    <td>{{item.date_received}}</td>
-                    <td>
-                      
-                  
-                    </td>
-                  </tr>
-
-
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <!-- /.card-body -->
-          </div>
-          <!-- /.card-->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Items</h3>
+        
         </div>
-        <!-- right col -->
-      </form>
-
+        <!-- /.card-header -->
+        <div class="card-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Location</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Arrival Date</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items %}
+              <tr>
+                <input type="checkbox" name="item_id" checked value="{{item.id}}" class="d-none">
+                <td> <a href="{% url 'item_detail' item.id %}">{{item.item_name}}</a></td>
+                <td>{{item.location}}</td>
+                <td>{{item.category}}</td>
+                <td>{{item.item_type}}</td>
+                <td><span
+                    class="badge bg-{% if item.status == 'available' %}success{% elif item.status == 'broken' %}danger{% else %}warning{%endif%}"
+                    style="font-size: small;">{{item.status}}</span></td>
+                <td>{{item.date_received}}</td>
+                
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
       
       <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
   </section>
   <!-- /.content -->
-</div>
 
+
+<script>
+  $(function () {
+    var table = $("#example1").DataTable({
+      "buttons": ["csv", "excel", "pdf", "print", "colvis"],
+      'searching': false,
+      //"dom": '<"toolbar d-flex justify-content-between"Bl><"mt-3"t>p',   
+      "dom": '<"table-header d-flex justify-content-between"Bl><"table-body"t><"table-footer d-flex justify-content-between"ip>',
+
+      "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      "ordering": false,
+      "paging": true,
+    
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+  });
+</script>
+
+ 
+
+</div>
 
 
 {% endblock %}

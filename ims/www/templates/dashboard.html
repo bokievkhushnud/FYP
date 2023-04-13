@@ -2,7 +2,6 @@
 {% block content %}
 {% load i18n %}
 
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -10,12 +9,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">{% trans "Hello, world!" %}</h1>
+                    <h1 class="m-0">{% trans "Dashboard" %}</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">{{LANGUAGE_CODE}}</li>
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -89,7 +88,7 @@
             </div>
             <div class="raw">
                 <div class="col m-0 p-0">
-                    <!-- Custom tabs (Charts with tabs)-->
+                    <!-- Category chart-->
                     <div class="card card-default">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -169,7 +168,7 @@
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="text-center mt-4">No Items check out</p>
+                            <p class="text-center mt-4">No Data Available</p>
                             {% endif %}
 
 
@@ -222,7 +221,7 @@
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="text-center mt-4">No Items check out</p>
+                            <p class="text-center mt-4">No Data Available</p>
                             {% endif %}
 
                         </div>
@@ -251,6 +250,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0" style="height:250px;">
+                            {% if items_due_return %}
                             <table class="table table-striped text-nowrap">
                                 <thead>
                                     <tr>
@@ -274,6 +274,11 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
+                            {% else %}
+                            <p class="text-center mt-4">No Data Available</p>
+
+                            {% endif %}
+
 
                         </div>
                         <!-- /.card-body -->
@@ -285,10 +290,11 @@
                     <!-- /.Due return Items -->
                 </section>
                 <!-- /.Left col -->
-                <!-- right col (We are only adding the ID to make the widgets sortable)-->
+
+                <!-- right col -->
                 <section class="col-lg-5 ">
 
-                    <!-- Map card -->
+                    <!-- Items Added chart -->
                     <div class="card">
                         <div class="card-header border-0">
                             <h3 class="card-title">
@@ -362,6 +368,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0" style="height:250px;">
+                            {% if items_in_shortage %}
                             <table class="table table-striped text-nowrap">
                                 <thead>
                                     <tr>
@@ -384,6 +391,9 @@
 
                                 </tbody>
                             </table>
+                            {% else %}
+                            <p class="text-center mt-4">No Data Available</p>
+                            {% endif %}
 
                         </div>
                         <!-- /.card-body -->
@@ -402,6 +412,7 @@
 
     <!-- /.content -->
 </div>
+
 
 <script>
 
@@ -489,10 +500,6 @@
     }
 
     fetchData(2023)
-
-
-
-
 </script>
 
 

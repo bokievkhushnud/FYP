@@ -7,21 +7,13 @@
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
-        <div class="col-sm-6">
+        <div class="col-sm-6 d-flex">
           <h1 class="m-0 d-inline">{{title}}</h1>
-          <button type="button" class="btn btn-lg  p-0 m-0" data-toggle="dropdown">
-            <i title="Add new" class="fa-sharp fa-solid fa-cart-plus text-success"></i>
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="{% url 'add_item' %}">Asset</a>
-            <a class="dropdown-item" href="{% url 'add_accessories' %}">Accessory</a>
-            <a class="dropdown-item" href="{% url 'add_consumables' %}">Consumable</a>
-          </div>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <form id="searchform" class="input-group input-group-sm float-sm-right" style="width: 150px;" method="GET" ,
             action="{% url 'items' %}">
-            <input type="text" name="q" value="{{search_filters.q}}" class="form-control" placeholder="Search">
+            <input type="search" name="q" value="{{search_filters.q}}" class="form-control" placeholder="Search">
             <input type="hidden" value="{{search_filters.category}}" name="category">
             <input type="hidden" value="{{search_filters.item_type}}" name="item_type">
             <input type="hidden" value="{{search_filters.status}}" name="status">
@@ -112,22 +104,30 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header d-flex align-items-center">
-              <h3 class="card-title">List of {{title}} ( </h3>
-              <span class="">{{total_count}})</span>
+              <!-- <h3 class="card-title">List of {{title}}</h3> -->
+              <button type="button" class="btn btn-success " data-toggle="dropdown">
+                Add New
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'add_item' %}">Asset</a>
+                <a class="dropdown-item" href="{% url 'add_accessories' %}">Accessory</a>
+                <a class="dropdown-item" href="{% url 'add_consumables' %}">Consumable</a>
+              </div>
               <div class="input-group-prepend   ml-auto">
                 <button type="button" class="btn  m-0 dropdown-toggle" data-toggle="dropdown">
                   Bulk action
                 </button>
                 <div class="dropdown-menu">
                   <input class="dropdown-item" type="submit" formaction="{% url 'bulk_delete' %}" value="Delete" />
-                  <input class="dropdown-item" type="submit" formaction="{% url 'checkout_items' %}" value="Check Out" />
+                  <input class="dropdown-item" type="submit" formaction="{% url 'checkout_items' %}"
+                    value="Check Out" />
                   <input class="dropdown-item" type="submit" formaction="{% url 'print_qr' %}" value="Print QR" />
-
                 </div>
               </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0">
+              {% if items %}
               <table class="table table-hover text-nowrap">
                 <thead>
                   <tr>
@@ -175,9 +175,35 @@
                   {% endfor %}
                 </tbody>
               </table>
+              {% else %}
+              <p class="text-center my-4">No Items Added yet</p>
+              {% endif %}
             </div>
+            {% if items %}
+            <div class="card-footer ">
+              <span class="step-links">
+                <span class="current">
+                  Page {{ items.number }} of {{ items.paginator.num_pages }}
+                </span>
+              </span>
+              <ul class="pagination pagination-sm m-0 float-right">
+                {% if items.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">First page</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ items.previous_page_number }}">«</a></li>
+                {% endif %}
+                <li class="page-item"><a class="page-link" href="#">{{ items.number }}</a></li>
+                {% if items.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ items.next_page_number }}">»</a></li>
+                <li class="page-item"><a class="page-link" href="#">Last page</a></li>
+
+                {% endif %}
+
+              </ul>
+            </div>
+            {% endif %}
             <!-- /.card-body -->
           </div>
+
           <!-- /.card-->
         </div>
         <!-- right col -->

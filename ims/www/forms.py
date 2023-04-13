@@ -145,3 +145,17 @@ class ProfileForm(ModelForm):
 
             if visible.field.label == "Profile pic":
                 visible.field.widget.attrs['class'] = 'form-control d-none'
+
+
+class CategoryForm(ModelForm):
+    class Meta:
+        model = Category
+        exclude = ['department']
+
+    def __init__(self, *args, **kwargs):
+        super(CategoryForm, self).__init__(*args, **kwargs)
+
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            if visible.field.label == "Description":
+                visible.field.widget.attrs['rows'] = 5

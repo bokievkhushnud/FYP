@@ -1,5 +1,6 @@
 <!-- Navbar -->
 {% load i18n %}
+{% load custom_filters %}
 {% get_current_language as current_language %}
 
 <nav class="main-header navbar navbar-expand navbar-dark navbar-dark">
@@ -8,112 +9,62 @@
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
+        {% if user|is_department_head %}
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{% url 'home' %}" class="nav-link">Home</a>
+            <a href="{% url 'home' %}" class="nav-link">Dashboard</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="{% url 'items' %}" class="nav-link">Items</a>
         </li>
-
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{% url 'licenses' %}" class="nav-link">Licenses</a>
+            <a href="{% url 'loans' %}" class="nav-link">Loans</a>
         </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{% url 'categories' %}" class="nav-link">Categories</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{% url 'reports' %}" class="nav-link">Reports</a>
+        </li>
+        <!-- <li class="nav-item d-none d-sm-inline-block">
+            <a href="{% url 'licenses' %}" class="nav-link">Licenses</a>
+        </li> -->
+        {% endif %}
     </ul>
+    {% if user|is_department_head %}
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <!-- Navbar Search -->
-        <li class="nav-item">
-            <a class="nav-link" href="#" role="button" data-toggle="modal" data-target="#modal-default">
+        <li class="nav-item" >
+            <a class="nav-link px-2" href="#" role="button" data-toggle="modal" data-target="#modal-default">
                 <i class="fa fa-qrcode"></i>
             </a>
         </li>
-        <!-- Notification Dropdown Menu -->
-        <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-bell"></i>
-                <span class="badge badge-danger navbar-badge">3</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <a href="#" class="dropdown-item">
-                    <!-- Message Start -->
-                    <div class="media">
-                        <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-                        <div class="media-body">
-                            <h3 class="dropdown-item-title">
-                                Brad Diesel
-                                <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                            </h3>
-                            <p class="text-sm">Call me whenever you can...</p>
-                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                        </div>
-                    </div>
-                    <!-- Message End -->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <!-- Message Start -->
-                    <div class="media">
-                        <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                        <div class="media-body">
-                            <h3 class="dropdown-item-title">
-                                John Pierce
-                                <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                            </h3>
-                            <p class="text-sm">I got your message bro</p>
-                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                        </div>
-                    </div>
-                    <!-- Message End -->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <!-- Message Start -->
-                    <div class="media">
-                        <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                        <div class="media-body">
-                            <h3 class="dropdown-item-title">
-                                Nora Silvester
-                                <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                            </h3>
-                            <p class="text-sm">The subject goes here</p>
-                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                        </div>
-                    </div>
-                    <!-- Message End -->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-            </div>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+        <li class="nav-item " >
+            <a class="nav-link px-2" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>
             </a>
         </li>
-
-        <li>
+        <li class="nav-item dropdown">
             <!-- Add this inside your navigation bar -->
-            <div class="language-selector">
-                <select id="language-select">
-                    <option value="en" {% if current_language == 'en' %}selected{% endif %}>English</option>
-                    <option value="ru" {% if current_language == 'ru' %}selected{% endif %}>Русский</option>
+            <a href="#" class="nav-link pl-0">
+                <select class="m-0 p-0 " id="language-select" style="background: none; color:rgba(255,255,255,.75); outline:none; border:none; font-weight:600; cursor:pointer;">
+                    <option class="dropdown-item" value="en" {% if current_language == 'en' %}selected{% endif %}>ENG</option>
+                    <option class="dropdown-item" value="ru" {% if current_language == 'ru' %}selected{% endif %}>RU</option>
                 </select>
-            </div>
+            </a>
         </li>
     </ul>
+    {% endif %}
 </nav>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const languageSelect = document.getElementById('language-select');
-
         languageSelect.addEventListener('change', function () {
             const selectedLanguage = this.value;
             const currentUrl = new URL(window.location.href);
             const returnUrl = currentUrl.pathname + currentUrl.search;
-
             // Set the language in a cookie and reload the page
             document.cookie = `django_language=${selectedLanguage}; path=/; max-age=${60 * 60 * 24 * 365}`;
             window.location.href = returnUrl;
