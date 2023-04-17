@@ -857,6 +857,8 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
 
+        Profile.objects.create(owner=user)
+
         # Notify user about account activation
         email = EmailMessage(
             "Accaunt Created", f"Dear {user.first_name},\nYour accaunt is creataed successfully", to=[user.email])

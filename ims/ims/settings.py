@@ -28,8 +28,8 @@ SECRET_KEY = 'django-insecure-bjybtte)y^lc!lu2ndz3s21@r_y5syjo3#u$pq=_-w!-081q0e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['invenotry-ms.herokuapp.com', '127.0.0.1']
-# ALLOWED_HOSTS  =[*]
+# ALLOWED_HOSTS = ['invenotry-ms.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -40,8 +40,28 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'www.apps.WwwConfig'
+    'www.apps.WwwConfig',
+    'rest_framework',
+    'djoser',
+    'rest_framework_simplejwt',
+    'corsheaders',
+
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,7 +73,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 
+]
+
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:19000', # Replace with the origin you want to allow
+    'http://192.168.1.184:19000', # Replace with the origin you want to allow
+    'exp://192.168.1.184', # Replace with the origin you want to allow
 ]
 
 ROOT_URLCONF = 'ims.urls'
@@ -69,7 +99,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
+
             ],
         },
     },
@@ -121,7 +151,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = 'bokiev.khushnud@gmail.com'
+EMAIL_HOST_USER = 'bokiev.khushnud@gmail.com'
+EMAIL_HOST_PASSWORD = 'jqebbjihabmhduhc'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+PASSWORD_RESET_TIMEOUT = 14400
 
 
 # Internationalization
@@ -142,11 +179,9 @@ LANGUAGES = [
     ('ru', 'Russian'),
 ]
 
-import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
-
 
 
 # Static files (CSS, JavaScripMEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -174,7 +209,6 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 
-
 CELERY_BEAT_SCHEDULE = {
     'send_due_date_notification': {
         'task': 'www.tasks.send_due_date_notification',
@@ -185,9 +219,3 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': timedelta(days=1),
     },
 }
-
-
-
-
-
-
