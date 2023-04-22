@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework_simplejwt',
     'corsheaders',
+    'django_extensions'
 
 ]
 
@@ -218,4 +219,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'www.tasks.send_expiry_notification',
         'schedule': timedelta(days=1),
     },
+}
+
+
+GRAPH_MODELS ={
+'all_applications': True,
+'graph_models': True,
 }

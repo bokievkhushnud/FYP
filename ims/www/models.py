@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-#  Table for departments
+# Table for departments
 class Department(models.Model):
     name = models.CharField(max_length=100)
     dep_code = models.CharField(max_length=20, default="")
@@ -9,6 +9,7 @@ class Department(models.Model):
 
     def __str__(self):
         return self.name
+
 
 # Table of categories
 class Category(models.Model):
@@ -21,9 +22,8 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 # Table for Asset (Single Items)
-
-
 class Item(models.Model):
     item_type = models.CharField(max_length=20, choices=[("asset", "Asset"), ("accessory", "Accessory"), ("consumable", "Consumable")],
                                  )
@@ -96,8 +96,7 @@ class ItemAssignment(models.Model):
         return f"{self.requestor.username}-{self.item.item_name}"
 
 
-
-# model to store item history
+# Table to store item history
 class ItemHistory(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -107,7 +106,6 @@ class ItemHistory(models.Model):
         return f"{self.item.item_name} - {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
 
 
-
 # model for user profiles
 class Profile(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -115,6 +113,4 @@ class Profile(models.Model):
     
     def __str__(self):
         return f"{self.owner.first_name}-{self.owner.last_name}"
- 
-
 

@@ -1,10 +1,8 @@
 from celery import shared_task
-from django.core.mail import send_mail
 from django.conf import settings
 from datetime import datetime, timedelta
 from .models import Item, ItemAssignment
 from django.core.mail import EmailMessage
-
 
 @shared_task
 def send_expiry_notification():
@@ -37,3 +35,12 @@ def send_due_date_notification():
             # Send the email notification
             email = EmailMessage(subject, message, to=[item.item.department.head.email, item.requestor.email])
             email.send()
+
+
+@shared_task
+def send_email_task(subject, message, recipient_list):
+    print("Sending")
+    email = EmailMessage(subject, message, to=recipient_list)
+    email.send()
+    print("sent")
+

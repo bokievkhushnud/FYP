@@ -5,8 +5,8 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from django.conf import settings
 from django.shortcuts import render, redirect
-from .models import Item, License, Category, Department, ItemAssignment, Profile, ItemHistory
-from .forms import AddItemForm, AddAccessoryForm, AddLicenseForm, CustomUserCreationForm, PasswordResetForm, SetPasswordForm, ProfileForm, CategoryForm
+from .models import Item, Category, Department, ItemAssignment, Profile, ItemHistory
+from .forms import AddItemForm, AddAccessoryForm, CustomUserCreationForm, PasswordResetForm, SetPasswordForm, ProfileForm, CategoryForm
 from django.db.models import Q
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -19,17 +19,15 @@ from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from django.core.mail import EmailMessage
 from datetime import date
 import pandas as pd
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth, ExtractYear
-import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required, user_passes_test
+from .tasks import send_email_task
 
-# Create your views here.
 
 # Function to check if the user is head of some department
 def is_department_head(user):
@@ -81,9 +79,9 @@ def homeView(request):
 
     # Broken Items Count
     broken_items = items.filter(status='broken')
-    recently_checked_out_items = ItemAssignment.objects.filter(department=department, action="assign", status="out")
+    recently_checked_out_items = ItemAssignment.objects.filter(
+        department=department, action="assign", status="out")
 
-    # Context to pass the data to template
     context = {
         "title": "Dashboard",
         "available_count": items.filter(status='available').count(),
@@ -111,7 +109,7 @@ def get_monthly_added_items_data(request, year):
     to make the filtering faster.
 
     """
-     
+
     # find the department by user
     department = Department.objects.filter(head=request.user).first()
 
@@ -140,8 +138,6 @@ def get_monthly_added_items_data(request, year):
     }
 
     return JsonResponse(data)
-
-
 
 
 # ------------------------------ ITEMS ------------------------------------------------
@@ -193,7 +189,6 @@ def items(request):
         Q(notes__contains=search_filters["q"]) |
         Q(vendor__contains=search_filters["q"])
     )
-
 
     # paginator (for items table)
     page = request.GET.get('page', 1)
@@ -247,7 +242,8 @@ def add_item(request):
             item = form.save(commit=False)
 
             # set category
-            cat = Category.objects.filter(department=department).filter(name=request.POST.get("category"))
+            cat = Category.objects.filter(department=department).filter(
+                name=request.POST.get("category"))
             item.category = cat[0]
             item.department = department
 
@@ -256,7 +252,7 @@ def add_item(request):
             item.save()
             messages.success(request, 'Item added successfully')
             return redirect('items')
-        
+
         # if form is not valid show errors
         else:
             for error in form.non_field_errors():
@@ -272,6 +268,7 @@ def add_item(request):
         "form": AddItemForm(),
     }
     return render(request, "items/add_new_item.html", context)
+
 
 # function to add (bulk items)
 @login_required(login_url='login/')
@@ -311,6 +308,8 @@ def add_accessory(request):
     return render(request, "items/add_new_accessory.html", context)
 
 # function to add (consumable)
+
+
 @login_required(login_url='login/')
 @user_passes_test(is_department_head, login_url='profile/')
 def add_consumable(request):
@@ -346,6 +345,8 @@ def add_consumable(request):
     return render(request, "items/add_new_accessory.html", context)
 
 # function to update assets
+
+
 @login_required(login_url='login/')
 @user_passes_test(is_department_head, login_url='profile/')
 def update(request, pk):
@@ -382,6 +383,8 @@ def update(request, pk):
     return render(request, "items/update_item.html", context)
 
 # function to add bulk items and consumables
+
+
 @login_required(login_url='login/')
 @user_passes_test(is_department_head, login_url='profile/')
 def update_consumables(request, pk):
@@ -432,59 +435,22 @@ def item_detail(request, pk):
     item = Item.objects.get(id=pk)
 
     # get checked out items
-    checked_out_items = ItemAssignment.objects.filter(item=item, action="assign", status = 'out')
+    checked_out_items = ItemAssignment.objects.filter(
+        item=item, action="assign", status='out')
 
     # get the history of the items
     item_history = ItemHistory.objects.filter(item=item)
-
 
     # pass information to the page
     context = {
         "title": f"{item.item_name} Detail",
         "item": item,
         "checked_out_items": checked_out_items,
-        'item_history':item_history,
+        'item_history': item_history,
 
     }
 
     return render(request, "items/item_detail.html", context)
-
-# ----------------------------------------------- Licenses --------------------------
-
-# For consumables
-def licenses(request):
-    context = {
-        "title": "Licenses",
-        "items": License.objects.all(),
-    }
-    return render(request, 'license/licenses.html', context)
-
-
-# Function for consumables details
-def licenses_detail(request, pk):
-
-    item = License.objects.get(id=pk)
-
-    context = {
-        "title": f"{item.license_name} Detail",
-        "item": item,
-    }
-    return render(request, 'license/license_detail.html', context)
-
-
-# Function for adding new consumables to DB
-def add_licenses(request):
-    if request.method == "POST":
-        form = AddLicenseForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return redirect('licenses')
-
-    context = {
-        "title": "Add License",
-        "form": AddLicenseForm(),
-    }
-    return render(request, 'license/add_new_license.html', context)
 
 
 # Bulk Delete
@@ -509,7 +475,6 @@ def checkout_items(request, pk):
     """
     This view is for checking out the items
     or assigning items to someone 
-
     """
     # Extract informatin fromt the form
     if request.method == "POST":
@@ -523,7 +488,6 @@ def checkout_items(request, pk):
         done_by = request.user
         due_date = request.POST.get("due_date") or None
 
-        
         notes = request.POST.get("notes")
         item.location = location
 
@@ -544,9 +508,10 @@ def checkout_items(request, pk):
         #  it will send email notifications
         if item.min_alert_quantity > 0:
             if item.quantity <= item.min_alert_quantity:
-                email = EmailMessage(
-                    f"{item}:Items in Shortage", f"Dear Admin, the following item is in shortage:\n{item}\t{item.quantity} available", to=[item.department.head.email])
-                email.send()
+                subject = f"{item}:Items in Shortage"
+                message = f"Dear Admin, the following item is in shortage:\n{item}\t{item.quantity} available"
+                recipient_list = [item.department.head.email]
+                send_email_task.delay(subject, message, recipient_list)
 
         # create new Transaction
         item_out = ItemAssignment(
@@ -559,23 +524,23 @@ def checkout_items(request, pk):
             done_by=done_by,
             due_date=due_date,
             notes=notes,
-            status= 'out',
+            status='out',
         )
         item_out.save()
 
         # Save to the item story
         ItemHistory.objects.create(item=item, transaction=item_out)
 
-
         # Send email to the user about the new transaction
-        # email = EmailMessage(
-        #     f"{item}", f"Dear {requestor.first_name},\nNew Items was assigned to you:\n{item}----{quantity}---{location}---{due_date}\nNotes: {notes}\nBy: {done_by} at {date}", to=[requestor.email])
-        # email.send()
+        subject = f"{item}"
+        message = f"Dear {requestor.first_name},\nNew Items was assigned to you:\n{item}----{quantity}---{location}---{due_date}\nNotes: {notes}\nBy: {done_by} at {date}"
+        recipient_list = [requestor.email]
+        send_email_task.delay(subject, message, recipient_list)
 
         messages.success(request, 'Checked Out Successfully')
         return redirect("item_detail", item.id)
-    
-    users = User.objects.all()
+
+    users = User.objects.filter(is_active=True)
     context = {
         "item": Item.objects.get(id=pk),
         "users": users,
@@ -609,7 +574,7 @@ def checkin_items(request, pk):
         item.holder.remove(requestor)
         if item.item_type == "asset":
             if item.status != 'broken':
-                item.status = "available"  
+                item.status = "available"
         else:
             if int(item.quantity)+int(quantity) > 0:
                 item.status = "available"
@@ -634,14 +599,15 @@ def checkin_items(request, pk):
         assingment.status = 'in'
         assingment.save()
 
-
         # Save to the item story
         ItemHistory.objects.create(item=item, transaction=item_in)
 
         # Redirect
-        # email = EmailMessage(
-        #     f"{item}", f"Dear {requestor.first_name},\nItem was returned:\n{item}----{quantity}\nNotes: {notes}\nBy: {done_by}", to=[requestor.email])
-        # email.send()
+        subject = f"{item}"
+        message = f"Dear {requestor.first_name},\nItem was returned:\n{item}----{quantity}\nNotes: {notes}\nBy: {done_by}"
+        recipient_list = [requestor.email]
+        send_email_task.delay(subject, message, recipient_list)
+
         messages.success(request, 'Checked In Successfully')
         return redirect("item_detail", item.id)
 
@@ -653,14 +619,18 @@ def checkin_items(request, pk):
     return render(request, "items/checkin.html", context)
 
 # item broken view: To report the item is broken
+
+
 @login_required(login_url='login/')
 def item_outoforder(request, pk):
     item = Item.objects.get(id=pk)
     item.status = "broken"
     item.save()
-    email = EmailMessage(
-        f"{item} Out of Order", f"Report: {item} is out of order\nLocation: {item.location}.", to=[item.department.head.email])
-    email.send()
+    subject = f"{item} Out of Order"
+    message = f"Report: {item} is out of order\nLocation: {item.location}."
+    recipient_list = [item.department.head.email]
+    send_email_task.delay(subject, message, recipient_list)
+
     messages.success(request, 'Report sent to Admin successfully!')
     return redirect("item_detail", item.id)
 
@@ -686,9 +656,7 @@ def generate_pdf(request):
     """
     View to generate pdf of qr codes and 
     allow customization of the page
-
     """
-
     # handle the form
     if request.method == "POST":
         # page configurations
@@ -698,19 +666,15 @@ def generate_pdf(request):
         mx = request.POST.get("mx")
         my = request.POST.get("my")
 
-
         # Create a file-like buffer to receive PDF data.
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename="qrcodes.pdf"'
 
-
         # Create the PDF object, using the response object as its "file."
         p = canvas.Canvas(response, pagesize=A4, bottomup=1)
 
-
         # p.setPageRotation(180)
         items = Item.objects.filter(id__in=checked_items)
-
 
         # image_paths =  [(settings.MEDIA_ROOT + 'qrcode/' + items) for i in range(100) ]
         # Define a list of image paths
@@ -745,11 +709,12 @@ def generate_pdf(request):
         p.save()
 
         return response
-    
+
     # return it as pdf page
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="qrcodes.pdf"'
     return response
+
 
 @login_required(login_url='login/')
 @user_passes_test(is_department_head, login_url='profile/')
@@ -784,13 +749,14 @@ def activateEmail(request, user, to_email):
         'token': account_activation_token.make_token(user),
         'protocol': 'https' if request.is_secure() else 'http'
     })
-    email = EmailMessage(mail_subject, message, to=[to_email])
-    if email.send():
-        messages.success(
-            request, f'Dear user, please check your inbox and click on activation link to confirm and complete the registration. Check your spam folder!')
-    else:
-        messages.error(
-            request, f'Problem sending confirmation email to {to_email}, check if you typed it correctly.')
+    recipient_list = [to_email]
+    send_email_task.delay(mail_subject, message, recipient_list)
+
+    messages.success(
+        request, f'Dear user, please check your inbox and click on activation link to confirm and complete the registration. Check your spam folder!')
+    # else:
+    #     messages.error(
+    #         request, f'Problem sending confirmation email to {to_email}, check if you typed it correctly.')
 
 
 # Registration
@@ -805,7 +771,7 @@ def register(request):
         if not re.match(r'^[a-zA-Z]+\.[a-zA-Z]+(_\d{4})?@ucentralasia\.org$', email):
             messages.error(request, 'Please enter a valid UCA email address.')
             return redirect("register")
-        
+
         # Extract data first name and last name from the email
         first_name, last_name = email.split('@')[0].split('.')
         if "_" in last_name:
@@ -823,12 +789,12 @@ def register(request):
             user.save()
 
             # call the activateEmail function that will send email to the user
-            # to confirm 
+            # to confirm
             activateEmail(request, user, form.cleaned_data.get('email'))
 
             # need to change to be redirected the special page
             return redirect('login')
-        
+
         else:
             for error in form.non_field_errors():
                 messages.error(request, error)
@@ -860,9 +826,12 @@ def activate(request, uidb64, token):
         Profile.objects.create(owner=user)
 
         # Notify user about account activation
-        email = EmailMessage(
-            "Accaunt Created", f"Dear {user.first_name},\nYour accaunt is creataed successfully", to=[user.email])
-        email.send()
+        
+        subject= "Accaunt Created"
+        message = f"Dear {user.first_name},\nYour accaunt is creataed successfully"
+        recipient_list=[user.email]
+        send_email_task.delay(subject, message, recipient_list)
+
         messages.success(
             request, 'Thank you for your email confirmation. Now you can login your account.')
         return redirect('login')
@@ -897,6 +866,8 @@ def auth(request):
     return render(request, "auth/login.html")
 
 # view to change your password
+
+
 def password_change(request):
     """
     View to change your password
@@ -913,9 +884,10 @@ def password_change(request):
 
             # notify user about the password change
             messages.success(request, "Your password has been changed")
-            email = EmailMessage(
-                "Password Changed", f"Dear {user.first_name},\nYour password is changed successfully", to=[user.email])
-            email.send()
+            subject = "Password Changed"
+            message= f"Dear {user.first_name},\nYour password is changed successfully"
+            to=[user.email]
+            send_email_task(subject, message, to)
             return redirect('login')
         else:
             for error in list(form.errors.values()):
@@ -950,19 +922,28 @@ def password_reset_request(request):
                     'token': account_activation_token.make_token(associated_user),
                     "protocol": 'https' if request.is_secure() else 'http'
                 })
-                email = EmailMessage(subject, message, to=[
-                                     associated_user.email])
-                if email.send():
-                    messages.success(request,
-                                     """
+
+                recipient_list = [associated_user.email]
+                send_email_task.delay(subject, message, recipient_list)
+                messages.success(request,
+                                 """
                             We've emailed you instructions for setting your password, if an account exists with the email you entered. 
                             You should receive them shortly.If you don't receive an email, please make sure you've entered the address 
                             you registered with, and check your spam folder.
                         """
-                                     )
-                else:
-                    messages.error(
-                        request, "Problem sending reset password email, <b>SERVER PROBLEM</b>")
+                                 )
+
+                # if email.send():
+                #     messages.success(request,
+                #                      """
+                #             We've emailed you instructions for setting your password, if an account exists with the email you entered.
+                #             You should receive them shortly.If you don't receive an email, please make sure you've entered the address
+                #             you registered with, and check your spam folder.
+                #         """
+                #                      )
+                # else:
+                #     messages.error(
+                #         request, "Problem sending reset password email, <b>SERVER PROBLEM</b>")
 
             return redirect('home')
 
@@ -992,9 +973,11 @@ def passwordResetConfirm(request, uidb64, token):
                 form.save()
 
                 # notify the user about the successfull password change
-                email = EmailMessage(
-                    "Password  reset", f"Dear {user.first_name},\nYour password is reset successfully", to=[user.email])
-                email.send()
+                
+                subject="Password  reset"
+                message = f"Dear {user.first_name},\nYour password is reset successfully" 
+                to=[user.email]
+                send_email_task.delay(subject, message, to)
                 messages.success(
                     request, "Your password has been set. You may go ahead and log in  now.")
                 return redirect('login')
@@ -1047,11 +1030,10 @@ def profilePage(request):
                 for error in field.errors:
                     messages.error(request, error)
 
-
     context = {
         'title': 'Profile',
         'profile': profile,
-        'items': ItemAssignment.objects.filter(requestor=request.user, status ='out'),
+        'items': ItemAssignment.objects.filter(requestor=request.user, status='out'),
         'form': ProfileForm(instance=profile)
     }
     return render(request, 'profile.html', context)
@@ -1068,7 +1050,7 @@ def reportPage(request):
 
     """
 
-     # get the department
+    # get the department
     department = Department.objects.filter(head=request.user).first()
     items = Item.objects.filter(department=department)
 
@@ -1110,7 +1092,6 @@ def reportPage(request):
         items_list = items_list.filter(
             holder__username__contains=search_filters["owner"])
 
-
     # passing data to the page
     context = {
         "title": "reports",
@@ -1122,14 +1103,12 @@ def reportPage(request):
     return render(request, 'report.html', context)
 
 
-
 @login_required(login_url='login/')
 @user_passes_test(is_department_head, login_url='profile/')
 def loans(request):
 
     department = Department.objects.filter(head=request.user).first()
     items = ItemAssignment.objects.filter(department=department, status="out")
-
 
     # filter queries
     category = request.GET.get("category")
@@ -1163,7 +1142,6 @@ def loans(request):
         items_list = items_list.filter(
             requestor__username__contains=search_filters["owner"])
 
-
     # passing data to the page
     context = {
         "title": "loans",
@@ -1194,7 +1172,7 @@ def categories(request):
             cateogry.save()
             messages.success(request, 'Category added successfully')
             return redirect('categories')
-        
+
         # if form is not valid show errors
         else:
             for error in form.non_field_errors():
@@ -1203,35 +1181,32 @@ def categories(request):
                 for error in field.errors:
                     messages.error(request, error)
 
-        
-
     # passing data to the page
     context = {
-        'form':CategoryForm(),
+        'form': CategoryForm(),
         "title": "Categories",
         "categories": Category.objects.filter(department=department),
-        'form_url':'categories',
+        'form_url': 'categories',
 
     }
 
     return render(request, 'categories.html', context)
 
 
-
 @login_required(login_url='login/')
 @user_passes_test(is_department_head, login_url='profile/')
-def categories_update(request,pk):
+def categories_update(request, pk):
     """
     View to update category
     """
-    category = Category.objects.get(id =pk)
+    category = Category.objects.get(id=pk)
     if request.method == 'POST':
-        form =CategoryForm(request.POST, instance = category)
+        form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
             form.save()
             messages.success(request, 'Category updated successfully')
             return redirect('categories')
-        
+
         # if form is not valid show errors
         else:
             for error in form.non_field_errors():
@@ -1240,22 +1215,20 @@ def categories_update(request,pk):
                 for error in field.errors:
                     messages.error(request, error)
 
-
     context = {
-        'form':CategoryForm(instance = category),
+        'form': CategoryForm(instance=category),
         "title": "Update Category",
-        "pk":pk
+        "pk": pk
     }
 
     return render(request, 'categories.html', context)
-    
 
 
 @login_required(login_url='login/')
 @user_passes_test(is_department_head, login_url='profile/')
-def categories_delete(request,pk):
+def categories_delete(request, pk):
     """
     View to remove category from the DB
     """
-    category = Category.objects.get(id =pk).delete()
+    category = Category.objects.get(id=pk).delete()
     return redirect('categories')

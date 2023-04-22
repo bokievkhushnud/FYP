@@ -20,16 +20,9 @@ urlpatterns = [
     path('checkout/<int:pk>', views.checkout_items, name='checkout_items'),
     path('checkin/<int:pk>', views.checkin_items, name='checkin_items'),
 
-
-    # Licenses
-    path('licenses/', views.licenses, name='licenses'),
-    path('licenses/detail/<int:pk>/', views.licenses_detail, name='licenses_detail'),
-    path('licenses/add', views.add_licenses, name='add_licenses'),
-
     # Bulk delete
     path('delete', views.delete_items, name="bulk_delete"),
     path('delete/<int:pk>/', views.delete_items, name="bulk_delete"),
-
     path('checkout/', views.checkout_items, name="checkout_items"),
     path('print_qr/', views.print_qr, name="print_qr"),
     path('print_qr/<int:pk>/', views.print_qr, name="print_qr"),
