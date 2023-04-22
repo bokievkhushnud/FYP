@@ -113,24 +113,24 @@ WSGI_APPLICATION = 'ims.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # connecting to posgresql
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
-    }
-}
-
-
 # DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'd57l14eo4kj584',
-#        'USER': 'epfamqixllpddb',
-#        'PASSWORD': '294cbdd21b8e10ce7f39599abeb2860e93a73330dc52d63eed3d046d799ea1bc',
-#        'HOST': 'ec2-52-30-67-143.eu-west-1.compute.amazonaws.com',
-#        'PORT': '5432',
-#    }
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'mydatabase',
+#     }
 # }
+
+
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'd57l14eo4kj584',
+       'USER': 'epfamqixllpddb',
+       'PASSWORD': '294cbdd21b8e10ce7f39599abeb2860e93a73330dc52d63eed3d046d799ea1bc',
+       'HOST': 'ec2-52-30-67-143.eu-west-1.compute.amazonaws.com',
+       'PORT': '5432',
+   }
+}
 
 
 # Password validation
@@ -192,6 +192,7 @@ MEDIA_URL = '/media/'
 # Static
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -219,10 +220,4 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'www.tasks.send_expiry_notification',
         'schedule': timedelta(days=1),
     },
-}
-
-
-GRAPH_MODELS ={
-'all_applications': True,
-'graph_models': True,
 }
