@@ -204,11 +204,15 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 
 # Celery settings
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'  # replace with your broker URL
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # replace with your backend URL
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'  # replace with your broker URL
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # replace with your backend URL
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+# redis for heroku
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+# ...
 
 
 CELERY_BEAT_SCHEDULE = {
