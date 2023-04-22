@@ -210,8 +210,8 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 # redis for heroku
-CELERY_BROKER_URL = os.environ.get('UPSTASH_REDIS_URL', 'rediss://:d5117342eff049cd9f505e5e259f639a@eu1-credible-foxhound-38496.upstash.io:38496')
-CELERY_RESULT_BACKEND = os.environ.get('UPSTASH_REDIS_URL', 'rediss://:d5117342eff049cd9f505e5e259f639a@eu1-credible-foxhound-38496.upstash.io:38496')
+CELERY_BROKER_URL = os.environ.get('REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
+CELERY_RESULT_BACKEND = os.environ.get('REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
 # ...
 
 
