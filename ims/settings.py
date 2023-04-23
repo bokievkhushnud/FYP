@@ -56,7 +56,8 @@ INSTALLED_APPS = [
 AWS_ACCESS_KEY_ID = os.environ.get('AKIAVZH4SBSYRIAJ3K66')
 AWS_SECRET_ACCESS_KEY = os.environ.get('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')
 AWS_STORAGE_BUCKET_NAME = os.environ.get('bucketeer-b6808bf1-6fae-4c38-9710-24f925f68ac4')
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/public/'
+
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
