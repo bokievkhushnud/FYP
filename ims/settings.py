@@ -45,9 +45,25 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework_simplejwt',
     'corsheaders',
-    'django_extensions'
-
+    'django_extensions',
+    'storages',
 ]
+
+
+# Add the following settings
+AWS_ACCESS_KEY_ID = os.environ.get('AKIAVZH4SBSYRIAJ3K66')
+AWS_SECRET_ACCESS_KEY = os.environ.get('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')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('bucketeer-b6808bf1-6fae-4c38-9710-24f925f68ac4')
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+
+# Configure the S3 backend as the default backend for media files
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+
 
 
 REST_FRAMEWORK = {
@@ -187,13 +203,14 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 # Static files (CSS, JavaScripMEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 
 # Static
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -212,7 +229,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 # redis for heroku
 CELERY_BROKER_URL = os.environ.get('REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
 CELERY_RESULT_BACKEND = os.environ.get('REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
-# ...
+#
 
 
 CELERY_BEAT_SCHEDULE = {
