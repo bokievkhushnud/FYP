@@ -6,7 +6,7 @@ from reportlab.lib.utils import ImageReader
 from django.conf import settings
 from django.shortcuts import render, redirect
 from .models import Item, Category, Department, ItemAssignment, Profile, ItemHistory
-from .forms import AddItemForm, AddAccessoryForm, CustomUserCreationForm, PasswordResetForm, SetPasswordForm, ProfileForm, CategoryForm
+from .forms import AddItemForm, AddAccessoryForm, CustomUserCreationForm, PasswordResetForm, SetPasswordForm, ProfileForm, CategoryForm, CustomPasswordChangeForm
 from django.db.models import Q
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -20,14 +20,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from datetime import date
-import pandas as pd
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Count, Sum
 from django.db.models.functions import TruncMonth, ExtractYear
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .tasks import send_email_task
-
 
 # Function to check if the user is head of some department
 def is_department_head(user):
@@ -866,8 +864,7 @@ def auth(request):
     return render(request, "auth/login.html")
 
 # view to change your password
-
-
+@login_required(login_url='login/')
 def password_change(request):
     """
     View to change your password
@@ -878,7 +875,7 @@ def password_change(request):
 
     # handle the form and change the passowrd
     if request.method == 'POST':
-        form = SetPasswordForm(user, request.POST)
+        form = CustomPasswordChangeForm(user, request.POST)
         if form.is_valid():
             form.save()
 
@@ -887,14 +884,14 @@ def password_change(request):
             subject = "Password Changed"
             message= f"Dear {user.first_name},\nYour password is changed successfully"
             to=[user.email]
-            send_email_task(subject, message, to)
+            send_email_task.delay(subject, message, to)
             return redirect('login')
         else:
             for error in list(form.errors.values()):
                 messages.error(request, error)
 
-    form = SetPasswordForm(user)
-    return render(request, 'auth/recover_password.html', {'form': form})
+    form = CustomPasswordChangeForm(user)
+    return render(request, 'auth/change_password.html', {'form': form})
 
 
 # view to reset the passowrd
@@ -903,7 +900,6 @@ def password_reset_request(request):
     This view will send request to reset your password
     by email confirmation
     """
-
     # handle the form
     if request.method == 'POST':
         form = PasswordResetForm(request.POST)
@@ -956,7 +952,6 @@ def passwordResetConfirm(request, uidb64, token):
     """
     View to confirm the email and change the password
     """
-
     # get the user
     User = get_user_model()
     try:
@@ -983,10 +978,10 @@ def passwordResetConfirm(request, uidb64, token):
                 return redirect('login')
             else:
                 for error in list(form.errors.values()):
-                    messages.error(request, error)
-
-        form = SetPasswordForm(user)
-        return render(request, 'auth/recover_password.html', {'form': form})
+                    messages.error(request, error) 
+        else:
+            form = SetPasswordForm(user)
+            return render(request, 'auth/recover_password.html', {'form': form})
     else:
         messages.error(request, "Link is expired")
 

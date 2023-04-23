@@ -3,7 +3,7 @@ from .models import *
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import SetPasswordForm, PasswordResetForm
+from django.contrib.auth.forms import SetPasswordForm, PasswordResetForm, PasswordChangeForm
 
 
 # Form for adding new Item
@@ -159,3 +159,17 @@ class CategoryForm(ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
             if visible.field.label == "Description":
                 visible.field.widget.attrs['rows'] = 5
+
+
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    old_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder':'Old password','class': 'form-control'})
+    )
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder':'New password','class': 'form-control'})
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder':'Confirm new password','class': 'form-control'})
+    )
