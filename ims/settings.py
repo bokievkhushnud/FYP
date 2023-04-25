@@ -65,7 +65,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 
 # Configure the S3 backend as the default backend for media files
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+# MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 
 
 s3 = boto3.resource(
@@ -76,6 +76,7 @@ s3 = boto3.resource(
 )
 
 bucket = s3.Bucket(AWS_STORAGE_BUCKET_NAME)
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -215,6 +216,7 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 # Static files (CSS, JavaScripMEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # MEDIA_URL = '/media/'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 
 # Static
 STATIC_URL = '/static/'
