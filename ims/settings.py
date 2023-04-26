@@ -263,3 +263,4 @@ MEDIA_URL = AWS_URL + '/media/'
 # DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicS3Boto3Storage'
 DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicS3Boto3Storage'
 
+MEDIAFILES_LOCATION = 'media'
