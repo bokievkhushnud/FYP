@@ -52,32 +52,6 @@ INSTALLED_APPS = [
 ]
 
 
-# Add the following settings
-AWS_ACCESS_KEY_ID = os.environ.get('AKIAVZH4SBSYRIAJ3K66')
-AWS_SECRET_ACCESS_KEY = os.environ.get('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')
-AWS_STORAGE_BUCKET_NAME = os.environ.get('bucketeer-b6808bf1-6fae-4c38-9710-24f925f68ac4')
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/public/'
-
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-
-
-# Configure the S3 backend as the default backend for media files
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
-
-
-s3 = boto3.resource(
-    's3',
-    aws_access_key_id=AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-    region_name='eu-west-1',
-)
-
-bucket = s3.Bucket(AWS_STORAGE_BUCKET_NAME)
-
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -110,9 +84,9 @@ MIDDLEWARE = [
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:19000', # Replace with the origin you want to allow
-    'http://192.168.1.184:19000', # Replace with the origin you want to allow
-    'exp://192.168.1.184', # Replace with the origin you want to allow
+    'http://localhost:19000',  # Replace with the origin you want to allow
+    'http://192.168.1.184:19000',  # Replace with the origin you want to allow
+    'exp://192.168.1.184',  # Replace with the origin you want to allow
 ]
 
 ROOT_URLCONF = 'ims.urls'
@@ -150,14 +124,14 @@ WSGI_APPLICATION = 'ims.wsgi.application'
 
 
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'd57l14eo4kj584',
-       'USER': 'epfamqixllpddb',
-       'PASSWORD': '294cbdd21b8e10ce7f39599abeb2860e93a73330dc52d63eed3d046d799ea1bc',
-       'HOST': 'ec2-52-30-67-143.eu-west-1.compute.amazonaws.com',
-       'PORT': '5432',
-   }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd57l14eo4kj584',
+        'USER': 'epfamqixllpddb',
+        'PASSWORD': '294cbdd21b8e10ce7f39599abeb2860e93a73330dc52d63eed3d046d799ea1bc',
+        'HOST': 'ec2-52-30-67-143.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',
+    }
 }
 
 
@@ -216,7 +190,6 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 # Static files (CSS, JavaScripMEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # MEDIA_URL = '/media/'
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 
 # Static
 STATIC_URL = '/static/'
@@ -240,8 +213,10 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 # redis for heroku
-CELERY_BROKER_URL = os.environ.get('REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
-CELERY_RESULT_BACKEND = os.environ.get('REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
+CELERY_BROKER_URL = os.environ.get(
+    'REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
+CELERY_RESULT_BACKEND = os.environ.get(
+    'REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
 #
 
 
@@ -255,3 +230,16 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': timedelta(days=1),
     },
 }
+
+
+# Bucketeer settings
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = os.environ.get('BUCKETEER_AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('BUCKETEER_AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('BUCKETEER_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.environ.get('BUCKETEER_AWS_REGION')
+AWS_S3_ENDPOINT_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
