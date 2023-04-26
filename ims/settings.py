@@ -244,4 +244,4 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
-DEFAULT_FILE_STORAGE = 'myapp.custom_storages.PublicMediaStorage'
+DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicMediaStorage'
