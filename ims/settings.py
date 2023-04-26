@@ -15,7 +15,7 @@ import os
 import django_heroku
 from datetime import timedelta
 import boto3
-from custom_storages import PublicMediaStorage
+from www.custom_storages import PublicMediaStorage
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
