@@ -14,7 +14,6 @@ from pathlib import Path
 import os
 import django_heroku
 from datetime import timedelta
-import boto3
 # from www.custom_storages import PublicMediaStorage
 
 
@@ -218,7 +217,6 @@ CELERY_BROKER_URL = os.environ.get(
     'REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
 CELERY_RESULT_BACKEND = os.environ.get(
     'REDISCLOUD_URL', 'redis://default:EtlstfCjAPW0mQ9tnUnP45bCXuVgNtDh@redis-15008.c3.eu-west-1-2.ec2.cloud.redislabs.com:15008')
-#
 
 
 CELERY_BEAT_SCHEDULE = {
@@ -233,20 +231,7 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 
-# Bucketeer settings
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# AWS_ACCESS_KEY_ID = os.environ.get('BUCKETEER_AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = os.environ.get('BUCKETEER_AWS_SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = os.environ.get('BUCKETEER_BUCKET_NAME')
-# AWS_S3_REGION_NAME = os.environ.get('BUCKETEER_AWS_REGION')
-# AWS_S3_ENDPOINT_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-# AWS_S3_OBJECT_PARAMETERS = {
-#     'CacheControl': 'max-age=86400',
-# }
-# MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
-# DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicMediaStorage'
-
-
+# AWS S3 settings
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
@@ -254,13 +239,10 @@ AWS_URL = os.environ.get('AWS_URL')
 AWS_DEFAULT_ACL = None
 AWS_S3_REGION_NAME = 'eu-north-1'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
-# AWS_DEFAULT_ACL = 'public-read'
 
 # STATIC_URL = AWS_URL + '/static/'
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 MEDIA_URL = AWS_URL + '/media/'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicS3Boto3Storage'
-# DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicMediaStorage'
 
 
