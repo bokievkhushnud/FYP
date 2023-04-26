@@ -15,7 +15,7 @@ import os
 import django_heroku
 from datetime import timedelta
 import boto3
-from www.custom_storages import PublicS3Boto3Storage
+from www.custom_storages import PublicMediaStorage
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -261,6 +261,6 @@ AWS_DEFAULT_ACL = 'public-read'
 MEDIA_URL = AWS_URL + '/media/'
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicS3Boto3Storage'
-DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicS3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicMediaStorage'
 
 MEDIAFILES_LOCATION = 'media'
