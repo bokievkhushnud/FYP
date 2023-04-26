@@ -1,12 +1,17 @@
-from qrcode import *
-from django.conf import settings
+from qrcode import make
+from django.core.files.storage import default_storage
 
 # Function to generate QR code
-def generate_qr(item_type,data,id):
+def generate_qr(item_type, data, id):
     img = make(data)
-    img_name = 'qr_'+item_type+"_"+str(id)+ '.png'
-    img_url = settings.MEDIA_ROOT + 'qrcode/' + img_name
-    img.save(img_url)
+    img_name = 'qr_' + item_type + "_" + str(id) + '.png'
+    img_path = 'qrcode/' + img_name
+
+    # Save the QR code to media storage
+    with default_storage.open(img_path, 'wb') as img_file:
+        for chunk in img.iter_chunks(1024):
+            img_file.write(chunk)
+
     return img_name
 
 
