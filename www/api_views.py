@@ -31,6 +31,9 @@ def get_user_profile(request):
     serializer = ProfileSerializer(profile)
     return Response(serializer.data)
 
+
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_items(request):

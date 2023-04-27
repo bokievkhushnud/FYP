@@ -55,11 +55,4 @@ urlpatterns = [
     path('categories/',views.categories, name="categories" ),
     path('category/delete/<int:pk>/',views.categories_delete, name="delete_category" ),
     path('category/update/<int:pk>/',views.categories_update, name="update_category" ),
-
-
-
-
-
-    
-
 ]

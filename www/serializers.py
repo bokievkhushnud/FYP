@@ -23,8 +23,10 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['owner', 'profile_pic']
 
 class ItemAssignmentSerializer(serializers.ModelSerializer):
-    item_name = serializers.ReadOnlyField(source='item.item_name')
+    item = ItemSerializer()
+    requestor = UserSerializer()
+    done_by = UserSerializer()
 
     class Meta:
         model = ItemAssignment
-        fields = ['item', 'item_name', 'quantity', 'action', 'department', 'location', 'requestor', 'done_by', 'date', 'due_date', 'notes', 'status']
+        fields = ['item', 'quantity', 'action', 'department', 'location', 'requestor', 'done_by', 'date', 'due_date', 'notes', 'status']
