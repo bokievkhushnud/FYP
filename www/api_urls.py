@@ -8,6 +8,6 @@ urlpatterns = [
     path('item/<int:item_id>/', api_views.item_details, name='item-details'),
     path('profile/', api_views.get_user_profile, name='get-user-profile'),
     path('items/', api_views.get_user_items, name='get-user-items'),
-    path('api/items/<int:item_id>/set_status/<str:status>/', api_views.set_item_status, name='set_item_status'),
+    path('broken/items/<int:item_id>/', api_views.set_item_status, name='set_item_status'),
 
 ]

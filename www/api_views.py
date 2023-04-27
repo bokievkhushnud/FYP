@@ -44,10 +44,10 @@ def get_user_items(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def set_item_status(request, item_id, status):
+def set_item_status(request, item_id):
     try:
         item = Item.objects.get(id=item_id)
-        item.status = status
+        item.status = 'broken'
         item.save()
         subject = f"{item} Out of Order"
         message = f"Report: {item} is out of order\nLocation: {item.location}."
