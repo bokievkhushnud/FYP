@@ -1,5 +1,4 @@
-from rest_framework import generics
-from .models import Item, User
+from .models import Item
 from .serializers import ItemSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +6,8 @@ from rest_framework.response import Response
 from .models import Profile, ItemAssignment
 from .serializers import ProfileSerializer, ItemAssignmentSerializer
 from rest_framework import status
-
+from django.http import JsonResponse
+from .tasks import send_email_task
 
 
 @api_view(['GET'])
@@ -41,3 +41,18 @@ def get_user_items(request):
     serializer = ItemAssignmentSerializer(item_assignments, many=True)
     return Response(serializer.data)
 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def set_item_status(request, item_id, status):
+    try:
+        item = Item.objects.get(id=item_id)
+        item.status = status
+        item.save()
+        subject = f"{item} Out of Order"
+        message = f"Report: {item} is out of order\nLocation: {item.location}."
+        recipient_list = [item.department.head.email]
+        send_email_task.delay(subject, message, recipient_list)
+        return JsonResponse({'success': True}, status=status.HTTP_200_OK)
+    except Item.DoesNotExist:
+        return JsonResponse({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
