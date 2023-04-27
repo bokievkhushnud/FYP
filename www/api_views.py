@@ -42,8 +42,8 @@ def get_user_items(request):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
 def set_item_status(request, item_id):
     try:
         item = Item.objects.get(id=item_id)
