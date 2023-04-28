@@ -12,4 +12,5 @@ urlpatterns = [
     path('change_profile_pic/', api_views.change_profile_pic, name='change_profile_pic'),
     path('change_password/', api_views.change_password, name='change_password'),
 
+
 ]
