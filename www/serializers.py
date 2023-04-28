@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name', 'email','username']
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     department = DepartmentSerializer()
-    holder = UserSerializer()
+    holder = UserSerializer(many=True)
     class Meta:
         model = Item
         fields = ['id', 'item_name', 'item_code','item_type', 'image', 'quantity', 'price','currency', 'description', 'vendor', 'date_received', 'expiration_date', 'notes', 'order_number', 'status', 'category', 'department', 'location', 'campus', 'holder', 'qr_code', 'min_alert_quantity']
@@ -43,7 +43,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['owner', 'profile_pic']
 
 class ItemAssignmentSerializer(serializers.ModelSerializer):
-    item = ItemSerializer()
+    item = ItemSerializer(many=True)
     requestor = UserSerializer()
     done_by = UserSerializer()
     department = DepartmentSerializer()
