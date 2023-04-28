@@ -3,7 +3,6 @@ from rest_framework import serializers
 from .models import Item, Profile, Department, Category
 from .models import Profile, ItemAssignment
 from django.contrib.auth.models import User
-from django.db import models
 
 
 
@@ -12,13 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name', 'last_name', 'email','username']
 
-    def to_representation(self, instance):
-        """
-        Overriding this method to handle ManyRelatedManager instances properly.
-        """
-        if isinstance(instance, models.Manager):
-            return [super().to_representation(user) for user in instance.all()]
-        return super().to_representation(instance)
+
 
 
 
