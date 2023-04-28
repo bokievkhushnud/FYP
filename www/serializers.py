@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name', 'last_name', 'email', 'username']
 
-        
+
 class ItemSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     department = DepartmentSerializer()
