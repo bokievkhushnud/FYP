@@ -4,7 +4,18 @@ from .models import Item, Profile, Department, Category
 from .models import Profile, ItemAssignment
 from django.contrib.auth.models import User
 
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'username']
+
+
 class DepartmentSerializer(serializers.ModelSerializer):
+    head = UserSerializer()
+
     class Meta:
         model = Department
         fields = ['id', 'name', 'head']
@@ -15,17 +26,10 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email', 'username']
-
-
 class ItemSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     department = DepartmentSerializer()
-    # holder = UserSerializer()
+    holder = UserSerializer()
     class Meta:
         model = Item
         fields = ['id', 'item_name', 'item_code','item_type', 'image', 'quantity', 'price','currency', 'description', 'vendor', 'date_received', 'expiration_date', 'notes', 'order_number', 'status', 'category', 'department', 'location', 'campus', 'holder', 'qr_code', 'min_alert_quantity']
