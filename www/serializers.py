@@ -45,7 +45,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['owner', 'profile_pic']
 
 class ItemAssignmentSerializer(serializers.ModelSerializer):
-    item = ItemSerializer(many=True)
+    item = ItemSerializer()
     requestor = UserSerializer()
     done_by = UserSerializer()
     department = DepartmentSerializer()
