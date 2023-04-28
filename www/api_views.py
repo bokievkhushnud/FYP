@@ -59,7 +59,6 @@ def set_item_status(request, item_id):
         return JsonResponse({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
-
 @api_view(['POST'])
 def change_profile_pic(request):
     user = request.user

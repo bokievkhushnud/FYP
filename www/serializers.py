@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     department = DepartmentSerializer()
-    holder = UserSerializer()
+    # holder = UserSerializer()
     class Meta:
         model = Item
         fields = ['id', 'item_name', 'item_code','item_type', 'image', 'quantity', 'price','currency', 'description', 'vendor', 'date_received', 'expiration_date', 'notes', 'order_number', 'status', 'category', 'department', 'location', 'campus', 'holder', 'qr_code', 'min_alert_quantity']
