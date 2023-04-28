@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ['id', 'item_name', 'image', 'quantity', 'price','currency', 'description', 'vendor', 'date_received', 'expiration_date', 'notes', 'order_number', 'status']
+        fields = ['id', 'item_name', 'item_code','item_type', 'image', 'quantity', 'price','currency', 'description', 'vendor', 'date_received', 'expiration_date', 'notes', 'order_number', 'status', 'category', 'department', 'location', 'campus', 'holder', 'qr_code', 'min_alert_quantity']
 
 
 class UserSerializer(serializers.ModelSerializer):
