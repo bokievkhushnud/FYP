@@ -1,10 +1,22 @@
 
 from rest_framework import serializers
-from .models import Item, Profile
+from .models import Item, Profile, Department, Category
 from .models import Profile, ItemAssignment
 from django.contrib.auth.models import User
 
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ['id', 'name', 'head']
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
+
 class ItemSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+    department = DepartmentSerializer()
     class Meta:
         model = Item
         fields = ['id', 'item_name', 'item_code','item_type', 'image', 'quantity', 'price','currency', 'description', 'vendor', 'date_received', 'expiration_date', 'notes', 'order_number', 'status', 'category', 'department', 'location', 'campus', 'holder', 'qr_code', 'min_alert_quantity']
@@ -17,7 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     owner = UserSerializer()
-
     class Meta:
         model = Profile
         fields = ['owner', 'profile_pic']
@@ -26,6 +37,7 @@ class ItemAssignmentSerializer(serializers.ModelSerializer):
     item = ItemSerializer()
     requestor = UserSerializer()
     done_by = UserSerializer()
+    department = DepartmentSerializer()
 
     class Meta:
         model = ItemAssignment
