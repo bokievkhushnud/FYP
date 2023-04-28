@@ -9,7 +9,7 @@ urlpatterns = [
     path('profile/', api_views.get_user_profile, name='get-user-profile'),
     path('items/', api_views.get_user_items, name='get-user-items'),
     path('broken/items/<int:item_id>/', api_views.set_item_status, name='set_item_status'),
-    path('api/change_profile_pic/', api_views.change_profile_pic, name='change_profile_pic'),
-    path('api/change_password/', api_views.change_password, name='change_password'),
+    path('change_profile_pic/', api_views.change_profile_pic, name='change_profile_pic'),
+    path('change_password/', api_views.change_password, name='change_password'),
 
 ]
