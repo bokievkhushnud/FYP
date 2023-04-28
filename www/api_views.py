@@ -8,7 +8,8 @@ from .serializers import ProfileSerializer, ItemAssignmentSerializer
 from rest_framework import status
 from django.http import JsonResponse
 from .tasks import send_email_task
-
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -56,3 +57,25 @@ def set_item_status(request, item_id):
         return JsonResponse({'success': True}, status=status.HTTP_200_OK)
     except Item.DoesNotExist:
         return JsonResponse({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['POST'])
+def change_profile_pic(request):
+    user = request.user
+    user.profile.profile_pic = request.FILES['profile_pic']
+    user.profile.save()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+def change_password(request):
+    user = request.user
+    form = PasswordChangeForm(user, request.data)
+
+    if form.is_valid():
+        user = form.save()
+        update_session_auth_hash(request, user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
