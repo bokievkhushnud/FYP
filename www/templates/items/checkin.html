@@ -28,7 +28,7 @@
             <!-- /.row -->
             <div class="col-md-12">
 
-                <form class="card-body row bg-white" action="{% url 'checkin_items' item.id %}" method="post">
+                <form class="card-body row elevation-4 mb-4" action="{% url 'checkin_items' item.id %}" method="post">
                     {% csrf_token %}
                     <div class="col-md-5  d-flex  justify-content-center">
                         <div class="mt-2">
