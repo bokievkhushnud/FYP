@@ -820,9 +820,6 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-
-        Profile.objects.create(owner=user)
-
         # Notify user about account activation
         
         subject= "Accaunt Created"
@@ -1000,8 +997,8 @@ def logout_user(request):
     return redirect('login')
 
 
-@login_required(login_url='login/')
 # personal profile page of the users
+@login_required(login_url='login/')
 def profilePage(request):
     """
     This view is for profile page
