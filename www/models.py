@@ -47,8 +47,10 @@ class Item(models.Model):
     notes = models.TextField(blank=True)
     order_number = models.CharField(max_length=100, blank=True)
     holder = models.ManyToManyField(User, blank=True,  related_name="holder")  # not visible
-    qr_code = models.CharField(
-        max_length=1000, blank=True, default="")  # not visible
+    # qr_code = models.CharField(
+    #     max_length=1000, blank=True, default="")  # not visible
+    
+    qr_code = models.ImageField(upload_to='qr_codes', blank=True, null=True)  # +
     image = models.ImageField(default='items/default.png', upload_to='items')  # +
     status = models.CharField(  # not visible
         max_length=20, choices=[("available", "Available"), ("outinuse", "Out In Use"), ("broken", "Broken")],
