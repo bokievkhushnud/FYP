@@ -62,9 +62,9 @@
                     <label class="custom-control-label" for="customSwitch3">Dark</label>
                 </div>
             </a>
-           
+
         </li>
-    
+
     </ul>
     {% endif %}
 </nav>
@@ -83,14 +83,36 @@
 
         var darkModeCheckbox = document.getElementById('customSwitch3');
 
+        // Set the initial state based on saved preference or default to light mode
+        function setInitialState() {
+            var savedPreference = localStorage.getItem('darkMode');
+            if (savedPreference) {
+                var isDarkMode = savedPreference === 'true';
+                darkModeCheckbox.checked = isDarkMode;
+                updateDarkModeState(isDarkMode);
+            }
+        }
+
         // Update the dark mode state based on the checkbox state
-        darkModeCheckbox.addEventListener('change', function() {
-            if (darkModeCheckbox.checked) {
+        function updateDarkModeState(isDarkMode) {
+            if (isDarkMode) {
                 document.body.classList.add('dark-mode');
             } else {
                 document.body.classList.remove('dark-mode');
             }
+        }
+
+        // Event listener for when the checkbox state changes
+        darkModeCheckbox.addEventListener('change', function () {
+            var isDarkMode = darkModeCheckbox.checked;
+            // Save the current preference to localStorage
+            localStorage.setItem('darkMode', isDarkMode);
+            updateDarkModeState(isDarkMode);
         });
+
+        // Set the initial state when the page loads
+        setInitialState();
+
     });
 
 
