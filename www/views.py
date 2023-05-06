@@ -676,7 +676,7 @@ def generate_pdf(request):
 
         # Define a list of image paths
         image_paths = list(
-            map(lambda item: settings.MEDIA_ROOT + item.qr_code.url, items))
+            map(lambda item: item.qr_code.url, items))
         image_width = int(size)
         image_height = int(size)
         padding = int(gap)
