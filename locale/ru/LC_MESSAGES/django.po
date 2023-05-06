@@ -19,6 +19,420 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
-#: www/templates/dashboard.html:13
-msgid "Hello, world!"
-msgstr "Privet"
+
+#: www/templates/navbar.html
+msgid "Dashboard"
+msgstr "Панель управления"
+
+msgid "Items"
+msgstr "Товары"
+
+msgid "Loans"
+msgstr "Займы"
+
+msgid "Categories"
+msgstr "Категории"
+
+msgid "Reports"
+msgstr "Отчеты"
+
+msgid "ENG"
+msgstr "АНГ"
+
+msgid "RU"
+msgstr "РУС"
+
+msgid "Dark"
+msgstr "Темный"
+
+#: www/templates/main_sidebar.html
+msgid "All categories"
+msgstr "Все категории"
+
+msgid "All Items"
+msgstr "Все товары"
+
+msgid "Add new"
+msgstr "Добавить новый"
+
+msgid "Add asset"
+msgstr "Добавить актив"
+
+msgid "Add accessory"
+msgstr "Добавить аксессуар"
+
+msgid "Add consumable"
+msgstr "Добавить расходник"
+
+msgid "Print QR codes"
+msgstr "Печать QR-кодов"
+
+msgid "Profile"
+msgstr "Профиль"
+
+msgid "Logout"
+msgstr "Выйти"
+
+msgid "Copyright &copy; 2023"
+msgstr "Авторское право &copy; 2023"
+
+msgid "All rights reserved."
+msgstr "Все права защищены."
+
+msgid "Version"
+msgstr "Версия"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "User Profile"
+msgstr "Профиль пользователя"
+
+msgid "Item"
+msgstr "Товар"
+
+msgid "Department"
+msgstr "Отдел"
+
+msgid "Update Profile Pic"
+msgstr "Обновить фото профиля"
+
+msgid "Change Password"
+msgstr "Сменить пароль"
+
+msgid "Location"
+msgstr "Местоположение"
+
+msgid "Checkout Date"
+msgstr "Дата выдачи"
+
+msgid "Checked Out By"
+msgstr "Выдано"
+
+msgid "Notes"
+msgstr "Заметки"
+
+#: www/templates/categories.html
+msgid "Add Category"
+msgstr "Добавить категорию"
+
+msgid "New Category"
+msgstr "Новаякатегория"
+
+msgid "Update Category"
+msgstr "Обновить категорию"
+
+msgid "Code"
+msgstr "Код"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "action"
+msgstr "действие"
+
+msgid "Action"
+msgstr "Действие"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+#: www/templates/loans.html
+msgid "Filters"
+msgstr "Фильтры"
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Owner"
+msgstr "Владелец"
+
+msgid "Checked Out Date"
+msgstr "Дата выдачи"
+
+msgid "Due Date"
+msgstr "Дата возврата"
+
+msgid "Apply Filter"
+msgstr "Применить фильтр"
+
+msgid "Reset Filter"
+msgstr "Сбросить фильтр"
+
+msgid "Quantity"
+msgstr "Количество"
+
+msgid "Requestor"
+msgstr "Запрашивающий"
+
+msgid "Checked out by"
+msgstr "Выдано"
+
+msgid "notes"
+msgstr "Примечания"
+
+#: www/templates/reports.html
+msgid "Type"
+msgstr "Тип"
+
+msgid "Arrival Date"
+msgstr "Дата прибытия"
+
+msgid "Date From"
+msgstr "Дата от"
+
+msgid "Date To"
+msgstr "Дата до"
+
+msgid "Item Type"
+msgstr "Тип предмета"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Available"
+msgstr "Доступный"
+
+msgid "Broken"
+msgstr "Сломанный"
+
+msgid "In Use"
+msgstr "Используется"
+
+#: www/templates/dashboard.html
+msgid "Total Items"
+msgstr "Общее количество товаров"
+
+msgid "Items Available"
+msgstr "Доступные товары"
+
+msgid "Items Out"
+msgstr "Товары вне склада"
+
+msgid "Collapse"
+msgstr "Свернуть"
+
+msgid "Remove"
+msgstr "Удалить"
+
+msgid "Recently Checked Out"
+msgstr "Недавно выданные"
+
+msgid "No Data Available"
+msgstr "Нет доступных данных"
+
+msgid "Broken Items"
+msgstr "Поврежденные товары"
+
+msgid "Items to be returned"
+msgstr "Товары к возврату"
+
+msgid "Checked Out"
+msgstr "Выдано"
+
+msgid "Items Added"
+msgstr "Добавленные товары"
+
+msgid "Item Types"
+msgstr "Типы товаров"
+
+msgid "Items in Shortage"
+msgstr "Товары с дефицитом"
+
+#: www/templates/items.html
+msgid "Total"
+msgstr "Всего"
+
+
+msgid "List of"
+msgstr "Список"
+
+msgid "Add New"
+msgstr "Добавить новый"
+
+msgid "Asset"
+msgstr "Актив"
+
+msgid "Accessory"
+msgstr "Аксессуар"
+
+msgid "Consumable"
+msgstr "Расходный материал"
+
+msgid "Bulk action"
+msgstr "Массовое действие"
+
+
+msgid "Print QR"
+msgstr "Печать QR"
+
+msgid "No Items Added yet"
+msgstr "Пока не добавлено ни одного предмета"
+
+msgid "Page"
+msgstr "Страница"
+
+msgid "of"
+msgstr "из"
+
+msgid "First page"
+msgstr "Первая страница"
+
+msgid "Last page"
+msgstr "Последняя страница"
+
+
+#: www/templates/filter.html
+msgid "Filter"
+msgstr "Фильтр"
+
+#: www/templates/add_new_item.html
+
+
+msgid "Fill the information"
+msgstr "Заполните информацию"
+
+msgid "Add Item"
+msgstr "Добавить элемент"
+
+msgid "New Item"
+msgstr "Новый товар"
+
+msgid "New Accessory"
+msgstr "Новый аксессуар"
+
+
+#: path/to/your/item_detail.html
+msgid "Details"
+msgstr "Детали"
+
+
+#: path/to/your/item_detail.html
+
+msgid "Holder"
+msgstr "Владелец"
+
+msgid "Order Number"
+msgstr "Номер заказа"
+
+msgid "Price"
+msgstr "Цена"
+
+msgid "Date Received"
+msgstr "Дата получения"
+
+msgid "Expiration Date"
+msgstr "Срок годности"
+
+msgid "Min Alert"
+msgstr "Минимальное кол-во"
+
+msgid "Vendor"
+msgstr "Поставщик"
+
+msgid "QR - code"
+msgstr "QR-код"
+
+msgid "Update"
+msgstr "Обновить"
+
+msgid "Check Out"
+msgstr "Выдать"
+
+msgid "Check In"
+msgstr "Принять"
+
+
+msgid "Fixed"
+msgstr "Исправлено"
+
+msgid "Out of order"
+msgstr "Сломанный"
+
+
+msgid "History"
+msgstr "История"
+
+
+msgid "Campus"
+msgstr "Кампус"
+
+msgid "Checked by"
+msgstr "Проверено"
+
+msgid "Date"
+msgstr "Дата"
+
+
+msgid "No history available for this item"
+msgstr "Нет истории для этого товара"
+
+msgid "This Item is in storage, it is not checked Out."
+msgstr "Этот товар находится на складе, он не выдан."
+
+
+#: path/to/your/checkin.html
+
+msgid "Item Name"
+msgstr "Товар"
+
+msgid "Return Date"
+msgstr "Дата возврата"
+
+msgid "Update Item"
+msgstr "Обновить"
+
+msgid "Edit Item"
+msgstr "Обновить товар"
+
+msgid "None"
+msgstr "Нет"
+
+
+# path/to/your/print_qrcodes.html
+
+msgid "Print Qr-Code"
+msgstr "Печать QR-кода"
+
+msgid "Image Size"
+msgstr "Размер изображения"
+
+msgid "Gap"
+msgstr "Расстояние"
+
+msgid "Margin Y"
+msgstr "Отступ Y"
+
+msgid "Margin X"
+msgstr "Отступ X"
+
+msgid "Preview"
+msgstr "Предпросмотр"
+
+msgid "Reset"
+msgstr "Сброс"
+
+msgid "Select Items to Add"
+msgstr "Выберите элементы для добавления"
+
+msgid "Close"
+msgstr "Закрыть"
+
+
+
+
+
+
+
+
+
+
+
+
+

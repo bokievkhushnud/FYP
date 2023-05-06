@@ -186,7 +186,7 @@ def items(request):
         Q(description__contains=search_filters["q"]) |
         Q(notes__contains=search_filters["q"]) |
         Q(vendor__contains=search_filters["q"])
-    )
+    ).order_by('-date_received')
 
     # paginator (for items table)
     page = request.GET.get('page', 1)
@@ -674,10 +674,9 @@ def generate_pdf(request):
         # p.setPageRotation(180)
         items = Item.objects.filter(id__in=checked_items)
 
-        # image_paths =  [(settings.MEDIA_ROOT + 'qrcode/' + items) for i in range(100) ]
         # Define a list of image paths
         image_paths = list(
-            map(lambda item: settings.MEDIA_ROOT + 'qrcode/' + item.qr_code, items))
+            map(lambda item: settings.MEDIA_ROOT + item.qr_code.url, items))
         image_width = int(size)
         image_height = int(size)
         padding = int(gap)

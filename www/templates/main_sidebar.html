@@ -1,9 +1,11 @@
 <!-- Main Sidebar Container -->
 {% load static %}
 {% load custom_filters %}
+{% load i18n %}
 
 {% if user.is_authenticated %}
 
+{% load i18n %}
 <aside class="main-sidebar sidebar-dark-primary elevation-1">
   <!-- Brand Logo -->
   <a href="{% url 'home' %}" class="brand-link">
@@ -30,16 +32,16 @@
         <!-- Add icons to the links using the .nav-icon class
                    with font-awesome or any other icon font library -->
 
-        
-                  
 
-          {% if user|is_department_head %}
+
+
+        {% if user|is_department_head %}
 
         <li class="nav-item ">
           <a href="" class="nav-link">
             <i class="nav-icon fa-solid fa-sitemap"></i>
             <p>
-              Categories
+              {% trans "Categories" %}
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
@@ -47,7 +49,7 @@
             <li class="nav-item">
               <a href="{% url 'categories' %}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>All categories</p>
+                <p>{% trans "All categories" %}</p>
               </a>
             </li>
           </ul>
@@ -56,7 +58,7 @@
           <a href="#" class="nav-link">
             <i class="nav-icon fa-solid fa-box"></i>
             <p>
-              Items
+              {% trans "Items" %}
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
@@ -64,14 +66,14 @@
             <li class="nav-item">
               <a href="{% url 'items' %}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>All Items</p>
+                <p>{% trans "All Items" %}</p>
               </a>
             </li>
             <li class="nav-item ">
               <a href="#" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>
-                  Add new
+                  {% trans "Add new" %}
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -80,31 +82,30 @@
                 <li class="nav-item">
                   <a href="{% url 'add_item' %}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Add asset</p>
+                    <p>{% trans "Add asset" %}</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="{% url 'add_accessories' %}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Add accessory</p>
+                    <p>{% trans "Add accessory" %}</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="{% url 'add_consumables' %}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Add consumable</p>
+                    <p>{% trans "Add consumable" %}</p>
                   </a>
                 </li>
               </ul>
             </li>
-
           </ul>
         </li>
         <li class="nav-item">
           <a href="{% url 'loans' %}" class="nav-link">
             <i class="nav-icon fa-solid fa-people-group"></i>
             <p>
-              Loans
+              {% trans "Loans" %}
             </p>
           </a>
         </li>
@@ -112,7 +113,7 @@
           <a href="{% url 'print_qr' %}" class="nav-link">
             <i class="nav-icon fa fa-qrcode"></i>
             <p>
-              Print QR codes
+              {% trans "Print QR codes" %}
             </p>
           </a>
         </li>
@@ -120,7 +121,7 @@
           <a href="{% url 'reports' %}" class="nav-link">
             <i class="nav-icon fa fa-file-text"></i>
             <p>
-              Reports
+              {% trans "Reports" %}
             </p>
           </a>
         </li>
@@ -129,16 +130,16 @@
           <a href="{% url 'profile' %}" class="nav-link">
             <i class="nav-icon fa fa-address-card"></i>
             <p>
-              Profile
+              {% trans "Profile" %}
             </p>
           </a>
         </li>
-        
+
         <li class="nav-item">
           <a href="{% url 'logout' %}" class="nav-link">
             <i class="nav-icon fa fa-sign-out"></i>
             <p>
-              Logout
+              {% trans "Logout" %}
             </p>
           </a>
         </li>
@@ -150,4 +151,8 @@
   </div>
   <!-- /.sidebar -->
 </aside>
+
+
+
+
 {% endif %}

@@ -1,5 +1,6 @@
 {% extends 'main.html' %}
 {% block content %}
+{% load i18n %}
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -8,7 +9,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6 d-flex">
-          <h1 class="m-0 d-inline">{{title}}</h1>
+          <h1 class="m-0 d-inline">{% trans "Items" %}</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <form id="searchform" class="input-group input-group-sm float-sm-right" style="width: 150px;" method="GET" ,
@@ -40,10 +41,10 @@
             <span class="info-box-icon bg-info elevation-1"><i class="fa-solid fa-cart-shopping"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Total</span>
+              <span class="info-box-text">{% trans "Total" %}</span>
               <span class="info-box-number">
                 {{total_count}}
-                <!-- <small>Items</small> -->
+                <!-- <small>{% trans "Items" %}</small> -->
               </span>
             </div>
             <!-- /.info-box-content -->
@@ -55,7 +56,7 @@
           <div class="info-box mb-3">
             <span class="info-box-icon bg-danger elevation-1"><i class="fa-solid fa-hammer"></i></span>
             <div class="info-box-content">
-              <span class="info-box-text">Broken</span>
+              <span class="info-box-text">{% trans "Broken" %}</span>
               <span class="info-box-number">{{broken_count}}</span>
             </div>
             <!-- /.info-box-content -->
@@ -70,7 +71,7 @@
             <span class="info-box-icon bg-success elevation-1"><i class="fa-solid fa-square-check"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">Available</span>
+              <span class="info-box-text">{% trans "Available" %}</span>
               <span class="info-box-number">{{available_count}}</span>
             </div>
             <!-- /.info-box-content -->
@@ -83,7 +84,7 @@
             <span class="info-box-icon bg-warning elevation-1"><i class="fa-solid fa-ban"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">In Use</span>
+              <span class="info-box-text">{% trans "In Use" %}</span>
               <span class="info-box-number">{{inuse_count}}</span>
             </div>
             <!-- /.info-box-content -->
@@ -104,22 +105,24 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header d-flex align-items-center">
-              <!-- <h3 class="card-title">List of {{title}}</h3> -->
+              <!-- <h3 class="card-title">{% trans "List of" %} {{title}}</h3> -->
               <button type="button" class="btn btn-success " data-toggle="dropdown">
-                Add New
+                {% trans "Add New" %}
               </button>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="{% url 'add_item' %}">Asset</a>
-                <a class="dropdown-item" href="{% url 'add_accessories' %}">Accessory</a>
-                <a class="dropdown-item" href="{% url 'add_consumables' %}">Consumable</a>
+                <a class="dropdown-item" href="{% url 'add_item' %}">{% trans "Asset" %}</a>
+                <a class="dropdown-item" href="{% url 'add_accessories' %}">{% trans "Accessory" %}</a>
+                <a class="dropdown-item" href="{% url 'add_consumables' %}">{% trans "Consumable" %}</a>
               </div>
               <div class="ml-auto">
                 <p class="m-0 dropdown-toggle" data-toggle="dropdown" style="cursor:pointer;">
-                  Bulk action
+                  {% trans "Bulk action" %}
                 </p>
                 <div class="dropdown-menu">
-                  <input class="dropdown-item" type="submit" formaction="{% url 'bulk_delete' %}" value="Delete" />
-                  <input class="dropdown-item" type="submit" formaction="{% url 'print_qr' %}" value="Print QR" />
+                  <input class="dropdown-item" type="submit" formaction="{% url 'bulk_delete' %}"
+                    value="{% trans 'Delete' %}" />
+                  <input class="dropdown-item" type="submit" formaction="{% url 'print_qr' %}"
+                    value="{% trans 'Print QR' %}" />
                 </div>
               </div>
             </div>
@@ -130,13 +133,13 @@
                 <thead>
                   <tr>
                     <th><input type="checkbox" name="" id="selectAll"></th>
-                    <th>Item</th>
-                    <th>Location</th>
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Arrival Date</th>
-                    <th>Action</th>
+                    <th>{% trans "Item" %}</th>
+                    <th>{% trans "Location" %}</th>
+                    <th>{% trans "Category" %}</th>
+                    <th>{% trans "Type" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Arrival Date" %}</th>
+                    <th>{% trans "Action" %}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -154,16 +157,15 @@
                     <td>
                       <div class="input-group-prepend   ml-auto">
                         <p class="  m-0 dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;">
-                          Action
+                          {% trans "Action" %}
                         </p>
                         <div class="dropdown-menu">
-                          <a href="{% url 'bulk_delete' item.id %}" class="dropdown-item">Delete</a>
+                          <a href="{% url 'bulk_delete' item.id %}" class="dropdown-item">{% trans "Delete" %}</a>
                           {% if item.item_type == "asset" %}
-                          <a href="{% url 'update_items' item.id %}" class="dropdown-item">Edit</a>
+                          <a href="{% url 'update_items' item.id %}" class="dropdown-item">{% trans "Edit" %}</a>
                           {% else %}
-                          <a href="{% url 'update_consumable' item.id %}" class="dropdown-item">Edit</a>
+                          <a href="{% url 'update_consumable' item.id %}" class="dropdown-item">{% trans "Edit" %}</a>
                           {% endif %}
-
                         </div>
                       </div>
                     </td>
@@ -174,25 +176,25 @@
                 </tbody>
               </table>
               {% else %}
-              <p class="text-center my-4">No Items Added yet</p>
+              <p class="text-center my-4">{% trans "No Items Added yet" %}</p>
               {% endif %}
             </div>
             {% if items %}
             <div class="card-footer ">
               <span class="step-links">
                 <span class="current">
-                  Page {{ items.number }} of {{ items.paginator.num_pages }}
+                  {% trans "Page" %} {{ items.number }} {% trans "of" %} {{ items.paginator.num_pages }}
                 </span>
               </span>
               <ul class="pagination pagination-sm m-0 float-right">
                 {% if items.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">First page</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1">{% trans "First page" %}</a></li>
                 <li class="page-item"><a class="page-link" href="?page={{ items.previous_page_number }}">«</a></li>
                 {% endif %}
                 <li class="page-item"><a class="page-link" href="#">{{ items.number }}</a></li>
                 {% if items.has_next %}
                 <li class="page-item"><a class="page-link" href="?page={{ items.next_page_number }}">»</a></li>
-                <li class="page-item"><a class="page-link" href="#">Last page</a></li>
+                <li class="page-item"><a class="page-link" href="#">{% trans "Last page" %}</a></li>
 
                 {% endif %}
 

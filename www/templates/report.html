@@ -2,13 +2,15 @@
 {% block content %}
 
 <!-- Content Wrapper. Contains page content -->
+{% load i18n %}
+
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0 d-inline">Reports</h1>
+          <h1 class="m-0 d-inline">{% trans "Reports" %}</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
         </div><!-- /.col -->
@@ -19,10 +21,10 @@
   <!-- Main content -->
   <section class="content">
     <div class="container-fluid">
-      <!-- Filters --> 
+      <!-- Filters -->
       <div class="card card-default">
         <div class="card-header">
-          <h3 class="card-title">Filter</h3>
+          <h3 class="card-title">{% trans "Filter" %}</h3>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
               <i class="fas fa-minus"></i>
@@ -35,7 +37,7 @@
             {% csrf_token %}
             <div class="col-md-6">
               <div class="form-group">
-                <label>Category</label>
+                <label>{% trans "Category" %}</label>
                 <select class="form-control" name="category" id="cat_select" style="width: 100%;">
                   {% if search_filters.category == "" %}
                   <option value="">All</option>
@@ -52,30 +54,33 @@
                 </select>
               </div>
               <!-- /.form-group -->
-      
+
               <div class="form-group">
-                <label>Item Type</label>
+                <label>{% trans "Item Type" %}</label>
                 <select class="form-control" name="item_type" id="item_type" style="width: 100%;">
                   <option {% if search_filters.item_type == "" %}selected{% endif %} value="">All</option>
                   <option {% if search_filters.item_type == "asset" %}selected{% endif %} value="asset">Asset</option>
-                  <option {% if search_filters.item_type == "accessory" %}selected{% endif %} value="accessory">Accessory</option>
-                  <option {% if search_filters.item_type == "consumable" %}selected{% endif %} value="consumable">Consumable</option>
+                  <option {% if search_filters.item_type == "accessory" %}selected{% endif %} value="accessory">Accessory
+                  </option>
+                  <option {% if search_filters.item_type == "consumable" %}selected{% endif %} value="consumable">
+                    Consumable</option>
                 </select>
               </div>
             </div>
             <!-- /.col -->
             <div class="col-md-6">
               <div class="form-group">
-                <label>Status</label>
+                <label>{% trans "Status" %}</label>
                 <select class="form-control" name="status" id="status_select" style="width: 100%;">
                   <option {% if search_filters.status == "" %}selected{% endif %} value="">All</option>
-                  <option {% if search_filters.status == "available" %}selected{% endif %} value="available">Available</option>
-                  <option {% if search_filters.status == "broken" %}selected{% endif %} value="broken">Broken</option>
+                  <option {% if search_filters.status == "available" %}selected{% endif %} value="available">Available
+                  </option>
+                  <option {% if search_filters.status == "broken" %}selected{% endif %} value="" broken">Broken</option>
                   <option {% if search_filters.status == "outinuse" %}selected{% endif %} value="outinuse">In Use</option>
                 </select>
               </div>
               <div class="form-group">
-                <label>Owner</label>
+                <label>{% trans "Owner" %}</label>
                 <select class="form-control" name="owner" id="owner_select" style="width: 100%;">
                   {% if search_filters.owner == "" %}
                   <option value="">All</option>
@@ -93,50 +98,48 @@
               </div>
               <!-- /.form-group -->
             </div>
-        
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label>Date From</label>
-                  <input type="date" class="form-control" value="{{search_filters.date_recieved}}" name="date_recieved"
-                    id="date_recieved_filter">
-                </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>{% trans "Date From" %}</label>
+                <input type="date" class="form-control" value="{{search_filters.date_recieved}}" name="date_recieved"
+                  id="date_recieved_filter">
               </div>
-              <div class="col-md-6">
-                 <div class="form-group">
-                <label>Date To</label>
-                <input type="date" class="form-control" value="{{search_filters.date_recieved_to}}" name="date_recieved_to"
-                  id="date_recieved_filter1">
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>{% trans "Date To" %}</label>
+                <input type="date" class="form-control" value="{{search_filters.date_recieved_to}}"
+                  name="date_recieved_to" id="date_recieved_filter1">
               </div>
-              </div>
-            
-      
+            </div>
+
+
             <div class="col-12 float-right">
-              <button id="filterformbtn" class="btn btn-primary" type="submit">Apply Filter</button>
-              <button class="btn btn-default" id="reset_filter">Reset Filter</button>
+              <button id="filterformbtn" class="btn btn-primary" type="submit">{% trans "Apply Filter" %}</button>
+              <button class="btn btn-default" id="reset_filter">{% trans "Reset Filter" %}</button>
             </div>
             <!-- /.col -->
           </form>
         </div>
-      
+
       </div>
       <!-- /.Filters -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Items</h3>
-        
+          <h3 class="card-title">{% trans "Items" %}</h3>
+
         </div>
         <!-- /.card-header -->
         <div class="card-body">
           <table id="example1" class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th>Item</th>
-                <th>Location</th>
-                <th>Category</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Arrival Date</th>
-                
+                <th>{% trans "Item" %}</th>
+                <th>{% trans "Location" %}</th>
+                <th>{% trans "Category" %}</th>
+                <th>{% trans "Type" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Arrival Date" %}</th>
               </tr>
             </thead>
             <tbody>
@@ -151,7 +154,6 @@
                     class="badge bg-{% if item.status == 'available' %}success{% elif item.status == 'broken' %}danger{% else %}warning{%endif%}"
                     style="font-size: small;">{{item.status}}</span></td>
                 <td>{{item.date_received}}</td>
-                
               </tr>
               {% endfor %}
             </tbody>
@@ -159,11 +161,14 @@
         </div>
         <!-- /.card-body -->
       </div>
-      
       <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
+
   </section>
-  <!-- /.content -->
+</div>
+
+
+<!-- /.content -->
 
 
 <script>
@@ -177,12 +182,12 @@
       "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
       "ordering": false,
       "paging": true,
-    
+
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
 </script>
 
- 
+
 
 </div>
 

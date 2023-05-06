@@ -3,18 +3,20 @@
 
 <!-- Navbar -->
 <!-- Content Wrapper. Contains page content -->
+{% load i18n %}
+
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Profile</h1>
+          <h1>{% trans "Profile" %}</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-            <li class="breadcrumb-item active">User Profile</li>
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active">{% trans "User Profile" %}</li>
           </ol>
         </div>
       </div>
@@ -42,16 +44,16 @@
 
               <ul class="list-group list-group-unbordered mb-3">
                 <li class="list-group-item">
-                  <b>Items</b> <a class="float-right">1</a>
+                  <b>{% trans "Items" %}</b> <a class="float-right">1</a>
                 </li>
                 <li class="list-group-item">
-                  <b>Department</b> <a class="float-right">{{profile.owner.department}}</a>
+                  <b>{% trans "Department" %}</b> <a class="float-right">{{profile.owner.department}}</a>
                 </li>
               </ul>
               <form action="{% url 'profile' %}" id="upload_form" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <label for="id_profile_pic" style="width:100%;">
-                  <p class="btn btn-primary btn-block mb-0"><b>Update Profile Pic</b></p>
+                  <p class="btn btn-primary btn-block mb-0"><b>{% trans "Update Profile Pic" %}</b></p>
                 </label>
                 <div class="d-none">
                   {{form.profile_pic}}
@@ -59,7 +61,7 @@
 
               </form>
 
-              <a href="{% url 'password_change' %}" class="btn btn-default btn-block"><b>Change Password</b></a>
+              <a href="{% url 'password_change' %}" class="btn btn-default btn-block"><b>{% trans "Change Password" %}</b></a>
 
             </div>
             <!-- /.card-body -->
@@ -72,7 +74,7 @@
           <div class="card">
             <div class="card-header p-2">
               <ul class="nav nav-pills">
-                <li class="nav-item"><a class="nav-link" href="#">Items</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">{% trans "Items" %}</a></li>
               </ul>
             </div><!-- /.card-header -->
             <div class="card-body">
@@ -82,13 +84,12 @@
                     <table class="table table-hover text-nowrap">
                       <thead>
                         <tr>
-                          <th>Item</th>
-                          <th>Location</th>
-                          <th>Checkout Date</th>
-                          <th>Due Date</th>
-                          <th>Checked Out By</th>
-                          <th>Notes</th>
-
+                          <th>{% trans "Item" %}</th>
+                          <th>{% trans "Location" %}</th>
+                          <th>{% trans "Checkout Date" %}</th>
+                          <th>{% trans "Due Date" %}</th>
+                          <th>{% trans "Checked Out By" %}</th>
+                          <th>{% trans "Notes" %}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -100,17 +101,12 @@
                           <td>{{item.due_date |date:"M d, Y"}}</td>
                           <td>{{item.done_by}}</td>
                           <td>{{item.notes}}</td>
-
                         </tr>
-
-
                         {% endfor %}
                       </tbody>
                     </table>
                   </div>
-
                 </div>
-
               </div>
               <!-- /.tab-content -->
             </div><!-- /.card-body -->
@@ -121,17 +117,19 @@
       </div>
       <!-- /.row -->
     </div><!-- /.container-fluid -->
+
   </section>
-  <script>
-    // User Picture Upload
-    const prfile_pic_upload = document.getElementById("id_profile_pic");
-    const profile_form = document.getElementById('upload_form');
-    
+</div>
 
-    prfile_pic_upload.addEventListener('change', () => {
-      profile_form.submit();
-    });
+<script>
+  // User Picture Upload
+  const prfile_pic_upload = document.getElementById("id_profile_pic");
+  const profile_form = document.getElementById('upload_form');
 
-  </script>
-  {% endblock %}
 
+  prfile_pic_upload.addEventListener('change', () => {
+    profile_form.submit();
+  });
+
+</script>
+{% endblock %}

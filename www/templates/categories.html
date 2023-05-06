@@ -2,29 +2,25 @@
 {% block content %}
 
 <!-- Content Wrapper. Contains page content -->
+{% load i18n %}
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
       <div class="row  mb-2">
         <div class="col-sm-6 d-flex">
-          <h1 class="m-0 d-inline">Categories</h1>
+          <h1 class="m-0 d-inline">{% trans "Categories" %}</h1>
         </div><!-- /.col -->
-
-
       </div><!-- /.row -->
     </div><!-- /.container-fluid -->
   </div>
   <!-- /.content-header -->
   <!-- Main content -->
-
-
-
   <section class="content">
     <div class="container-fluid">
       <div class="card card-default">
         <div class="card-header">
-          <h3 class="card-title">Add Category</h3>
+          <h3 class="card-title">{% trans "Add Category" %}</h3>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
               <i class="fas fa-minus"></i>
@@ -37,29 +33,27 @@
         <!-- Form to add new Category -->
         <div class="card-body" style="display: block;">
           {% if title == 'Categories' %}
-            <form method="post" action="{% url form_url %}" class="row">
-          {% else %}
+          <form method="post" action="{% url form_url %}" class="row">
+            {% else %}
             <form method="post" action="{% url 'update_category' pk %}" class="row">
-          {% endif %}
-
-
-            {% csrf_token %}
-            {{form}}
-            <div class="mt-3">
-              {% if title == 'Categories' %}
-              <input type="submit" class="btn btn-success" value="New Category">
-              {% else %}
-              <input type="submit" class="btn btn-success" value="Update Category">
               {% endif %}
-            </div>
-          </form>
+              {% csrf_token %}
+              {{form}}
+              <div class="mt-3">
+                {% if title == 'Categories' %}
+                <input type="submit" class="btn btn-success" value="{% trans 'New Category' %}">
+                {% else %}
+                <input type="submit" class="btn btn-success" value="{% trans 'Update Category' %}">
+                {% endif %}
+              </div>
+            </form>
         </div>
       </div>
       <!-- table -->
       {% if title == 'Categories' %}
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Categories</h3>
+          <h3 class="card-title">{% trans "Categories" %}</h3>
 
         </div>
         <!-- /.card-header -->
@@ -67,10 +61,10 @@
           <table id="example1" class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th>Category</th>
-                <th>Code</th>
-                <th>Description</th>
-                <th>action</th>
+                <th>{% trans "Category" %}</th>
+                <th>{% trans "Code" %}</th>
+                <th>{% trans "Description" %}</th>
+                <th>{% trans "action" %}</th>
               </tr>
             </thead>
             <tbody>
@@ -82,12 +76,12 @@
                 <td>
                   <div class="input-group-prepend   ml-auto">
                     <p class=" m-0 dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;">
-                      Action
+                      {% trans "Action" %}
                     </p>
                     <div class="dropdown-menu">
-                      <a href="{% url 'delete_category' cat.id %}" class="dropdown-item">Delete</a>
+                      <a href="{% url 'delete_category' cat.id %}" class="dropdown-item">{% trans "Delete" %}</a>
 
-                      <a href="{% url 'update_category' cat.id %}" class="dropdown-item">Edit</a>
+                      <a href="{% url 'update_category' cat.id %}" class="dropdown-item">{% trans "Edit" %}</a>
 
 
                     </div>
@@ -101,16 +95,12 @@
         <!-- /.card-body -->
       </div>
       {% endif %}
-
-
     </div>
-
-
-
-</div><!-- /.container-fluid -->
-</section>
-<!-- /.content -->
+  </section>
 </div>
+<!-- /.container-fluid -->
+
+
 
 <script>
   $(function () {

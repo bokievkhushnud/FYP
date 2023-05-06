@@ -2,9 +2,6 @@ from pathlib import Path
 import os
 import django_heroku
 from datetime import timedelta
-# from www.custom_storages import PublicMediaStorage
-from www.custom_storages import PublicS3Boto3Storage
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -72,11 +69,11 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:19000',  # Replace with the origin you want to allow
-    'http://192.168.1.184:19000',  # Replace with the origin you want to allow
-    'exp://192.168.1.184',  # Replace with the origin you want to allow
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:19000',  # Replace with the origin you want to allow
+#     'http://192.168.1.184:19000',  # Replace with the origin you want to allow
+#     'exp://192.168.1.184',  # Replace with the origin you want to allow
+# ]
 
 ROOT_URLCONF = 'ims.urls'
 
@@ -229,4 +226,3 @@ MEDIA_URL = AWS_URL + '/media/'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
-# DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicS3Boto3Storage'

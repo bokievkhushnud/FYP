@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +17,7 @@
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-
+    <link rel="shorcut icon" type="image/x-icon" href="{% static 'www/pictures/favicon.ico' %}">
 
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'www/dist/css/adminlte.min.css' %}">
@@ -84,12 +86,13 @@
         <!-- /.modal-dialog -->
     </div>
     <footer class="main-footer">
-        <strong>Copyright &copy; 2023 <a href="#">IMS-UCA</a>.</strong>
-        All rights reserved.
+        <strong>{% trans "Copyright &copy; 2023" %} <a href="#">IMSUCA</a>.</strong>
+        {% trans "All rights reserved." %}
         <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> 1.0.0
+            <b>{% trans "Version" %}</b> 1.0.0
         </div>
     </footer>
+    
 
 
     <script src="{% static 'www/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
