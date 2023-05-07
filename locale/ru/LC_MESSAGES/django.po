@@ -424,15 +424,52 @@ msgstr "Выберите элементы для добавления"
 msgid "Close"
 msgstr "Закрыть"
 
+#: path/to/your/login.html
+msgid "Sign In"
+msgstr "Войти"
+
+msgid "Email"
+msgstr "Эл. адрес"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "I forgot my password"
+msgstr "Я забыл свой пароль"
+
+msgid "Register a new membership"
+msgstr "Зарегистрировать новый аккаунт"
+
+#: path/to/your/forgot_password.html
+
+msgid "You forgot your password? Here you can easily retrieve a new password."
+msgstr "Забыли пароль? Здесь вы можете легко получить новый пароль."
+
+msgid "Request new password"
+msgstr "Запросить новый пароль"
+
+msgid "Login"
+msgstr "Вход"
 
 
+#: path/to/your/register.html
+msgid "Create new account"
+msgstr "Создать новый аккаунт"
 
+msgid "I agree to the"
+msgstr "Согласен с"
 
+msgid "terms"
+msgstr "условиями"
 
+msgid "Register"
+msgstr "Регистрация"
 
+msgid "I already have an account"
+msgstr "У меня уже есть аккаунт"
 
+msgid "Set a new Password"
+msgstr "Установить новый пароль"
 
-
-
-
-
+msgid "Change password"
+msgstr "Изменить пароль"

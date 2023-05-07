@@ -1223,3 +1223,7 @@ def categories_delete(request, pk):
     """
     category = Category.objects.get(id=pk).delete()
     return redirect('categories')
+
+
+def docs(request):
+    return render(request, 'docs.html')
