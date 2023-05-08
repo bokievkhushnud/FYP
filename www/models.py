@@ -47,9 +47,6 @@ class Item(models.Model):
     notes = models.TextField(blank=True)
     order_number = models.CharField(max_length=100, blank=True)
     holder = models.ManyToManyField(User, blank=True,  related_name="holder")  # not visible
-    # qr_code = models.CharField(
-    #     max_length=1000, blank=True, default="")  # not visible
-    
     qr_code = models.ImageField(upload_to='qr_codes', blank=True, null=True)  # +
     image = models.ImageField(default='items/default.png', upload_to='items')  # +
     status = models.CharField(  # not visible
@@ -59,26 +56,6 @@ class Item(models.Model):
 
     def __str__(self):
         return self.item_name
-
-
-# Table for Licenses
-class License(models.Model):
-    license_id = models.CharField(max_length=20, )
-    license_name = models.CharField(max_length=100, default="")
-    purchase_cost = models.PositiveIntegerField(default=0)
-    notification_days = models.PositiveIntegerField(default=3)
-    licensed_to = models.CharField(max_length=100, default="")
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    product_key = models.TextField(blank=True)
-    licensed_by = models.CharField(max_length=100, blank=True)
-    purchased_date = models.DateField(null=True)
-    expiration_date = models.DateField(blank=True, null=True)
-    order_number = models.CharField(max_length=100, blank=True)
-    notes = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.license_name
-
 
 # Table for Items that are out in use
 class ItemAssignment(models.Model):
@@ -96,7 +73,6 @@ class ItemAssignment(models.Model):
 
     def __str__(self):
         return f"{self.requestor.username}-{self.item.item_name}"
-
 
 # Table to store item history
 class ItemHistory(models.Model):

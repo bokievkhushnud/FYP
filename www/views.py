@@ -99,6 +99,8 @@ def homeView(request):
     return render(request, "dashboard.html", context)
 
 
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def get_monthly_added_items_data(request, year):
     """
     This view is for Item Added Graph,
@@ -107,7 +109,7 @@ def get_monthly_added_items_data(request, year):
     to make the filtering faster.
 
     """
-
+    print("Hello")
     # find the department by user
     department = Department.objects.filter(head=request.user).first()
 
@@ -134,6 +136,7 @@ def get_monthly_added_items_data(request, year):
         'months': months,
         'items_added': items_added,
     }
+    print(data)
 
     return JsonResponse(data)
 
@@ -1224,6 +1227,9 @@ def categories_delete(request, pk):
     category = Category.objects.get(id=pk).delete()
     return redirect('categories')
 
+
+def terms(request):
+    return render(request, 'terms.html')
 
 def docs(request):
     return render(request, 'docs.html')

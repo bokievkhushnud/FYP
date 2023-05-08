@@ -41,15 +41,15 @@
         <div class="row">
           <div class="col-7">
             <div class="icheck-primary">
-              <input type="checkbox" id="agreeTerms" name="terms" value="agree">
+              <input type="checkbox" required id="agreeTerms" name="terms" value="agree">
               <label for="agreeTerms">
-                {% trans "I agree to the" %} <a href="#">{% trans "terms" %}</a>
+                {% trans "I agree to the" %} <a href="{% url 'terms' %}">{% trans "terms" %}</a>
               </label>
             </div>
           </div>
           <!-- /.col -->
           <div class="col-5">
-            <button type="submit" class="btn btn-primary btn-block">{% trans "Register" %}</button>
+            <button type="submit" id="register-button" disabled class="btn btn-primary btn-block">{% trans "Register" %}</button>
           </div>
           <!-- /.col -->
         </div>
@@ -60,6 +60,25 @@
     <!-- /.form-box -->
   </div><!-- /.card -->
 </div>
+
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const termsCheckbox = document.getElementById('agreeTerms');
+    const registerButton = document.getElementById('register-button');
+
+    termsCheckbox.addEventListener('change', function() {
+      if (this.checked) {
+        registerButton.disabled = false;
+      } else {
+        registerButton.disabled = true;
+      }
+    });
+  });
+</script>
+{% endblock %}
+
 
 
 

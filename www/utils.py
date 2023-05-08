@@ -13,8 +13,6 @@ def generate_qr(item_type, data, id):
     img.save(buffer, format='PNG')
     buffer.seek(0)
     img_file = ContentFile(buffer.read())
-    # default_storage.save(img_path, img_file)
-    # img_url = default_storage.url(img_path)
     return img_name, img_file
 
 

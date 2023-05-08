@@ -75,18 +75,6 @@ class AddAccessoryForm(ModelForm):
                 visible.field.widget.attrs['rows'] = 6
 
 
-# For Licenses
-class AddLicenseForm(ModelForm):
-    class Meta:
-        model = License
-        fields = "__all__"
-
-    def __init__(self, *args, **kwargs):
-        super(AddLicenseForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-
-
 # Registration form
 class CustomUserCreationForm(UserCreationForm):
     # email = UCAEmailField(label=_('Email'), max_length=254)
@@ -159,9 +147,6 @@ class CategoryForm(ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
             if visible.field.label == "Description":
                 visible.field.widget.attrs['rows'] = 5
-
-
-
 
 class CustomPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(

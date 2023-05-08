@@ -71,6 +71,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const languageSelect = document.getElementById('language-select');
+        if (!languageSelect) {
+            return;
+        }
         languageSelect.addEventListener('change', function () {
             const selectedLanguage = this.value;
             const currentUrl = new URL(window.location.href);
