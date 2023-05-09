@@ -25,7 +25,7 @@ def add_qr_item(sender, instance, **kwargs):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    if created and instance.is_active:
+    if created:
         # Extract data first name and last name from the email
         first_name, last_name = instance.username.split('@')[0].split('.')
         if "_" in last_name:
