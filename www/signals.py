@@ -33,8 +33,9 @@ def create_user_profile(sender, instance, created, **kwargs):
         instance.email = instance.username
         instance.first_name = first_name
         instance.last_name = last_name
-        instance.save()
+        instance.save(update_fields=['email', 'first_name', 'last_name'])
 
         Profile.objects.create(owner=instance)
+
 
         
