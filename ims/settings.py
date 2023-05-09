@@ -15,8 +15,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS', 'localhost')]
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS', 'localhost')]
 
 # Application definition
 
@@ -65,11 +65,6 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:19000',  # Replace with the origin you want to allow
-    'http://192.168.1.184:19000',  # Replace with the origin you want to allow
-    'exp://192.168.1.184',  # Replace with the origin you want to allow
-]
 
 ROOT_URLCONF = 'ims.urls'
 
