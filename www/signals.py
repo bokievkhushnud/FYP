@@ -31,8 +31,8 @@ def create_user_profile(sender, instance, created, **kwargs):
         if "_" in last_name:
             last_name = last_name.split("_")[0]
         instance.email = instance.username
-        instance.first_name = first_name
-        instance.last_name = last_name
+        instance.first_name = first_name.capitalize()
+        instance.last_name = last_name.capitalize()
         instance.save(update_fields=['email', 'first_name', 'last_name'])
 
         Profile.objects.create(owner=instance)
