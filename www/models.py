@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 
 # Table for departments
 class Department(models.Model):
-    name = models.CharField(max_length=100)
-    dep_code = models.CharField(max_length=20, default="")
+    name = models.CharField(max_length=100, unique=True)
+    dep_code = models.CharField(max_length=20, default="", unique=True)
     head = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -14,7 +14,7 @@ class Department(models.Model):
 # Table of categories
 class Category(models.Model):
     name = models.CharField(max_length=100 ,unique=True)
-    cat_code = models.CharField(max_length=20, default="")
+    cat_code = models.CharField(max_length=20, default="", unique=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
 
@@ -30,7 +30,7 @@ class Item(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    item_name = models.CharField(max_length=300)
+    item_name = models.CharField(max_length=300, unique=True)
     item_code = models.CharField(max_length=100)
     price = models.PositiveIntegerField(default=0)
     currency = models.CharField(max_length=20, default="USD", blank=True)
@@ -87,7 +87,7 @@ class ItemHistory(models.Model):
 # model for user profiles
 class Profile(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(default='items/default.png', upload_to='profile_pics')
+    profile_pic = models.ImageField(default='profile_pics/default.png', upload_to='profile_pics')
     
     def __str__(self):
         return f"{self.owner.first_name}-{self.owner.last_name}"
