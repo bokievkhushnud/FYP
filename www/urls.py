@@ -61,7 +61,4 @@ urlpatterns = [
 
     #docs
     path('docs/',views.docs, name="docs" ),
-
-    # about
-    path('about/',views.about, name="about" ),
 ]
