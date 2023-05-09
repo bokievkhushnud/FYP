@@ -91,7 +91,7 @@ if (resetbtn) {
 
 
   // Select All 
-  let selectAllBtn = document.getElementById("selectAll")
+let selectAllBtn = document.getElementById("selectAll")
 if (selectAllBtn) {
   selectAllBtn.addEventListener("change", function () {
     var options = document.getElementsByClassName("option");

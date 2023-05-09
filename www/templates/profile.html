@@ -44,13 +44,13 @@
 
               <ul class="list-group list-group-unbordered mb-3">
                 <li class="list-group-item">
-                  <b>{% trans "Items" %}</b> <a class="float-right">1</a>
+                  <b>{% trans "Items" %}</b> <a class="float-right">{{items_count}}</a>
                 </li>
                 <li class="list-group-item">
                   <b>{% trans "Department" %}</b> <a class="float-right">{{profile.owner.department}}</a>
                 </li>
               </ul>
-              <form action="{% url 'profile' %}" id="upload_form" method="post" enctype="multipart/form-data">
+              <form action="{% url 'profile' %}" id="upload_form" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <label for="id_profile_pic" style="width:100%;">
                   <p class="btn btn-primary btn-block mb-0"><b>{% trans "Update Profile Pic" %}</b></p>
@@ -58,9 +58,7 @@
                 <div class="d-none">
                   {{form.profile_pic}}
                 </div>
-
               </form>
-
               <a href="{% url 'password_change' %}" class="btn btn-default btn-block"><b>{% trans "Change Password" %}</b></a>
 
             </div>

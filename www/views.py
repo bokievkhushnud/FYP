@@ -1028,6 +1028,7 @@ def profilePage(request):
         'title': 'Profile',
         'profile': profile,
         'items': ItemAssignment.objects.filter(requestor=request.user, status='out'),
+        'items_count': ItemAssignment.objects.filter(requestor=request.user, status='out').count(),
         'form': ProfileForm(instance=profile)
     }
     return render(request, 'profile.html', context)

@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 
+
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
