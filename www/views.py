@@ -459,7 +459,6 @@ def item_detail(request, pk):
 def delete_items(request, pk=None):
     if request.method == "POST":
         checked_items = request.POST.getlist("item_id")
-        print(checkin_items)
         if len(checked_items) > 0:
             Item.objects.filter(id__in=checked_items).delete()
         return redirect('items')
@@ -722,6 +721,7 @@ def print_qr(request, pk=None):
     """
     View to show the print QR codes page
     """
+    department = Department.objects.filter(head=request.user).first()
 
     # get the selected items and show the page
     checked_items = request.POST.getlist("item_id")
@@ -729,7 +729,7 @@ def print_qr(request, pk=None):
         checked_items.append(pk)
     context = {
         "items": Item.objects.filter(id__in=checked_items),
-        "all_items": Item.objects.all().exclude(id__in=checked_items),
+        "all_items": Item.objects.filter(department=department).exclude(id__in=checked_items),
     }
 
     return render(request, "items/print_qrcodes.html", context)
