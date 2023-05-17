@@ -11,19 +11,19 @@
         </li>
         {% if user|is_department_head %}
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{% url 'home' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'home' %}" class="nav-link">{% trans "Dashboard" %}</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{% url 'items' %}" class="nav-link">Items</a>
+            <a href="{% url 'items' %}" class="nav-link">{% trans "Items" %}</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{% url 'loans' %}" class="nav-link">Loans</a>
+            <a href="{% url 'loans' %}" class="nav-link">{% trans "Loans" %}</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{% url 'categories' %}" class="nav-link">Categories</a>
+            <a href="{% url 'categories' %}" class="nav-link">{% trans "Categories" %}</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="{% url 'reports' %}" class="nav-link">Reports</a>
+            <a href="{% url 'reports' %}" class="nav-link">{% trans "Reports" %}</a>
         </li>
 
         {% endif %}
@@ -48,9 +48,9 @@
             <a href="#" class="nav-link pl-0">
                 <select class="m-0 p-0 " id="language-select"
                     style="background: none; color:rgba(255,255,255,.75); outline:none; border:none; font-weight:600; cursor:pointer;">
-                    <option class="dropdown-item" value="en" {% if current_language == 'en' %}selected{% endif %}>ENG
+                    <option class="dropdown-item" value="en" {% if current_language == 'en' %}selected{% endif %}>{% trans "ENG" %}
                     </option>
-                    <option class="dropdown-item" value="ru" {% if current_language == 'ru' %}selected{% endif %}>RU
+                    <option class="dropdown-item" value="ru" {% if current_language == 'ru' %}selected{% endif %}>{% trans "RU" %}
                     </option>
                 </select>
             </a>
@@ -59,19 +59,21 @@
             <a class="nav-link pl-0">
                 <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                     <input type="checkbox" class="custom-control-input" id="customSwitch3">
-                    <label class="custom-control-label" for="customSwitch3">Dark</label>
+                    <label class="custom-control-label" for="customSwitch3">{% trans "Dark" %}</label>
                 </div>
             </a>
-
         </li>
-
     </ul>
     {% endif %}
 </nav>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const languageSelect = document.getElementById('language-select');
+        if (!languageSelect) {
+            return;
+        }
         languageSelect.addEventListener('change', function () {
             const selectedLanguage = this.value;
             const currentUrl = new URL(window.location.href);

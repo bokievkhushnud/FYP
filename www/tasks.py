@@ -3,6 +3,9 @@ from django.conf import settings
 from datetime import datetime, timedelta
 from .models import Item, ItemAssignment
 from django.core.mail import EmailMessage
+import requests
+import boto3
+import subprocess
 
 @shared_task
 def send_expiry_notification():
@@ -44,3 +47,33 @@ def send_email_task(subject, message, recipient_list):
     email.send()
     print("sent")
 
+
+
+
+@shared_task
+def backup_database():
+    try:
+        # Run a backup
+        subprocess.run(['heroku', 'pg:backups:capture', '--app', 'inventory-ms'], check=True)
+
+        # Get the download url
+        result = subprocess.run(['heroku', 'pg:backups:url', '--app', 'inventory-ms'], capture_output=True, text=True)
+        url = result.stdout.strip()
+
+        # Download the backup
+        response = requests.get(url)
+
+        # Create an S3 client
+        s3 = boto3.client('s3',
+                          aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                          aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+
+        # Save the file to S3
+        s3.put_object(Body=response.content,
+                      Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                      Key=f'database_backups/{datetime.datetime.now().isoformat()}.dump')
+
+        print("Database backup successful.")
+        
+    except Exception as e:
+        print(f"Error: {e}")

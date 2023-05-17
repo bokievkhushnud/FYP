@@ -99,6 +99,8 @@ def homeView(request):
     return render(request, "dashboard.html", context)
 
 
+@login_required(login_url='login/')
+@user_passes_test(is_department_head, login_url='profile/')
 def get_monthly_added_items_data(request, year):
     """
     This view is for Item Added Graph,
@@ -107,7 +109,6 @@ def get_monthly_added_items_data(request, year):
     to make the filtering faster.
 
     """
-
     # find the department by user
     department = Department.objects.filter(head=request.user).first()
 
@@ -134,6 +135,7 @@ def get_monthly_added_items_data(request, year):
         'months': months,
         'items_added': items_added,
     }
+    print(data)
 
     return JsonResponse(data)
 
@@ -186,7 +188,7 @@ def items(request):
         Q(description__contains=search_filters["q"]) |
         Q(notes__contains=search_filters["q"]) |
         Q(vendor__contains=search_filters["q"])
-    )
+    ).order_by('-date_received')
 
     # paginator (for items table)
     page = request.GET.get('page', 1)
@@ -457,7 +459,6 @@ def item_detail(request, pk):
 def delete_items(request, pk=None):
     if request.method == "POST":
         checked_items = request.POST.getlist("item_id")
-        print(checkin_items)
         if len(checked_items) > 0:
             Item.objects.filter(id__in=checked_items).delete()
         return redirect('items')
@@ -674,10 +675,9 @@ def generate_pdf(request):
         # p.setPageRotation(180)
         items = Item.objects.filter(id__in=checked_items)
 
-        # image_paths =  [(settings.MEDIA_ROOT + 'qrcode/' + items) for i in range(100) ]
         # Define a list of image paths
         image_paths = list(
-            map(lambda item: settings.MEDIA_ROOT + 'qrcode/' + item.qr_code, items))
+            map(lambda item: item.qr_code.url, items))
         image_width = int(size)
         image_height = int(size)
         padding = int(gap)
@@ -721,6 +721,7 @@ def print_qr(request, pk=None):
     """
     View to show the print QR codes page
     """
+    department = Department.objects.filter(head=request.user).first()
 
     # get the selected items and show the page
     checked_items = request.POST.getlist("item_id")
@@ -728,7 +729,7 @@ def print_qr(request, pk=None):
         checked_items.append(pk)
     context = {
         "items": Item.objects.filter(id__in=checked_items),
-        "all_items": Item.objects.all().exclude(id__in=checked_items),
+        "all_items": Item.objects.filter(department=department).exclude(id__in=checked_items),
     }
 
     return render(request, "items/print_qrcodes.html", context)
@@ -1026,6 +1027,7 @@ def profilePage(request):
         'title': 'Profile',
         'profile': profile,
         'items': ItemAssignment.objects.filter(requestor=request.user, status='out'),
+        'items_count': ItemAssignment.objects.filter(requestor=request.user, status='out').count(),
         'form': ProfileForm(instance=profile)
     }
     return render(request, 'profile.html', context)
@@ -1224,3 +1226,10 @@ def categories_delete(request, pk):
     """
     category = Category.objects.get(id=pk).delete()
     return redirect('categories')
+
+
+def terms(request):
+    return render(request, 'terms.html')
+
+def docs(request):
+    return render(request, 'docs.html')

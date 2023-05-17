@@ -55,4 +55,10 @@ urlpatterns = [
     path('categories/',views.categories, name="categories" ),
     path('category/delete/<int:pk>/',views.categories_delete, name="delete_category" ),
     path('category/update/<int:pk>/',views.categories_update, name="update_category" ),
+
+    # terms and conditions
+    path('terms/',views.terms, name="terms" ),
+
+    #docs
+    path('docs/',views.docs, name="docs" ),
 ]

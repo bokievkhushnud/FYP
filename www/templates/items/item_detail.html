@@ -1,22 +1,25 @@
 {% extends 'main.html' %}
 {% block content %}
+{% load i18n %}
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Details</h1>
+                    <h1>{% trans "Details" %}</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">{{item.item_name}}</li>
+                        <li class="breadcrumb-item"><a href="#">{% trans "Home" %}</a></li>
+                        <li class="breadcrumb-item active">{% trans "Details" %}</li>
                     </ol>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
     </section>
+
 
     <!-- Main content -->
     <section class="content">
@@ -36,71 +39,68 @@
                             <p><em>{{item.item_name}}</em></p>
                         </h3>
                         <hr>
-                        <h4 class="mt-3">Quantity:</h4>
-                        <p > - {{item.quantity}} <em>{{item.quantity_unit}}</em></p>
+                        <h4 class="mt-3">{% trans "Quantity" %}</h4>
+                        <p> - {{item.quantity}} <em>{{item.quantity_unit}}</em></p>
 
-                        <h4 class="mt-3">Category:</h4>
+                        <h4 class="mt-3">{% trans "Category" %}</h4>
                         <p> - {{item.category}}</p>
-                        <h4 class="mt-3">Code:</h4>
-                        <p > - {{item.item_code}}</p>
-                        
+                        <h4 class="mt-3">{% trans "Code" %}</h4>
+                        <p> - {{item.item_code}}</p>
 
-                        <h4 class="mt-3">Status:</h4> - <span
+
+                        <h4 class="mt-3">{% trans "Status" %}</h4> - <span
                             class="badge bg-{% if item.status == 'available' %}success{% elif item.status == 'broken' %}danger{% else %}warning{%endif%}"
                             style="font-size: medium;">{{item.status}}</span>
-
-
                     </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-md-4">
-                        <h4 class="mt-3">Location:</h4>
+                        <h4 class="mt-3">{% trans "Location" %}</h4>
                         <p> - {{item.location}}</p>
-                        <h4 class="mt-3">Holder:</h4>
+                        <h4 class="mt-3">{% trans "Holder" %}</h4>
                         {% if item.item_type == "asset" %}
                         <p> - {%for i in item.holder.all%}{{i}}{% endfor %}</p>
                         {% else %}
                         <p> - {{item.holder.all.count}}</p>
                         {% endif %}
-                        <h4 class="mt-3">Order Number:</h4>
+                        <h4 class="mt-3">{% trans "Order Number" %}</h4>
                         <p> - {{item.order_number}}</p>
 
                     </div>
                     <div class="col-md-4">
-                        <h4 class="mt-3">Price:</h4>
+                        <h4 class="mt-3">{% trans "Price" %}</h4>
                         <p> - {{item.price}} <em>{{item.currency}}</em></p>
-                        <h4 class="mt-3">Campus:</h4>
+                        <h4 class="mt-3">{% trans "Campus" %}</h4>
                         <p> - {{item.campus}}</p>
-                        <h4 class="mt-3">Notes:</h4>
+                        <h4 class="mt-3">{% trans "Notes" %}</h4>
                         <p> - {{item.notes}}</p>
 
                     </div>
                     <div class="col-md-4">
-                        <h4 class="mt-3">Date Received:</h4>
+                        <h4 class="mt-3">{% trans "Date Received" %}</h4>
                         <p> - {{item.date_received}}</p>
-                        <h4 class="mt-3">Expiration Date:</h4>
+                        <h4 class="mt-3">{% trans "Expiration Date" %}</h4>
                         <p> - {{item.expiration_date}}</p>
-                        <h4 class="mt-3">Description:</h4>
+                        <h4 class="mt-3">{% trans "Description" %}</h4>
                         <p> - {{item.description}}</p>
                     </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-md-4">
-                        <h4 class="mt-3">Min Alert:</h4>
+                        <h4 class="mt-3">{% trans "Min Alert" %}</h4>
                         <p> - {{item.min_alert_quantity}}</p>
 
                     </div>
                     <div class="col-md-4">
-                        <h4 class="mt-3">Vendor:</h4>
+                        <h4 class="mt-3">{% trans "Vendor" %}</h4>
                         <p> - {{item.vendor}}</p>
 
                     </div>
                     <div class="col-md-4">
-                        <h4 class="mt-3">QR - code:</h4>
-                        <img src="{{item.qr_code}}" class="m-0" alt="{{item.qr_code}}"
-                            style="max-height: 200px;">
+                        <h4 class="mt-3">{% trans "QR - code" %}</h4>
+                        <img src="{{item.qr_code.url}}" class="m-0" alt="{{item.qr_code}}" style="max-height: 200px;">
 
                     </div>
 
@@ -110,52 +110,49 @@
                 <div class="row">
                     <div class="col">
                         {% if item.item_type == "asset" %}
-                        <a href="{% url 'update_items' item.id %}" class="btn btn-primary m-1">Update</a>
+                        <a href="{% url 'update_items' item.id %}" class="btn btn-primary m-1">{% trans "Update" %}</a>
                         {% else %}
-                        <a href="{% url 'update_consumable' item.id %}" class="btn btn-primary m-1">Update</a>
+                        <a href="{% url 'update_consumable' item.id %}" class="btn btn-primary m-1">{% trans "Update"%}</a>
                         {% endif %}
                         {% if item.status == "available" %}
                         <form class="d-inline" action="{% url 'checkout_items' item.id %}" method="get">
                             {% csrf_token %}
                             <input type="checkbox" name="item_id" value="{{item.id}}" class="option d-none">
-                            <input type="submit" class="btn btn-warning m-1" value="Check Out">
+                            <input type="submit" class="btn btn-warning m-1" value="{% trans 'Check Out' %}">
                         </form>
                         {% else %}
-                            {% if item.item_type == "asset" %}
-                                {% for i in checked_out_items %}
-                                    {% if i.status == "out" %}
-                                    <a href="{% url 'checkin_items' i.id %}" class="btn btn-success m-1">Check In</a>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
+                        {% if item.item_type == "asset" %}
+                        {% for i in checked_out_items %}
+                        {% if i.status == "out" %}
+                        <a href="{% url 'checkin_items' i.id %}" class="btn btn-success m-1">{% trans "Check In" %}</a>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
                         {% endif %}
                         <form action="{% url 'bulk_delete' %}" method="post" class="d-inline">
                             {% csrf_token %}
-                            <input type="hidden" name="item_id" value="{{item.id}}" class="option" >
-                            <input type="submit" class="btn btn-danger  m-1" value="Delete"> 
+                            <input type="hidden" name="item_id" value="{{item.id}}" class="option">
+                            <input type="submit" class="btn btn-danger  m-1" value="{% trans 'Delete' %}">
                         </form>
                         {% if item.status == 'broken' %}
-                        <a href="{% url 'fix' item.id %}" class="btn btn-success">Fixed</a>
+                        <a href="{% url 'fix' item.id %}" class="btn btn-success">{% trans "Fixed" %}</a>
                         {% else %}
-                        <a href="{% url 'broken' item.id %}" class="btn btn-warning">Out of order</a>
+                        <a href="{% url 'broken' item.id %}" class="btn btn-warning">{% trans "Out of order" %}</a>
                         {% endif %}
-                        <a  class="btn btn-default m-1" href="{% url 'print_qr' item.id %}">Print QR</a>
-                        
+                        <a class="btn btn-default m-1" href="{% url 'print_qr' item.id %}">{% trans "Print QR" %}</a>
+
 
                     </div>
-                   
+
                 </div>
                 <div class="row mt-4">
                     <nav class="w-100">
                         <div class="nav nav-tabs" id="product-tab" role="tablist">
                             <a class="nav-item nav-link" id="product-desc-tab" data-toggle="tab" href="#product-desc"
-                                role="tab" aria-controls="product-desc" aria-selected="false">History</a>
+                                role="tab" aria-controls="product-desc" aria-selected="false">{% trans "History" %} </a>
                             <a class="nav-item nav-link active" id="product-comments-tab" data-toggle="tab"
                                 href="#product-comments" role="tab" aria-controls="product-comments"
-                                aria-selected="true">Checked Out</a>
-                            <!-- <a class="nav-item nav-link" id="product-rating-tab" data-toggle="tab"
-                                href="#product-rating" role="tab" aria-controls="product-rating"
-                                aria-selected="false">Checked In</a> -->
+                                aria-selected="true">{% trans "Checked Out" %}</a>
                         </div>
                     </nav>
                     <div class="tab-content table-responsive p-3" id="nav-tabContent">
@@ -165,13 +162,13 @@
                             <table class="table table-hover text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th>Item</th>
-                                        <th>Requestor</th>
-                                        <th>Location</th>
-                                        <th>Quantity</th>
-                                        <th>Due Date</th>
-                                        <th>Checked by</th>
-                                        <th>Date</th>
+                                        <th>{% trans "Item" %}</th>
+                                        <th>{% trans "Requestor" %}</th>
+                                        <th>{% trans "Location" %}</th>
+                                        <th>{% trans "Quantity" %}</th>
+                                        <th>{% trans "Due Date" %}</th>
+                                        <th>{% trans "Checked by" %}</th>
+                                        <th>{% trans "Date" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -190,7 +187,7 @@
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="text-muted">No history available for this item</p>
+                            <p class="text-muted">{% trans "No history available for this item" %}</p>
                             {% endif %}
                         </div>
 
@@ -201,14 +198,14 @@
                             <table class="table table-hover text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th>Item</th>
-                                        <th>Requestor</th>
-                                        <th>Location</th>
-                                        <th>Quantity</th>
-                                        <th>Due Date</th>
-                                        <th>Checked by</th>
-                                        <th>Date</th>
-                                        <th>Action</th>
+                                        <th>{% trans "Item" %}</th>
+                                        <th>{% trans "Requestor" %}</th>
+                                        <th>{% trans "Location" %}</th>
+                                        <th>{% trans "Quantity" %}</th>
+                                        <th>{% trans "Due Date" %}</th>
+                                        <th>{% trans "Checked by" %}</th>
+                                        <th>{% trans "Date" %}</th>
+                                        <th>{% trans "Action" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -223,19 +220,16 @@
                                         <td>{{his.done_by}}</td>
                                         <td>{{his.date}}</td>
                                         <td>
-                                            <a href="{% url 'checkin_items' his.id %}" class="btn btn-success m-1">Check
-                                                In</a>
+                                            <a href="{% url 'checkin_items' his.id %}" class="btn btn-success m-1">{% trans "Check In" %}</a>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="text-muted">This Item is in storage, it is not checked Out.</p>
+                            <p class="text-muted">{% trans "This Item is in storage, it is not checked Out." %}</p>
                             {% endif %}
-
                         </div>
-
 
                         <div class="tab-pane fade" id="product-rating" role="tabpanel"
                             aria-labelledby="product-rating-tab">
@@ -245,15 +239,11 @@
                 </div>
                 {% endif %}
 
-
             </div>
             <!-- /.card-body -->
         </div>
-        <!-- /.card -->
-
-
     </section>
-    <!-- /.content -->
+
 </div>
 <!-- /.content-wrapper -->
 

@@ -1,0 +1,164 @@
+{% load static %}
+{% load i18n %}
+{% get_current_language as current_language %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% trans "Terms and Conditions" %}</title>
+    <link rel="shorcut icon" type="image/x-icon" href="{% static 'www/pictures/favicon.ico' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css" />
+</head>
+
+<body class="">
+    <div class="bg-dark mb-4">
+        <div class="container">
+            <div class="row d-flex justify-content-center align-items-center" style="height:300px">
+                <div class="col-lg-8 d-flex justify-content-center align-items-center">
+                    <div class="col-6">
+                        <img class="img-fluid" src="{% static 'www/pictures/icon.png' %}" alt="{% trans 'Logo' %}"
+                            style="max-width:200px;">
+                    </div>
+                    <div class="col-6 ">
+                        <h2>{% trans "Terms &amp; Conditions" %}</h2>
+                        <p>{% trans "UCA Inventory Management System" %}</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <section class="">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    <div class="blog__details__content">
+                        <div class="blog__details__pic"></div>
+                        <div class="blog__details__text">
+                            <h2><strong>{% trans "Terms &amp; Conditions" %}</strong></h2>
+                            <p>
+                                {% trans "Please read these Terms and Conditions carefully before using the Inventory Management System operated by University of Central Asia." %}
+                            </p>
+                            <p>
+                                {% trans "Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all users and others who access or use the Service." %}
+                            </p>
+                            <p>
+                                {% trans "By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the Service." %}
+                            </p>
+                            <h4 class="wp-block-heading">
+                                <strong>{% trans "Accounts" %}</strong>
+                            </h4>
+                            <p>
+                                {% trans "When you create an account with us, you must provide us with accurate, complete, and current information. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service." %}
+                            </p>
+                            <p>
+                                {% trans "You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password, whether your password is with our Service or a third-party service." %}
+                            </p>
+                            <p>
+                                {% trans "You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account." %}
+                            </p>
+                            <h4 class="wp-block-heading">
+                                <strong>{% trans "User Conduct" %}</strong>
+                            </h4>
+                            <p>
+                                {% trans "As a user of our Service, you agree not to:" %}
+                            </p>
+                            <ul>
+                                <li>
+                                    {% trans "Use the Service for any illegal purpose or in violation of any local, state, national, or international law." %}
+                                </li>
+                                <li>
+                                    {% trans "Engage in any conduct that could harm, intimidate, or harass other users." %}
+                                </li>
+                                <li>
+                                    {% trans "Upload or share any content that is unlawful, harmful, threatening, abusive, or otherwise objectionable." %}
+                                </li>
+                            </ul>                          
+                        
+                            <h4 class="wp-block-heading">
+                                <strong>{% trans "Intellectual Property" %}</strong>
+                            </h4>
+                            <p>
+                                {% trans "All content, features, and functionality of the Service are and will remain the exclusive property of University of Central Asia and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of University of Central Asia." %}
+                            </p>
+                            <ul>
+                                <li>
+                                    {% trans "To personalize user’s experience and to allow us to deliver the type of content and product offerings in which you are most interested." %}
+                                </li>
+                                <li>
+                                    {% trans "To allow us to better service you in responding to your customer service requests." %}
+                                </li>
+                                <li>
+                                    {% trans "To send periodic emails regarding your order or other products and services." %}
+                                </li>
+                            </ul>
+                                                       
+                            <h4 class="wp-block-heading">
+                                <strong>{% trans "Termination" %}</strong>
+                            </h4>
+                            <p>
+                                {% trans "We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms." %}
+                            </p>
+                            <p>
+                                {% trans "Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account, you may simply discontinue using the Service." %}
+                            </p>
+                            <h4 class="wp-block-heading">
+                                <strong>{% trans "Limitation of Liability" %}</strong>
+                            </h4>
+                            <p>
+                                {% trans "In no event shall UCA, nor its directors,employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service; (iii) any content obtained from the Service; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage, and even if a remedy set forth herein is found to have failed of its essential purpose." %}
+                            </p>
+                            <h4 class="wp-block-heading">
+                                <strong>{% trans "Changes" %}</strong>
+                            </h4>
+                            <p>
+                                {% trans "We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion." %}
+                            </p>
+                            <p>
+                                {% trans "By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service." %}
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer bg-dark m-auto d-flex justify-content-center align-items-center">
+        <div class="col-lg-8">
+            <strong>{% trans "Copyright &copy; 2023" %} <a href="#">IMSUCA</a>.</strong>
+            {% trans "All rights reserved." %}
+            <div class="float-right">
+                <select class="m-0 p-0 " id="language-select"
+                    style="background: none; color:rgba(255,255,255,.75); outline:none; border:none; font-weight:600; cursor:pointer;">
+                    <option class="dropdown-item" value="en" {% if current_language == 'en' %}selected{% endif %}>{% trans "ENG" %}
+                    </option>
+                    <option class="dropdown-item" value="ru" {% if current_language == 'ru' %}selected{% endif %}>{% trans "RU" %}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const languageSelect = document.getElementById('language-select');
+            languageSelect.addEventListener('change', function () {
+                const selectedLanguage = this.value;
+                const currentUrl = new URL(window.location.href);
+                const returnUrl = currentUrl.pathname + currentUrl.search;
+                // Set the language in a cookie and reload the page
+                document.cookie = `django_language=${selectedLanguage}; path=/; max-age=${60 * 60 * 24 * 365}`;
+                window.location.href = returnUrl;
+            });
+        });
+    </script>
+</body>
+
+</html>

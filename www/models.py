@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 
 # Table for departments
 class Department(models.Model):
-    name = models.CharField(max_length=100)
-    dep_code = models.CharField(max_length=20, default="")
+    name = models.CharField(max_length=100, unique=True)
+    dep_code = models.CharField(max_length=20, default="", unique=True)
     head = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -14,7 +14,7 @@ class Department(models.Model):
 # Table of categories
 class Category(models.Model):
     name = models.CharField(max_length=100 ,unique=True)
-    cat_code = models.CharField(max_length=20, default="")
+    cat_code = models.CharField(max_length=20, default="", unique=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
 
@@ -47,8 +47,7 @@ class Item(models.Model):
     notes = models.TextField(blank=True)
     order_number = models.CharField(max_length=100, blank=True)
     holder = models.ManyToManyField(User, blank=True,  related_name="holder")  # not visible
-    qr_code = models.CharField(
-        max_length=1000, blank=True, default="")  # not visible
+    qr_code = models.ImageField(upload_to='qr_codes', blank=True, null=True)  # +
     image = models.ImageField(default='items/default.png', upload_to='items')  # +
     status = models.CharField(  # not visible
         max_length=20, choices=[("available", "Available"), ("outinuse", "Out In Use"), ("broken", "Broken")],
@@ -57,26 +56,6 @@ class Item(models.Model):
 
     def __str__(self):
         return self.item_name
-
-
-# Table for Licenses
-class License(models.Model):
-    license_id = models.CharField(max_length=20, )
-    license_name = models.CharField(max_length=100, default="")
-    purchase_cost = models.PositiveIntegerField(default=0)
-    notification_days = models.PositiveIntegerField(default=3)
-    licensed_to = models.CharField(max_length=100, default="")
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    product_key = models.TextField(blank=True)
-    licensed_by = models.CharField(max_length=100, blank=True)
-    purchased_date = models.DateField(null=True)
-    expiration_date = models.DateField(blank=True, null=True)
-    order_number = models.CharField(max_length=100, blank=True)
-    notes = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.license_name
-
 
 # Table for Items that are out in use
 class ItemAssignment(models.Model):
@@ -95,7 +74,6 @@ class ItemAssignment(models.Model):
     def __str__(self):
         return f"{self.requestor.username}-{self.item.item_name}"
 
-
 # Table to store item history
 class ItemHistory(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
@@ -109,7 +87,7 @@ class ItemHistory(models.Model):
 # model for user profiles
 class Profile(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(default='items/default.png', upload_to='profile_pics')
+    profile_pic = models.ImageField(default='profile_pics/default.png', upload_to='profile_pics')
     
     def __str__(self):
         return f"{self.owner.first_name}-{self.owner.last_name}"

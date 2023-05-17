@@ -2,6 +2,8 @@
 
 from django.urls import path
 from . import api_views
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     # path('item/detail/<int:pk>/', api_views.ItemDetailView.as_view(), name='item-detail-api'),
@@ -11,6 +13,8 @@ urlpatterns = [
     path('broken/items/<int:item_id>/', api_views.set_item_status, name='set_item_status'),
     path('change_profile_pic/', api_views.change_profile_pic, name='change_profile_pic'),
     path('change_password/', api_views.change_password, name='change_password'),
+    path('auth/token/', TokenObtainPairView.as_view(),name='token_obtain_pair'),
+    path('auth/token/refresh/',TokenRefreshView.as_view(), name='token_refresh'),
 
 
 ]

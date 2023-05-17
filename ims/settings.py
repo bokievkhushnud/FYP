@@ -2,25 +2,23 @@ from pathlib import Path
 import os
 import django_heroku
 from datetime import timedelta
-# from www.custom_storages import PublicMediaStorage
-from www.custom_storages import PublicS3Boto3Storage
+from celery.schedules import crontab
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bjybtte)y^lc!lu2ndz3s21@r_y5syjo3#u$pq=_-w!-081q0e'
+# SECRET_KEY = 'lashak-insecure-bjybtte)y^lc!lu2ndz3s21@r_y5syjo3#u$pq=_-w!-081q0e'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-# ALLOWED_HOSTS = ['invenotry-ms.herokuapp.com', '127.0.0.1']
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS', 'localhost')]
 
 # Application definition
 
@@ -40,7 +38,6 @@ INSTALLED_APPS = [
     'storages',
 ]
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -53,8 +50,6 @@ REST_FRAMEWORK = {
 DJOSER = {
     'LOGIN_FIELD': 'email',
 }
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -67,16 +62,11 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 
-]
 
+]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:19000',  # Replace with the origin you want to allow
-    'http://192.168.1.184:19000',  # Replace with the origin you want to allow
-    'exp://192.168.1.184',  # Replace with the origin you want to allow
-]
 
 ROOT_URLCONF = 'ims.urls'
 
@@ -98,11 +88,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ims.wsgi.application'
-
-
 # Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 # connecting to posgresql
 # DATABASES = {
 #     'default': {
@@ -110,7 +96,6 @@ WSGI_APPLICATION = 'ims.wsgi.application'
 #         'NAME': 'mydatabase',
 #     }
 # }
-
 
 DATABASES = {
     'default': {
@@ -214,6 +199,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'www.tasks.send_expiry_notification',
         'schedule': timedelta(days=1),
     },
+      'backup_database': {
+        'task': 'www.tasks.backup_database',
+        'schedule': crontab(hour=0, minute=0, day_of_week='sunday'),  # Run every Sunday at midnight
+    },
 }
 
 
@@ -226,7 +215,4 @@ AWS_DEFAULT_ACL = None
 AWS_S3_REGION_NAME = 'eu-north-1'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 MEDIA_URL = AWS_URL + '/media/'
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-
-DEFAULT_FILE_STORAGE = 'www.custom_storages.PublicS3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

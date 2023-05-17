@@ -13,15 +13,15 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-                        <li class="breadcrumb-item active">Dashboard</li>
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+                        <li class="breadcrumb-item active">{% trans "Dashboard" %}</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
-    <!-- /.content-header -->
 
+    <!-- /.content-header -->
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -32,8 +32,7 @@
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3>{{total_count}}</h3>
-
-                            <p>Total Items</p>
+                            <p>{% trans "Total Items" %}</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
@@ -47,7 +46,7 @@
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3>{{available_count}}</h3>
-                            <p>Items Available</p>
+                            <p>{% trans "Items Available" %}</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
@@ -61,8 +60,7 @@
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3>{{checked_out_count}}</h3>
-
-                            <p>Items Out</p>
+                            <p>{% trans "Items Out" %}</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
@@ -76,7 +74,7 @@
                     <div class="small-box bg-danger">
                         <div class="inner">
                             <h3>{{broken_count}}</h3>
-                            <p>Broken Items</p>
+                            <p>{% trans "Broken Items" %}</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-pie-graph"></i>
@@ -86,6 +84,8 @@
                 </div>
                 <!-- ./col -->
             </div>
+
+
             <div class="raw">
                 <div class="col m-0 p-0">
                     <!-- Category chart-->
@@ -93,18 +93,17 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-chart-pie"></i>
-                                Categories
+                                {% trans "Categories" %}
                             </h3>
                             <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                    title="Collapse">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="{% trans 'Collapse' %}">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <button type="button" class="btn btn-tool" data-card-widget="remove" title="{% trans 'Remove' %}">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
-
+            
                         </div><!-- /.card-header -->
                         <div class="card-body">
                             <div class="tab-content p-0">
@@ -121,20 +120,21 @@
                     <!-- /.card -->
                 </div>
             </div>
+            
+
             <div class="row">
                 <!-- Left col -->
                 <section class="col-lg-7 ">
-
                     <!-- Recently checked out -->
                     <div class="card card-success">
                         <div class="card-header bg-warnning">
-                            <h3 class="card-title">Recently Checked Out</h3>
-
+                            <h3 class="card-title">{% trans "Recently Checked Out" %}</h3>
+                
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-
+                
                                 <button type="button" class="btn btn-tool" data-card-widget="remove">
                                     <i class="fas fa-times"></i>
                                 </button>
@@ -147,10 +147,10 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">#</th>
-                                        <th>Item</th>
-                                        <th>Location</th>
-                                        <th>Requestor</th>
-                                        <th>Checked Out</th>
+                                        <th>{% trans "Item" %}</th>
+                                        <th>{% trans "Location" %}</th>
+                                        <th>{% trans "Requestor" %}</th>
+                                        <th>{% trans "Checked Out" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -168,29 +168,28 @@
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="text-center mt-4">No Data Available</p>
+                            <p class="text-center mt-4">{% trans "No Data Available" %}</p>
                             {% endif %}
-
-
+                
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-
+                
                         </div>
                         <!-- /.card-footer-->
                     </div>
                     <!-- /.Recently checked out -->
-
+                
                     <!-- Broken Items -->
                     <div class="card card-danger">
                         <div class="card-header ">
-                            <h3 class="card-title">Broken Items</h3>
-
+                            <h3 class="card-title">{% trans "Broken Items" %}</h3>
+                
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-
+                
                                 <button type="button" class="btn btn-tool" data-card-widget="remove">
                                     <i class="fas fa-times"></i>
                                 </button>
@@ -203,9 +202,9 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">#</th>
-                                        <th>Item</th>
-                                        <th>Location</th>
-                                        <th>Code</th>
+                                        <th>{% trans "Item" %}</th>
+                                        <th>{% trans "Location" %}</th>
+                                        <th>{% trans "Code" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -217,32 +216,31 @@
                                         <td>{{item.item_code}}</td>
                                     </tr>
                                     {% endfor %}
-
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="text-center mt-4">No Data Available</p>
+                            <p class="text-center mt-4">{% trans "No Data Available" %}</p>
                             {% endif %}
-
+                    
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-
+                    
                         </div>
                         <!-- /.card-footer-->
                     </div>
                     <!-- /.Broken Items -->
-
+                    
                     <!-- Due return Items -->
                     <div class="card card-warning">
                         <div class="card-header bg-warnning">
-                            <h3 class="card-title">Items to be returned</h3>
-
+                            <h3 class="card-title">{% trans "Items to be returned" %}</h3>
+                    
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-
+                    
                                 <button type="button" class="btn btn-tool" data-card-widget="remove">
                                     <i class="fas fa-times"></i>
                                 </button>
@@ -255,10 +253,10 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">#</th>
-                                        <th>Item</th>
-                                        <th>Location</th>
-                                        <th>Requestor</th>
-                                        <th>Due Date</th>
+                                        <th>{% trans "Item" %}</th>
+                                        <th>{% trans "Location" %}</th>
+                                        <th>{% trans "Requestor" %}</th>
+                                        <th>{% trans "Due Date" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -275,15 +273,14 @@
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="text-center mt-4">No Data Available</p>
-
+                            <p class="text-center mt-4">{% trans "No Data Available" %}</p>
+                    
                             {% endif %}
-
-
+                    
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-
+                    
                         </div>
                         <!-- /.card-footer-->
                     </div>
@@ -298,18 +295,17 @@
                     <div class="card">
                         <div class="card-header border-0">
                             <h3 class="card-title">
-                                Items Added
+                                {% trans "Items Added" %}
                             </h3>
                             <!-- card tools -->
                             <div class="card-tools">
-
+                
                                 <select type="button" class="btn m-0 p-0" onchange="fetchData(this.value)">
                                     {% for year in years %}
                                     <option value="{{year}}">{{year}}</option>
                                     {% endfor %}
                                 </select>
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                    title="Collapse">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="{% trans 'Collapse' %}">
                                     <i class="fas fa-minus"></i>
                                 </button>
                                 <button type="button" class="btn btn-tool" data-card-widget="remove">
@@ -323,15 +319,15 @@
                                 style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                         </div>
                         <!-- /.card-body-->
-
+                
                     </div>
                     <!-- /.card -->
-
+                
                     <!-- Char for Item Types -->
                     <div class="card ">
                         <div class="card-header border-0">
-                            <h3 class="card-title">Item Types</h3>
-
+                            <h3 class="card-title">{% trans "Item Types" %}</h3>
+                
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
@@ -350,17 +346,17 @@
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
-
+                
                     <!-- Items in shortage -->
                     <div class="card ">
                         <div class="card-header">
-                            <h3 class="card-title">Items in Shortage</h3>
-
+                            <h3 class="card-title">{% trans "Items in Shortage" %}</h3>
+                
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-
+                
                                 <button type="button" class="btn btn-tool" data-card-widget="remove">
                                     <i class="fas fa-times"></i>
                                 </button>
@@ -373,9 +369,9 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">#</th>
-                                        <th>Item</th>
-                                        <th>Category</th>
-                                        <th>Quantity</th>
+                                        <th>{% trans "Item" %}</th>
+                                        <th>{% trans "Category" %}</th>
+                                        <th>{% trans "Quantity" %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -385,27 +381,29 @@
                                         <td><a href="{% url 'item_detail' item.id %}">{{item}}</a></td>
                                         <td>{{item.category}}</td>
                                         <td>{{item.quantity}}</td>
-
                                     </tr>
                                     {% endfor %}
-
+                    
                                 </tbody>
                             </table>
                             {% else %}
-                            <p class="text-center mt-4">No Data Available</p>
+                            <p class="text-center mt-4">{% trans "No Data Available" %}</p>
                             {% endif %}
-
+                    
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-
+                    
                         </div>
                         <!-- /.card-footer-->
                     </div>
                     <!-- /.Items in shortage -->
                 </section>
+                    
+            
                 <!-- right col -->
             </div>
+
         </div>
         <!-- /.container-fluid -->
     </section>

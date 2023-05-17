@@ -19,6 +19,557 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
-#: www/templates/dashboard.html:13
-msgid "Hello, world!"
-msgstr "Privet"
+
+#: www/templates/navbar.html
+msgid "Dashboard"
+msgstr "Панель управления"
+
+msgid "Items"
+msgstr "Товары"
+
+msgid "Loans"
+msgstr "Займы"
+
+msgid "Categories"
+msgstr "Категории"
+
+msgid "Reports"
+msgstr "Отчеты"
+
+msgid "ENG"
+msgstr "АНГ"
+
+msgid "RU"
+msgstr "РУС"
+
+msgid "Dark"
+msgstr "Темный"
+
+#: www/templates/main_sidebar.html
+msgid "All categories"
+msgstr "Все категории"
+
+msgid "All Items"
+msgstr "Все товары"
+
+msgid "Add new"
+msgstr "Добавить новый"
+
+msgid "Add asset"
+msgstr "Добавить актив"
+
+msgid "Add accessory"
+msgstr "Добавить аксессуар"
+
+msgid "Add consumable"
+msgstr "Добавить расходник"
+
+msgid "Print QR codes"
+msgstr "Печать QR-кодов"
+
+msgid "Profile"
+msgstr "Профиль"
+
+msgid "Logout"
+msgstr "Выйти"
+
+msgid "Copyright &copy; 2023"
+msgstr "Авторское право &copy; 2023"
+
+msgid "All rights reserved."
+msgstr "Все права защищены."
+
+msgid "Version"
+msgstr "Версия"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "User Profile"
+msgstr "Профиль пользователя"
+
+msgid "Item"
+msgstr "Товар"
+
+msgid "Department"
+msgstr "Отдел"
+
+msgid "Update Profile Pic"
+msgstr "Обновить фото профиля"
+
+msgid "Change Password"
+msgstr "Сменить пароль"
+
+msgid "Location"
+msgstr "Местоположение"
+
+msgid "Checkout Date"
+msgstr "Дата выдачи"
+
+msgid "Checked Out By"
+msgstr "Выдано"
+
+msgid "Notes"
+msgstr "Заметки"
+
+#: www/templates/categories.html
+msgid "Add Category"
+msgstr "Добавить категорию"
+
+msgid "New Category"
+msgstr "Новаякатегория"
+
+msgid "Update Category"
+msgstr "Обновить категорию"
+
+msgid "Code"
+msgstr "Код"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "action"
+msgstr "действие"
+
+msgid "Action"
+msgstr "Действие"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+#: www/templates/loans.html
+msgid "Filters"
+msgstr "Фильтры"
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Owner"
+msgstr "Владелец"
+
+msgid "Checked Out Date"
+msgstr "Дата выдачи"
+
+msgid "Due Date"
+msgstr "Дата возврата"
+
+msgid "Apply Filter"
+msgstr "Применить фильтр"
+
+msgid "Reset Filter"
+msgstr "Сбросить фильтр"
+
+msgid "Quantity"
+msgstr "Количество"
+
+msgid "Requestor"
+msgstr "Запрашивающий"
+
+msgid "Checked out by"
+msgstr "Выдано"
+
+msgid "notes"
+msgstr "Примечания"
+
+#: www/templates/reports.html
+msgid "Type"
+msgstr "Тип"
+
+msgid "Arrival Date"
+msgstr "Дата прибытия"
+
+msgid "Date From"
+msgstr "Дата от"
+
+msgid "Date To"
+msgstr "Дата до"
+
+msgid "Item Type"
+msgstr "Тип предмета"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Available"
+msgstr "Доступный"
+
+msgid "Broken"
+msgstr "Сломанный"
+
+msgid "In Use"
+msgstr "Используется"
+
+#: www/templates/dashboard.html
+msgid "Total Items"
+msgstr "Общее количество товаров"
+
+msgid "Items Available"
+msgstr "Доступные товары"
+
+msgid "Items Out"
+msgstr "Товары вне склада"
+
+msgid "Collapse"
+msgstr "Свернуть"
+
+msgid "Remove"
+msgstr "Удалить"
+
+msgid "Recently Checked Out"
+msgstr "Недавно выданные"
+
+msgid "No Data Available"
+msgstr "Нет доступных данных"
+
+msgid "Broken Items"
+msgstr "Поврежденные товары"
+
+msgid "Items to be returned"
+msgstr "Товары к возврату"
+
+msgid "Checked Out"
+msgstr "Выдано"
+
+msgid "Items Added"
+msgstr "Добавленные товары"
+
+msgid "Item Types"
+msgstr "Типы товаров"
+
+msgid "Items in Shortage"
+msgstr "Товары с дефицитом"
+
+#: www/templates/items.html
+msgid "Total"
+msgstr "Всего"
+
+
+msgid "List of"
+msgstr "Список"
+
+msgid "Add New"
+msgstr "Добавить новый"
+
+msgid "Asset"
+msgstr "Актив"
+
+msgid "Accessory"
+msgstr "Аксессуар"
+
+msgid "Consumable"
+msgstr "Расходный материал"
+
+msgid "Bulk action"
+msgstr "Массовое действие"
+
+
+msgid "Print QR"
+msgstr "Печать QR"
+
+msgid "No Items Added yet"
+msgstr "Пока не добавлено ни одного предмета"
+
+msgid "Page"
+msgstr "Страница"
+
+msgid "of"
+msgstr "из"
+
+msgid "First page"
+msgstr "Первая страница"
+
+msgid "Last page"
+msgstr "Последняя страница"
+
+
+#: www/templates/filter.html
+msgid "Filter"
+msgstr "Фильтр"
+
+#: www/templates/add_new_item.html
+
+
+msgid "Fill the information"
+msgstr "Заполните информацию"
+
+msgid "Add Item"
+msgstr "Добавить элемент"
+
+msgid "New Item"
+msgstr "Новый товар"
+
+msgid "New Accessory"
+msgstr "Новый аксессуар"
+
+
+#: path/to/your/item_detail.html
+msgid "Details"
+msgstr "Детали"
+
+
+#: path/to/your/item_detail.html
+
+msgid "Holder"
+msgstr "Владелец"
+
+msgid "Order Number"
+msgstr "Номер заказа"
+
+msgid "Price"
+msgstr "Цена"
+
+msgid "Date Received"
+msgstr "Дата получения"
+
+msgid "Expiration Date"
+msgstr "Срок годности"
+
+msgid "Min Alert"
+msgstr "Минимальное кол-во"
+
+msgid "Vendor"
+msgstr "Поставщик"
+
+msgid "QR - code"
+msgstr "QR-код"
+
+msgid "Update"
+msgstr "Обновить"
+
+msgid "Check Out"
+msgstr "Выдать"
+
+msgid "Check In"
+msgstr "Принять"
+
+
+msgid "Fixed"
+msgstr "Исправлено"
+
+msgid "Out of order"
+msgstr "Сломанный"
+
+
+msgid "History"
+msgstr "История"
+
+
+msgid "Campus"
+msgstr "Кампус"
+
+msgid "Checked by"
+msgstr "Проверено"
+
+msgid "Date"
+msgstr "Дата"
+
+
+msgid "No history available for this item"
+msgstr "Нет истории для этого товара"
+
+msgid "This Item is in storage, it is not checked Out."
+msgstr "Этот товар находится на складе, он не выдан."
+
+
+#: path/to/your/checkin.html
+
+msgid "Item Name"
+msgstr "Товар"
+
+msgid "Return Date"
+msgstr "Дата возврата"
+
+msgid "Update Item"
+msgstr "Обновить"
+
+msgid "Edit Item"
+msgstr "Обновить товар"
+
+msgid "None"
+msgstr "Нет"
+
+
+# path/to/your/print_qrcodes.html
+
+msgid "Print Qr-Code"
+msgstr "Печать QR-кода"
+
+msgid "Image Size"
+msgstr "Размер изображения"
+
+msgid "Gap"
+msgstr "Расстояние"
+
+msgid "Margin Y"
+msgstr "Отступ Y"
+
+msgid "Margin X"
+msgstr "Отступ X"
+
+msgid "Preview"
+msgstr "Предпросмотр"
+
+msgid "Reset"
+msgstr "Сброс"
+
+msgid "Select Items to Add"
+msgstr "Выберите элементы для добавления"
+
+msgid "Close"
+msgstr "Закрыть"
+
+#: path/to/your/login.html
+msgid "Sign In"
+msgstr "Войти"
+
+msgid "Email"
+msgstr "Эл. адрес"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "I forgot my password"
+msgstr "Я забыл свой пароль"
+
+msgid "Register a new membership"
+msgstr "Зарегистрировать новый аккаунт"
+
+#: path/to/your/forgot_password.html
+
+msgid "You forgot your password? Here you can easily retrieve a new password."
+msgstr "Забыли пароль? Здесь вы можете легко получить новый пароль."
+
+msgid "Request new password"
+msgstr "Запросить новый пароль"
+
+msgid "Login"
+msgstr "Вход"
+
+
+#: path/to/your/register.html
+msgid "Create new account"
+msgstr "Создать новый аккаунт"
+
+msgid "I agree to the"
+msgstr "Согласен с"
+
+msgid "terms"
+msgstr "условиями"
+
+msgid "Register"
+msgstr "Регистрация"
+
+msgid "I already have an account"
+msgstr "У меня уже есть аккаунт"
+
+msgid "Set a new Password"
+msgstr "Установить новый пароль"
+
+msgid "Change password"
+msgstr "Изменить пароль"
+
+
+# path/to/your/terms.html
+msgid "Terms and Conditions"
+msgstr "Условия использования"
+
+msgid "Logo"
+msgstr "Логотип"
+
+msgid "Terms &amp; Conditions"
+msgstr "Условия использования"
+
+msgid "UCA Inventory Management System"
+msgstr "Система управления инвентарем УЦА"
+
+msgid "Accounts"
+msgstr "Учетные записи"
+
+msgid "User Conduct"
+msgstr "Поведение пользователя"
+
+msgid "Intellectual Property"
+msgstr "Интеллектуальная собственность"
+
+msgid "Termination"
+msgstr "Расторжение"
+
+msgid "Limitation of Liability"
+msgstr "Ограничение ответственности"
+
+msgid "Changes"
+msgstr "Изменения"
+
+msgid "Please read these Terms and Conditions carefully before using the Inventory Management System operated by University of Central Asia."
+msgstr "Пожалуйста, внимательно прочтите эти Условия использования перед использованием Системы управления инвентарем, управляемой Университетом Центральной Азии."
+
+msgid "Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all users and others who access or use the Service."
+msgstr "Ваш доступ и использование Сервиса зависит от вашего принятия и соблюдения этих Условий. Эти Условия применяются ко всем пользователям и другим лицам, которые получают доступ или используют Сервис."
+
+msgid "By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the Service."
+msgstr "Получая доступ или используя Сервис, вы соглашаетесь соблюдать эти Условия. Если вы не согласны с любой частью условий, вы не можете получить доступ к Сервису."
+
+msgid "When you create an account with us, you must provide us with accurate, complete, and current information. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service."
+msgstr "При создании учетной записи у нас, вы должны предоставить нам точную, полную и актуальную информацию. Несоблюдение этого условия является нарушением Условий, что может привести к немедленному прекращению вашей учетной записи в нашем Сервисе."
+
+msgid "You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password, whether your password is with our Service or a third-party service."
+msgstr "Вы несете ответственность за сохранение пароля, который Вы используете для доступа к Сервису, а также за любые действия и активность, осуществляемые с использованием вашего пароля, независимо от того, является ли ваш пароль частью нашего Сервиса или сторонней службы."
+
+msgid "You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account."
+msgstr "Вы соглашаетесь не разглашать свой пароль третьим лицам. Вы должны немедленно уведомить нас, став в курсе любого нарушения безопасности или несанкционированного использования вашей учетной записи."
+
+
+msgid "As a user of our Service, you agree not to:"
+msgstr "Как пользователь нашего Сервиса, вы соглашаетесь не:"
+
+
+msgid "All content, features, and functionality of the Service are and will remain the exclusive property of University of Central Asia and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of University of Central Asia."
+msgstr "Весь контент, функционал и возможности Сервиса являются и останутся исключительной собственностью Университета Центральной Азии и его лицензиаров. Сервис защищен авторским правом, торговыми марками и другими законами как Соединенных Штатов, так и иностранных стран. Наши товарные знаки и фирменный стиль не могут использоваться в связи с любым продуктом или услугой без предварительного письменного согласия Университета Центральной Азии."
+
+msgid "We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms."
+msgstr "Мы можем прекратить или приостановить вашу учетную запись немедленно, без предварительного уведомления или ответственности, по любой причине, включая, но не ограничиваясь, нарушение Условий."
+
+msgid "Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account, you may simply discontinue using the Service."
+msgstr "После прекращения ваше право на использование Сервиса немедленно прекращается. Если вы хотите прекратить свою учетную запись, вы можете просто прекратить использовать Сервис."
+
+msgid "In no event shall UCA, nor its directors,employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service; (iii) any content obtained from the Service; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage, and even if a remedy set forth herein is found to have failed of its essential purpose."
+msgstr "Ни в коем случае УЦА, ни его директора, сотрудники, партнеры, агенты, поставщики или аффилированные лица, не несут ответственности за косвенный, случайный, специальный, последующий или штрафной ущерб, включая, без ограничения, потерю прибыли, данных, использования, доброй воли или других нематериальных потерь, возникающих из (i) вашего доступа или использования или неспособности получить доступ или использовать Сервис; (ii) любого поведения или контента любой третьей стороны в Сервисе; (iii) любого контента, полученного из Сервиса; и (iv) несанкционированного доступа, использования или изменения ваших передач или контента, основанного на гарантии, договоре, деликте (включая халатность) или любой другой правовой теории, независимо от того, были ли мы проинформированы о возможности такого ущерба, и даже если средство, предусмотренное здесь, было признано несостоятельным в своих основных целях."
+
+msgid "We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion."
+msgstr "Мы оставляем за собой право, по своему усмотрению, изменять или заменять эти Условия в любое время. Если изменение существенное, мы постараемся предоставить уведомление за 30 дней до вступления в силу новых условий. То, что считается существенным изменением, будет определено по нашему усмотрению."
+
+msgid "By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service."
+msgstr "Продолжая доступ или использование нашего Сервиса после того, как изменения вступят в силу, вы соглашаетесь соблюдать измененные условия. Если вы не согласны с новыми условиями, прекратите использование Сервиса."
+
+
+msgid "To personalize user’s experience and to allow us to deliver the type of content and product offerings in which you are most interested."
+msgstr "Для индивидуализации пользовательского опыта и предоставления возможности предлагать контент и продукты, которые могут быть наиболее интересными для вас."
+
+msgid "To allow us to better service you in responding to your customer service requests."
+msgstr "Чтобы позволить нам лучше обслуживать вас при ответе на ваши запросы в службу поддержки."
+
+msgid "To send periodic emails regarding your order or other products and services."
+msgstr "Для отправки периодических электронных писем, касающихся вашего заказа или других продуктов и услуг."
+
+msgid "Use the Service for any illegal purpose or in violation of any local, state, national, or international law."
+msgstr "Использовать сервис в незаконных целях или с нарушением местных, региональных, национальных или международных законов."
+
+msgid "Engage in any conduct that could harm, intimidate, or harass other users."
+msgstr "Совершать действия, которые могут навредить, запугать или досаждать другим пользователям."
+
+msgid "Upload or share any content that is unlawful, harmful, threatening, abusive, or otherwise objectionable."
+msgstr "Загружать или делиться любым контентом, который является незаконным, вредным, угрожающим, злоупотребляющим или иным образом неприемлемым."
+
+
+
+
+
+
+
+

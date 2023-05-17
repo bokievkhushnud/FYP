@@ -1,6 +1,4 @@
 
-// var html5QrcodeScanner = new Html5QrcodeScanner(
-// 	"reader", { fps: 10, qrbox: 250 });
 let scan = document.getElementById("scanqr")
 let stop_scan = document.getElementById("closeqr")
 let stop_scan1 = document.getElementById("closeqr1")
@@ -77,39 +75,43 @@ fileinput.addEventListener('change', e => {
 });
 
 // Reset Filter
-
 let resetbtn = document.getElementById("reset_filter")
-resetbtn.addEventListener("click", (e) => {
-  e.preventDefault()
-  document.getElementById("date_recieved_filter").value = ""
-  document.getElementById("date_recieved_filter1").value = ""
-  document.getElementById("cat_select").value = ""
-  document.getElementById("owner_select").value = ""
-  document.getElementById("item_type").value = ""
-  document.getElementById("status_select").value = ""
-})
-
-// Select All 
-document.getElementById("selectAll").addEventListener("change", function () {
-  var options = document.getElementsByClassName("option");
-  for (var i = 0; i < options.length; i++) {
-    options[i].checked = this.checked;
-  }
-});
-
-// if any of them is not selected deselect all
-var options = document.getElementsByClassName("option");
-for (var i = 0; i < options.length; i++) {
-  options[i].addEventListener("change", function () {
-    var selectAll = document.getElementById("selectAll");
-    var allChecked = true;
-    for (var j = 0; j < options.length; j++) {
-      if (!options[j].checked) {
-        allChecked = false;
-        break;
-      }
-    }
-    selectAll.checked = allChecked;
-  });
+if (resetbtn) {
+  resetbtn.addEventListener("click", (e) => {
+    e.preventDefault()
+    document.getElementById("date_recieved_filter").value = ""
+    document.getElementById("date_recieved_filter1").value = ""
+    document.getElementById("cat_select").value = ""
+    document.getElementById("owner_select").value = ""
+    document.getElementById("item_type").value = ""
+    document.getElementById("status_select").value = ""
+  })
 }
 
+
+
+  // Select All 
+let selectAllBtn = document.getElementById("selectAll")
+if (selectAllBtn) {
+  selectAllBtn.addEventListener("change", function () {
+    var options = document.getElementsByClassName("option");
+    for (var i = 0; i < options.length; i++) {
+      options[i].checked = this.checked;
+    }
+  });
+  // if any of them is not selected deselect all
+  var options = document.getElementsByClassName("option");
+  for (var i = 0; i < options.length; i++) {
+    options[i].addEventListener("change", function () {
+      var selectAll = document.getElementById("selectAll");
+      var allChecked = true;
+      for (var j = 0; j < options.length; j++) {
+        if (!options[j].checked) {
+          allChecked = false;
+          break;
+        }
+      }
+      selectAll.checked = allChecked;
+    });
+  }
+}

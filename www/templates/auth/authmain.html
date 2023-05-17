@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,12 +15,15 @@
     
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'www/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2.0/dist/css/adminlte.min.css">
+
+    <link rel="shorcut icon" type="image/x-icon" href="{% static 'www/pictures/favicon.ico' %}">
+
   
     <title>{{title}}</title>
 </head>
 
 <body class="hold-transition ">
-
     <!-- Modal For QR Code Scanner -->
     <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
@@ -66,11 +71,9 @@
         </div>
     </div>
 
-
-    <!-- jQuery -->
-    <script src="{% static 'www/plugins/jquery/jquery.min.js' %}"></script>
-
     <!-- Bootstrap 4 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script src="{% static 'www/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'www/dist/js/adminlte.js' %}"></script>
 

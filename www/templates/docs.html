@@ -1,0 +1,45 @@
+{% load static %}
+{% load i18n %}
+{% get_current_language as current_language %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% trans "Documentation" %}</title>
+  <link rel="shorcut icon" type="image/x-icon" href="{% static 'www/pictures/favicon.ico' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css" />
+</head>
+
+<body class="">
+  <div class="bg-dark mb-4">
+    <div class="container">
+      <div class="row d-flex justify-content-center align-items-center" style="height:300px">
+        <div class="col-lg-8 d-flex justify-content-center align-items-center">
+          <div class="col-6">
+            <img class="img-fluid" src="{% static 'www/pictures/icon.png' %}" alt="{% trans 'Logo' %}"
+              style="max-width:200px;">
+          </div>
+          <div class="col-6 ">
+            <h2>{% trans "Documentation" %}</h2>
+            <p>{% trans "UCA Inventory Management System" %}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="main-footer bg-dark m-auto d-flex justify-content-center align-items-center">
+    <div class="col-lg-8">
+      <strong>{% trans "Copyright &copy; 2023" %} <a href="#">IMSUCA</a>.</strong>
+      {% trans "All rights reserved." %}
+      <div class="float-right">
+
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
