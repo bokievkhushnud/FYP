@@ -55,7 +55,12 @@ By default, the server will be accessible at `127.0.0.1:8000`.
 ## Usage
 
 Once the server is running, you can navigate to the homepage at `http://127.0.0.1:8000/`. From there, you can create an account, log in, and start managing your inventory.
-
+First, you should create a superuser by running the follwing command:
+    ```
+    python manage.py createsuperuser
+    ```
+After, you can create departments and assign admins to them, and then admins can start managing their inventory.
+Note: All the users except superuser should create accoutn by registering via auth page using UCA email.
 
 ## License
 
