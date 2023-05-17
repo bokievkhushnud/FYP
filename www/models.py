@@ -30,7 +30,7 @@ class Item(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    item_name = models.CharField(max_length=300, unique=True)
+    item_name = models.CharField(max_length=300)
     item_code = models.CharField(max_length=100)
     price = models.PositiveIntegerField(default=0)
     currency = models.CharField(max_length=20, default="USD", blank=True)

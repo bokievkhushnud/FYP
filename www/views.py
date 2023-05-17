@@ -109,7 +109,6 @@ def get_monthly_added_items_data(request, year):
     to make the filtering faster.
 
     """
-    print("Hello")
     # find the department by user
     department = Department.objects.filter(head=request.user).first()
 
