@@ -40,39 +40,31 @@ These instructions will get you a copy of the project up and running on your loc
 This project uses Django's default SQLite database. If you wish to use other databases, adjust the DATABASES setting in settings.py according to your preference.
 
 Run the following command to apply migrations:
-
-
+    ```
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
 
 ### Running the Server
 
 Start the development server:
 
-
-
 By default, the server will be accessible at `127.0.0.1:8000`.
-
-### Tests
-
-To run the tests:
-
 
 
 ## Usage
 
 Once the server is running, you can navigate to the homepage at `http://127.0.0.1:8000/`. From there, you can create an account, log in, and start managing your inventory.
 
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project belongs to UCA
 
 ## Acknowledgments
 
 - Django - The web framework used.
-- Your name - Initial work.
+- Khushnud Boqiev - Initial work.
 
 
 
