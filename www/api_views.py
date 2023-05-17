@@ -1,6 +1,6 @@
 from .models import Item
 from .serializers import ItemSerializer
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes,parser_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Profile, ItemAssignment
@@ -10,7 +10,9 @@ from django.http import JsonResponse
 from .tasks import send_email_task
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-
+from django.contrib.auth.decorators import login_required
+from django.core.files.images import ImageFile
+from rest_framework.parsers import MultiPartParser, FormParser
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def item_details(request, item_id):
@@ -59,12 +61,29 @@ def set_item_status(request, item_id):
         return JsonResponse({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
+# @api_view(['POST'])
+# def change_profile_pic(request):
+#     user = request.user
+#     user.profile.profile_pic = request.FILES['profile_pic']
+#     user.profile.save()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
 @api_view(['POST'])
+@parser_classes([MultiPartParser, FormParser])
+@login_required
 def change_profile_pic(request):
     user = request.user
-    user.profile.profile_pic = request.FILES['profile_pic']
-    user.profile.save()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    profile_pic = request.data.get('profile_pic', None)
+    if profile_pic is not None:
+        user.profile.profile_pic = ImageFile(profile_pic)
+        user.profile.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response({"error": "No profile picture uploaded"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['POST'])
