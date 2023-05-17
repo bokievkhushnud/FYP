@@ -2,6 +2,8 @@ from pathlib import Path
 import os
 import django_heroku
 from datetime import timedelta
+from celery.schedules import crontab
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -196,6 +198,10 @@ CELERY_BEAT_SCHEDULE = {
     'send_expiry_notification': {
         'task': 'www.tasks.send_expiry_notification',
         'schedule': timedelta(days=1),
+    },
+      'backup_database': {
+        'task': 'www.tasks.backup_database',
+        'schedule': crontab(hour=0, minute=0, day_of_week='sunday'),  # Run every Sunday at midnight
     },
 }
 
